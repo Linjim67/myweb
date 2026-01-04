@@ -1,67 +1,77 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Node Site</title>
+    <title>DHJH Chem</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-<div id="tsparticles"></div>
-<section class="hero-banner">
-    <div class="hero-content">
-        <h1>Find Your Ideal Health Plan</h1>
-        <p>What kind of service do you need today?</p>
+    <div id="tsparticles"></div>
 
-        <div class="filter-buttons">
-            <button class="filter-btn active" data-filter="all">All</button>
-            <button class="filter-btn" data-filter="medical">Medical</button>
-            <button class="filter-btn" data-filter="counseling">Counseling</button>
-            <button class="filter-btn" data-filter="remote">Remote</button>
+    <section class="hero-banner">
+        <div class="hero-content">
+            <h1>敦化國中資優班化學科營隊網站</h1>
+            <p>講師：林峻亨</p>
+            <p>科學班準備</p>
+
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">全部顯示</button>
+                <button class="filter-btn" data-filter="summer">暑期科學營</button>
+                <button class="filter-btn" data-filter="winter">寒假加強營</button>
+                <button class="filter-btn" data-filter="mock">科學班準備</button>
+            </div>
+
+            <div class="subject-grid">
+                <div class="subject-card" data-category="summer">
+                    <span class="card-tag">暑期</span>
+                    <div class="icon">&#9935;</div>
+                    <h3>New features</h3>
+                    <p>Building...</p> <!--(Game Zone)-->
+                </div>
+
+                <div class="subject-card" data-category="summer">
+                    <span class="card-tag">暑期</span>
+                    <div class="icon">&#128464;</div>
+                    <h3>試題詳解</h3>
+                    <p>詳細解析與答對率分析</p>
+                </div>
+
+                <div class="subject-card" data-category="summer">
+                    <span class="card-tag">暑期</span>
+                    <div class="icon">&#xe99c;</div>
+                    <h3>成績查詢</h3>
+                    <p>個人成績與排名分析</p>
+                </div>
+
+                <div class="subject-card" data-category="winter">
+                    <span class="card-tag">寒假</span>
+                    <div class="icon">&#xe953;</div>
+                    <h3>時間表</h3>
+                    <p>寒假加強營上課時程</p>
+                </div>
+
+                <div class="subject-card" data-category="winter">
+                    <span class="card-tag">寒假</span>
+                    <div class="icon">&#128464;</div>
+                    <h3>試題詳解</h3>
+                    <p>模擬考與練習題庫</p>
+                </div>
+
+                <div class="subject-card" data-category="winter">
+                    <span class="card-tag">寒假</span>
+                    <div class="icon">&#xe99c;</div>
+                    <h3>成績查詢</h3>
+                    <p>寒訓測驗結果</p>
+                </div>
+            </div>
         </div>
+    </section>
 
-        <div class="subject-grid">
-            <div class="subject-card" data-category="medical">
-                <div class="icon">🏥</div>
-                <h3>Outpatient Clinic</h3>
-                <p>Professional diagnosis and medication.</p>
-            </div>
-
-            <div class="subject-card" data-category="counseling">
-                <div class="icon">💬</div>
-                <h3>Psychotherapy</h3>
-                <p>One-on-one deep counseling.</p>
-            </div>
-
-            <div class="subject-card" data-category="remote">
-                <div class="icon">💻</div>
-                <h3>Online Video</h3>
-                <p>Consultation from home.</p>
-            </div>
-
-            <div class="subject-card" data-category="medical">
-                <div class="icon">🧠</div>
-                <h3>TMS Therapy</h3>
-                <p>Advanced brain stimulation.</p>
-            </div>
-
-            <div class="subject-card" data-category="counseling">
-                <div class="icon">🧸</div>
-                <h3>Child Therapy</h3>
-                <p>Specialized care for children.</p>
-            </div>
-            <div class="subject-card" data-category="remote">
-                <div class="icon">📱</div>
-                <h3>App Chat</h3>
-                <p>Text-based support anytime.</p>
-            </div>
-        </div>
-    </div>
-</section>
-<script src="https://cdn.jsdelivr.net/npm/tsparticles-slim@2.0.6/tsparticles.slim.bundle.min.js"></script>
-<script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles-slim@2.0.6/tsparticles.slim.bundle.min.js"></script>
+    <script src="script.js"></script>
 </body>
 
 </html>
