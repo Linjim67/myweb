@@ -47,87 +47,96 @@ body {
 .filter-btn.active {
     color: white;
 }
-
-/* 3. Grid System */
+/* --- 3. Grid System (Restores spacing between cards) --- */
 .subject-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
+    /* This ensures cards don't get too wide or too narrow */
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 30px;
+    /* INCREASED: This is the "vertical margin" between cards */
     max-width: 1000px;
     margin: 0 auto;
+    /* Centers the whole grid on the page */
 }
 
-/* 4. Card Styling */
+/* --- 4. Card Styling (Restored to Original Look) --- */
 .subject-card {
     background: white;
     position: relative;
     z-index: 2;
-    padding: 25px;
+    padding: 35px 25px;
+    /* More vertical padding inside the card */
     border-radius: 15px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
     transition: transform 0.3s ease;
     cursor: pointer;
 
-    /* Flex layout for alignment */
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    height: 100%;
-    /* Uniform Height */
-    min-height: 220px;
+    /* RESTORED: Center Alignment */
+    text-align: center;
+
+    /* RESTORED: Natural Height (Removed 'height: 100%') */
+    display: block;
 }
 
 .subject-card:hover {
     transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
+/* Restored Spacing for Items Inside */
 .subject-card .icon {
-    font-size: 30px;
-    margin: 15px 0;
+    font-size: 40px;
+    margin-top: 15px;
+    /* Space between Tag and Icon */
+    margin-bottom: 15px;
+    /* Space between Icon and Title */
     color: #555;
 }
 
 .subject-card h3 {
-    margin: 0 0 10px 0;
-    color: #333;
+    margin: 0 0 15px 0;
+    /* Space between Title and Text */
+    color: #2c3e50;
+    font-size: 1.2rem;
 }
 
 .subject-card p {
     margin: 0;
-    color: #777;
-    font-size: 0.9em;
-    flex-grow: 1;
-    text-align: left;
+    color: #7f8c8d;
+    font-size: 0.95rem;
+    line-height: 1.6;
 }
 
 .subject-card.hide {
     display: none;
 }
 
-/* 5. SMART TAGS (The Merge Trick) */
+/* --- 5. SMART TAGS (Kept the new feature!) --- */
 .card-tag {
     display: inline-block;
-    padding: 4px 12px;
+    padding: 5px 15px;
     border-radius: 20px;
-    font-size: 12px;
+    font-size: 13px;
     color: white;
     font-weight: bold;
+    letter-spacing: 1px;
+
+    /* Fix position if needed, or just let it sit at top */
+    margin-bottom: 5px;
 }
 
-/* If the card is Summer -> Tag is Orange */
+/* AUTOMATIC COLORS (Based on parent category) */
+/* Summer = Orange */
 .subject-card[data-category="summer"] .card-tag {
     background-color: #FF9F43;
-    /* Orange */
 }
 
-/* If the card is Winter -> Tag is Blue */
+/* Winter = Blue */
 .subject-card[data-category="winter"] .card-tag {
     background-color: #54a0ff;
-    /* Blue */
 }
 
-/* If the card is Mock/Prep -> Tag is Green */
+/* Mock = Green */
 .subject-card[data-category="mock"] .card-tag {
     background-color: #1dd1a1;
-    /* Green */
 }
