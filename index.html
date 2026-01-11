@@ -78,6 +78,52 @@
 
     <script src="https://cdn.jsdelivr.net/npm/tsparticles-slim@2.0.6/tsparticles.slim.bundle.min.js"></script>
     <script src="script.js"></script>
+    <script>
+        // 1. Check if user is logged in
+        function handleTranscriptClick() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+
+            if (!currentUser) {
+                // CASE A: Not logged in -> Go to Login Page
+                alert("Please Login First");
+                window.location.href = '/login';
+            } else {
+                downloadTranscript(currentUser);
+            }
+        }
+
+        // 2. The Download Function (Same as before, but runs on Index)
+        function downloadTranscript(user) {
+            const username = user.username;
+            const admission_year = user.admission_year;
+
+            if (!admission_year) {
+                alert("資料錯誤：缺少入學年度 (Missing Year)");
+                return;
+            }
+
+            // Create hidden form to trigger download
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/get-transcript';
+
+            const inputUser = document.createElement('input');
+            inputUser.type = 'hidden';
+            inputUser.name = 'username';
+            inputUser.value = username;
+            form.appendChild(inputUser);
+
+            const inputYear = document.createElement('input');
+            inputYear.type = 'hidden';
+            inputYear.name = 'admission_year';
+            inputYear.value = admission_year;
+            form.appendChild(inputYear);
+
+            document.body.appendChild(form);
+            form.submit();
+            document.body.removeChild(form);
+        }
+    </script>
 </body>
 
 </html>
