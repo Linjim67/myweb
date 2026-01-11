@@ -14,8 +14,7 @@ if (!mongoURI) {
         .catch(err => console.error("❌ MongoDB connection error:", err));
 }
 
-// 2. Middleware (Allows server to read JSON data from forms)
-app.use(express.static('public')); // Or wherever your html files are
+app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -34,4 +33,54 @@ app.listen(port, () => {
 
 app.get('/login', (req, res) => {
     res.sendFile(__dirname + '/login.html');
+});
+
+
+const User = require('./models/User'); // Import the model
+
+// ... (Database connection code remains here) ...
+
+// ROUTE: Handle Login
+app.post('/login', async (req, res) => {
+    const { username, password } = req.body;
+
+    try {
+        const user = await User.findOne({ username: username });
+
+        if (user && user.password === password) {
+            
+            res.json({ 
+                success: true, 
+                username: user.username, 
+                name: user.name,
+                admission_year: user.admission_year
+            });
+
+        } else {
+            res.status(401).json({ success: false, message: "帳號或密碼錯誤" });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: "伺服器錯誤" });
+    }
+});
+
+app.get('/dashboard', (req, res) => {
+    res.sendFile(__dirname + '/dashboard.html');
+});
+
+
+
+const path = require('path');
+const fs = require('fs');
+
+app.post('/get-transcript', (req, res) => {
+    const { username, admission_year } = req.body; 
+    const filePath = path.join(__dirname, 'privatee', admission_year, '1.1', `${username}_summer_transcript.pdf`);
+
+    if (fs.existsSync(filePath)) {
+        res.download(filePath, `${username}.pdf`);
+    } else {
+        res.status(404).json({ success: false, message: "Transcrpit not found" });
+    }
 });

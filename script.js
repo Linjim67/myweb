@@ -6,9 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Define colors to match your CSS (Summer=Orange, Winter=Blue, Mock=Green)
     const categoryColors = {
         all: '#576574',       // Dark Grey for "All"
-        summer: '#FF9F43',    // Orange
-        winter: '#54a0ff',    // Blue
-        mock: '#1dd1a1'       // Green
+        summer: '#fc7a00ff',    // Orange
+        winter: '#0073ffff',    // Blue
+        mock: '#00c490ff'       // Green
     };
 
     filterButtons.forEach(button => {

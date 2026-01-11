@@ -10,10 +10,14 @@ const userSchema = new mongoose.Schema({
         type: String, 
         required: true 
     },
-    // We can add roles later (e.g., 'student', 'teacher')
-    role: {
+
+    name: {
         type: String,
-        default: 'student'
+        required: true
+    },
+    admission_year: {
+        type: Number, 
+        required: true 
     }
 });
 

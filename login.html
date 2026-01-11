@@ -69,6 +69,42 @@
                 toggleBtn.innerText = "返回登入";
             }
         });
+        
+        // login
+        const loginForm = document.getElementById('login-form');
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Stop page from refreshing
+
+            // Get values from inputs
+            const usernameInput = loginForm.querySelector('input[type="text"]').value;
+            const passwordInput = loginForm.querySelector('input[type="password"]').value;
+
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: usernameInput, password: passwordInput })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Save user data (including files) to LocalStorage
+                    localStorage.setItem('currentUser', JSON.stringify(data));
+
+                    // Go to Dashboard
+                    window.location.href = '/dashboard';
+                } else {
+                    alert("登入失敗: " + data.message);
+                }
+            } catch (err) {
+                console.error(err);
+                alert("連線錯誤，請稍後再試");
+            }
+        });
+
     </script>
 </body>
+
 </html>
