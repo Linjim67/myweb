@@ -77,11 +77,11 @@ app.post('/login', async (req, res) => {
             });
 
         } else {
-            res.status(401).json({ success: false, message: "帳號或密碼錯誤 (Invalid Credentials)" });
+            res.status(401).json({ success: false, message: "Invalid Credentials" });
         }
     } catch (error) {
         console.error("Login Error:", error);
-        res.status(500).json({ success: false, message: "伺服器錯誤 (Server Error)" });
+        res.status(500).json({ success: false, message: "Server Error" });
     }
 });
 
@@ -102,7 +102,7 @@ app.post('/get-transcript', (req, res) => {
         res.download(filePath, fileName);
     } else {
         console.error(`❌ File not found: ${filePath}`);
-        res.status(404).json({ success: false, message: "Transcript not published" });
+        res.status(404).json({ success: false, message: "Transcript not published yet" });
     }
 });
 

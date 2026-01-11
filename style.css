@@ -187,6 +187,29 @@ body {
 
 .input-group input:focus {
     border-color: #54a0ff;
+}/* 1. Position the Link Container (The <a> tag) */
+#nav-login-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    text-decoration: none; /* Removes underline */
+    z-index: 100; /* Ensures it sits on top of everything */
+}
+
+/* 2. Style the Button inside it */
+/* We use a specific class or selector to override generic defaults */
+.nav-btn-style {
+    background-color: white !important; /* Force white background */
+    color: #555 !important;             /* Grey text */
+    border: 1px solid #ccc;             /* Optional: adds a subtle border */
+    transition: all 0.3s ease;          /* Smooth hover effect */
+}
+
+/* Optional: Add a hover effect for better UX */
+.nav-btn-style:hover {
+    background-color: #f1f1f1 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 .login-btn {
@@ -225,4 +248,26 @@ body {
     color: #b2bec3;
     text-decoration: none;
     font-size: 0.85rem;
+}
+
+
+#nav-login-btn {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    text-decoration: none;
+    z-index: 100;
+}
+
+.nav-btn-style {
+    background-color: white !important;
+    color: #555 !important;
+    border: 1px solid #ccc;
+    transition: all 0.3s ease;
+}
+
+.nav-btn-style:hover {
+    background-color: #f1f1f1 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
