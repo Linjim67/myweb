@@ -14,14 +14,14 @@
         <div class="login-card">
             <h2 id="form-title">學員登入</h2>
             
-            <form id="login-form" action="/login" method="POST">
+            <form id="login-form">
                 <div class="input-group">
-                    <label>帳號</label>
-                    <input type="text" placeholder="輸入您的帳號" required>
+                    <label>Email / 帳號</label>
+                    <input type="text" name="username" placeholder="輸入您的帳號" required>
                 </div>
                 <div class="input-group">
                     <label>密碼</label>
-                    <input type="password" placeholder="輸入密碼" required>
+                    <input type="password" name="password" placeholder="輸入密碼" required>
                 </div>
                 <button type="submit" class="login-btn">登入</button>
             </form>
