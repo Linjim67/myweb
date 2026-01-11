@@ -72,8 +72,7 @@ app.post('/login', async (req, res) => {
             res.json({ 
                 success: true, 
                 username: user.username, 
-                // Ensure these exist in your MongoDB document if you need them:
-                name: user.name || username, 
+                name: user.name, 
                 admission_year: user.admission_year 
             });
 

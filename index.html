@@ -123,6 +123,26 @@
             form.submit();
             document.body.removeChild(form);
         }
+        
+        // --- Update Navbar with Name ---
+        document.addEventListener("DOMContentLoaded", () => {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            const navBtn = document.getElementById('nav-login-btn');
+
+            if (currentUser && navBtn) {
+                const displayName = currentUser.name || currentUser.username;
+
+                navBtn.innerText = `👤 ${displayName}`;
+                navBtn.href = "#";
+                navBtn.onclick = function (e) {
+                    e.preventDefault();
+                    if (confirm(`Hi ${displayName}, 確定要登出嗎? (Log out?)`)) {
+                        localStorage.removeItem('currentUser');
+                        window.location.reload();
+                    }
+                };
+            }
+        });
     </script>
 </body>
 
