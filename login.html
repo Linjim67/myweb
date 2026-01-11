@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - DHJH Chem</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-page">
+
+    <div id="tsparticles"></div>
+
+    <div class="login-container">
+        <div class="login-card">
+            <h2 id="form-title">學員登入</h2>
+            
+            <form id="login-form" action="/login" method="POST">
+                <div class="input-group">
+                    <label>帳號</label>
+                    <input type="text" placeholder="輸入您的帳號" required>
+                </div>
+                <div class="input-group">
+                    <label>密碼</label>
+                    <input type="password" placeholder="輸入密碼" required>
+                </div>
+                <button type="submit" class="login-btn">登入</button>
+            </form>
+
+            <p class="switch-text">
+                還沒有帳號嗎？ <a href="#" id="toggle-btn">立即註冊</a>
+            </p>
+            
+            <a href="/" class="back-home">← 回首頁</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles-slim@2.0.6/tsparticles.slim.bundle.min.js"></script>
+    <script>
+        // 1. Particle Background (Same as index)
+        (async () => {
+            await tsParticles.load("tsparticles", {
+                particles: {
+                    color: { value: "#888888" },
+                    links: { enable: true, color: "#888888", distance: 150, opacity: 0.5 },
+                    move: { enable: true, speed: 1 },
+                    number: { value: 60, density: { enable: true, area: 800 } },
+                    opacity: { value: 0.5 },
+                    size: { value: { min: 1, max: 3 } },
+                }
+            });
+        })();
+
+        // 2. Simple Toggle between Login / Sign Up text
+        const toggleBtn = document.getElementById('toggle-btn');
+        const formTitle = document.getElementById('form-title');
+        const submitBtn = document.querySelector('.login-btn');
+        let isLogin = true;
+
+        toggleBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            isLogin = !isLogin;
+            if (isLogin) {
+                formTitle.innerText = "學員登入";
+                submitBtn.innerText = "登入";
+                toggleBtn.innerText = "立即註冊";
+            } else {
+                formTitle.innerText = "註冊新帳號";
+                submitBtn.innerText = "註冊";
+                toggleBtn.innerText = "返回登入";
+            }
+        });
+    </script>
+</body>
+</html>
