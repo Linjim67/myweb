@@ -65,19 +65,28 @@ app.get('/solution', (req, res) => {
 app.post('/api/solution-data', (req, res) => {
     const { username, admission_year } = req.body;
 
-    // 1. Define Paths
-    // You mentioned: web/privatee/115/1.2/
+    // DEBUG: Force 115 if admission_year is missing/113
+    const yearToUse = `${String(admission_year || "115")}`;
     const classGroup = "1.2";
-    const baseDir = path.join(__dirname, 'privatee', admission_year, classGroup);
 
+    // 1. Build Paths
+    const baseDir = path.join(__dirname, 'privatee', yearToUse, classGroup);
     const universalPath = path.join(baseDir, 'exam_summer.json');
     const personalPath = path.join(baseDir, `${username}_result.json`);
+
+    // --- 🔍 DEBUG LOGS ---
+    console.log("------------------------------------------------");
+    console.log(`🔍 Request for: ${username} (Year: ${yearToUse})`);
+    console.log(`📂 Looking in folder: ${baseDir}`);
+    console.log(`📄 Universal File: ${universalPath} -> Exists? ${fs.existsSync(universalPath)}`);
+    console.log(`📄 Personal File: ${personalPath} -> Exists? ${fs.existsSync(personalPath)}`);
+    console.log("------------------------------------------------");
 
     // 2. Read Files
     try {
         // Check if Universal Exam exists
         if (!fs.existsSync(universalPath)) {
-            return res.status(404).json({ success: false, message: "Exam data not found on server." });
+            return res.status(404).json({ success: false, message: `Exam file not found at: ${universalPath}` });
         }
 
         const examData = JSON.parse(fs.readFileSync(universalPath, 'utf8'));
@@ -92,7 +101,7 @@ app.post('/api/solution-data', (req, res) => {
         res.json({
             success: true,
             exam: examData,
-            result: userResult // This might be null if student didn't take exam
+            result: userResult
         });
 
     } catch (error) {
@@ -151,54 +160,6 @@ app.post('/get-transcript', (req, res) => {
 });
 
 
-// API: Get Solution Data (Reads local JSON files)
-app.post('/api/solution-data', (req, res) => {
-    const { username, admission_year } = req.body;
-
-    // DEBUG: Force 115 if admission_year is missing/113
-    const yearToUse =`${String(admission_year || "115")}`;
-    const classGroup = "1.2";
-
-    // 1. Build Paths
-    const baseDir = path.join(__dirname, 'privatee', yearToUse, classGroup);
-    const universalPath = path.join(baseDir, 'exam_summer.json');
-    const personalPath = path.join(baseDir, `${username}_result.json`);
-
-    // --- 🔍 DEBUG LOGS ---
-    console.log("------------------------------------------------");
-    console.log(`🔍 Request for: ${username} (Year: ${yearToUse})`);
-    console.log(`📂 Looking in folder: ${baseDir}`);
-    console.log(`📄 Universal File: ${universalPath} -> Exists? ${fs.existsSync(universalPath)}`);
-    console.log(`📄 Personal File: ${personalPath} -> Exists? ${fs.existsSync(personalPath)}`);
-    console.log("------------------------------------------------");
-
-    // 2. Read Files
-    try {
-        // Check if Universal Exam exists
-        if (!fs.existsSync(universalPath)) {
-            return res.status(404).json({ success: false, message: `Exam file not found at: ${universalPath}` });
-        }
-
-        const examData = JSON.parse(fs.readFileSync(universalPath, 'utf8'));
-
-        // Check if User Result exists
-        let userResult = null;
-        if (fs.existsSync(personalPath)) {
-            userResult = JSON.parse(fs.readFileSync(personalPath, 'utf8'));
-        }
-
-        // 3. Send Both to Frontend
-        res.json({
-            success: true,
-            exam: examData,
-            result: userResult
-        });
-
-    } catch (error) {
-        console.error("File Read Error:", error);
-        res.status(500).json({ success: false, message: "Server error reading solution files." });
-    }
-}); // <--- These were the missing brackets!
 
 // ====================================================
 // 6. START SERVER
