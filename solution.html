@@ -322,34 +322,49 @@
 
         async function loadPage() {
             if (!currentUser) {
-                alert("Please login first.");
                 window.location.href = '/login';
                 return;
             }
 
             try {
-                // 1. Call the new Server API
+                console.log("🚀 Sending request to server...");
+
                 const response = await fetch('/api/solution-data', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         username: currentUser.username,
-                        admission_year: currentUser.admission_year 
+                        // Send "115" manually if your user is still set to "113"
+                        admission_year: currentUser.admission_year || "115"
                     })
                 });
 
+                console.log("📡 Response received:", response.status);
+
+                // ERROR HANDLING
+                if (!response.ok) {
+                    const errText = await response.text();
+                    throw new Error(`Server Error (${response.status}): ${errText}`);
+                }
+
                 const data = await response.json();
+                console.log("📦 Data received:", data);
 
                 if (!data.success) {
-                    alert("Error: " + data.message);
+                    alert("Server Logic Error: " + data.message);
                     return;
                 }
 
-                // 2. Merge Data (Universal + Personal)
                 mergeAndRender(data.exam, data.result);
 
             } catch (error) {
-                console.error("Connection Error:", error);
+                console.error("❌ CRITICAL FAILURE:", error);
+                // Display error on screen so you don't need console
+                document.getElementById('solution-container').innerHTML =
+                    `<div style="color:red; padding:20px; border:1px solid red;">
+                        <h3>Something went wrong!</h3>
+                        <p>${error.message}</p>
+                    </div>`;
             }
         }
 
@@ -383,6 +398,7 @@
 
         loadPage();
         renderSolutions();
+        
     </script>
 </body>
 
