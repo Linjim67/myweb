@@ -3,6 +3,7 @@
    ========================================= */
 // This event triggers when the HTML is fully loaded
 document.addEventListener('DOMContentLoaded', () => {
+    console.log("🚀 Script started! Calling loadPage()...");
     loadPage();
 });
 
