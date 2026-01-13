@@ -8,6 +8,29 @@
     <link rel="stylesheet" href="style.css">
     <style>
         /* --- Solution Specific Styles --- */
+        
+        /* Status Badges for Options */
+        .status-badge {
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-left: 10px;
+            display: inline-block;
+        }
+
+        /* 1. User picked Correctly (Green) */
+        .status-correct-choice { background: #dff9fb; color: #2ecc71; border: 1px solid #2ecc71; }
+
+        /* 2. User picked Wrongly (Red) */
+        .status-wrong-choice { background: #ff7675; color: white; border: 1px solid #d63031; }
+
+        /* 3. User Missed a Correct Answer (Orange/Yellow) */
+        .status-missed { background: #ffeaa7; color: #d35400; border: 1px solid #e17055; }
+
+        /* 4. Neutral (Gray) */
+        .status-neutral { background: #eee; color: #aaa; }
+
         body {
             background: #f4f7f6;
             color: #333;
@@ -218,36 +241,70 @@
             });
         }
 
-        // HELPER: Render Options Logic
+
         function renderOptions(prob) {
-            if (prob.type === 'fill') {
-                return `<div style="padding:15px; background:white; border:1px solid #ddd; border-radius:8px;">
-                            <strong>Your Answer:</strong> ${prob.userResult.input} <br>
-                            <strong>Correct Answer:</strong> ${prob.correctAnswer} <br><br>
-                            <em>Explanation: ${prob.explanation}</em>
-                        </div>`;
+                // Handle Fill-in-the-blank (Type 3) separately
+                if (prob.type === 'fill') {
+                    return `<div style="padding:15px; background:white; border:1px solid #ddd; border-radius:8px;">
+                    <strong>Your Answer:</strong> ${prob.userResult.input} <br>
+                    <strong>Correct Answer:</strong> ${prob.correctAnswer} <br><br>
+                    <em>Explanation: ${prob.explanation}</em>
+                </div>`;
+                }
+
+                // Handle Multiple Choice (Type 1 & 2)
+                return prob.options.map(opt => {
+                    // 1. NORMALIZE DATA: Ensure everything is an Array for easy comparison
+                    // (If it's Type 1 "A", it becomes ["A"]. If it's Type 2 ["A","C"], it stays array)
+                    const userChoices = Array.isArray(prob.userResult.choice) ? prob.userResult.choice : [prob.userResult.choice];
+                    const correctAnswers = Array.isArray(prob.correctAnswer) ? prob.correctAnswer : [prob.correctAnswer];
+
+                    // 2. DETERMINE STATE
+                    const isSelected = userChoices.includes(opt.label);
+                    const isCorrect = correctAnswers.includes(opt.label);
+
+                    let statusHTML = '';
+                    let rowClass = ''; // To highlight the whole row
+
+                    if (isSelected && isCorrect) {
+                        // Case 1: Correctly Chosen (User ✅, Answer ✅)
+                        statusHTML = `<span class="status-badge status-correct-choice">✅ Correct Selection</span>`;
+                        rowClass = 'chosen-option';
+                    }
+                    else if (isSelected && !isCorrect) {
+                        // Case 2: Wrongly Chosen (User ✅, Answer ❌)
+                        statusHTML = `<span class="status-badge status-wrong-choice">❌ Incorrect Choice</span>`;
+                        rowClass = 'chosen-option'; // Still highlight because user picked it
+                    }
+                    else if (!isSelected && isCorrect) {
+                        // Case 3: Missed Answer (User ❌, Answer ✅)
+                        statusHTML = `<span class="status-badge status-missed">⚠️ Missed Answer</span>`;
+                    }
+                    else {
+                        // Case 4: Correctly Ignored (User ❌, Answer ❌)
+                        // Usually we show nothing, or a faint "Not Answer"
+                        statusHTML = `<span class="status-badge status-neutral">Ignored</span>`;
+                    }
+
+                    // 3. RENDER HTML
+                    return `
+            <div class="option-item ${rowClass}" onclick="toggleExplanation(this)">
+                <div class="option-header">
+                    <span style="font-weight:bold;">${opt.label}. ${opt.text}</span>
+                    ${statusHTML} </div>
+                
+                <div style="padding: 0 12px 12px;">
+                    <div class="option-bar"><div class="option-fill" style="width: ${opt.percent}"></div></div>
+                </div>
+
+                <div class="option-explanation">
+                    <strong>Analysis:</strong> ${opt.explanation}
+                </div>
+            </div>
+        `;
+                }).join('');
             }
 
-            return prob.options.map(opt => {
-                const isSelected = prob.userResult.choice === opt.label || (Array.isArray(prob.userResult.choice) && prob.userResult.choice.includes(opt.label));
-                const highlightClass = isSelected ? 'chosen-option' : '';
-                
-                return `
-                    <div class="option-item ${highlightClass}" onclick="toggleExplanation(this)">
-                        <div class="option-header">
-                            <span style="font-weight:bold;">${opt.label}. ${opt.text}</span>
-                            <span style="font-size:0.9rem; color:#7f8c8d;">${opt.percent} chosen</span>
-                        </div>
-                        <div style="padding: 0 12px 12px;">
-                            <div class="option-bar"><div class="option-fill" style="width: ${opt.percent}"></div></div>
-                        </div>
-                        <div class="option-explanation">
-                            💡 ${opt.explanation}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
 
         // TOGGLE FUNCTIONS
         function toggleDetails(id) {

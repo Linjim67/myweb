@@ -39,14 +39,14 @@
                     <p>Building...</p> <!--(Game Zone)-->
                 </div>
 
-                <div class="subject-card" onclick="handleSolutionClick()" data-category="summer">
+                <div class="subject-card" onclick="checkLoginAndGo('/solution')" data-category="summer">
                     <span class="card-tag" style="background-color: #e17055;">暑期</span>
                     <div class="icon">&#128464;</div>
                     <h3>試題詳解</h3>
                     <p>詳解建議與難度分析</p>
                 </div>
 
-                <div class="subject-card" onclick="handleTranscriptClick()" data-category="summer">
+                <div class="subject-card" onclick="checkLoginAndGo('download')" data-category="summer">
                     <span class="card-tag">暑期</span>
                     <div class="icon">📊</div>
                     <h3>成績查詢</h3>
@@ -81,33 +81,23 @@
     <script src="script.js"></script>
     <script>
 
-        // Function for the "Solution" Card
-        function handleSolutionClick() {
+        function checkLoginAndGo(target) {
+
             const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
-            if (!currentUser) {
-                // CASE A: Not logged in -> Go to Login Page
-                alert("請先登入 (Please Login First)");
-                window.location.href = '/login';
-            } else {
-                // CASE B: Logged in -> Go to Solution Page
-                window.location.href = '/solution';
+                if (!currentUser) {
+                    alert("請先登入 (Please Login First)");
+                    window.location.href = '/login';
+                    return;
+                }
+
+                if (target === 'download') {
+                    downloadTranscript(currentUser);
+                } else {
+                    window.location.href = target;
+                }
             }
-        }
 
-        // 1. Check if user is logged in
-        function handleTranscriptClick() {
-            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-
-            if (!currentUser) {
-                alert("Please Login First");
-                window.location.href = '/login';
-            } else {
-                downloadTranscript(currentUser);
-            }
-        }
-
-        // 2. The Download Function (Same as before, but runs on Index)
         function downloadTranscript(user) {
             const username = user.username;
             const admission_year = user.admission_year;

@@ -1,41 +1,41 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Setup Filters
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    const cards = document.querySelectorAll('.subject-card');
+  // 1. Setup Filters
+  const filterButtons = document.querySelectorAll('.filter-btn');
+  const cards = document.querySelectorAll('.subject-card');
 
-    // Define colors to match your CSS (Summer=Orange, Winter=Blue, Mock=Green)
-    const categoryColors = {
-        all: '#576574',       // Dark Grey for "All"
-        summer: '#fc7a00ff',    // Orange
-        winter: '#0073ffff',    // Blue
-        mock: '#00c490ff'       // Green
-    };
+  // Define colors to match your CSS (Summer=Orange, Winter=Blue, Mock=Green)
+  const categoryColors = {
+    all: '#576574',       // Dark Grey for "All"
+    summer: '#fc7a00ff',    // Orange
+    winter: '#0073ffff',    // Blue
+    mock: '#00c490ff'       // Green
+  };
 
-    filterButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            // Reset all buttons
-            filterButtons.forEach(btn => {
-                btn.classList.remove('active');
-                btn.style.backgroundColor = '#e0e0e0';
-            });
+  filterButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      // Reset all buttons
+      filterButtons.forEach(btn => {
+        btn.classList.remove('active');
+        btn.style.backgroundColor = '#e0e0e0';
+      });
 
-            // Activate clicked button
-            button.classList.add('active');
-            const filterValue = button.getAttribute('data-filter');
-            
-            // Apply Color
-            button.style.backgroundColor = categoryColors[filterValue] || '#333';
+      // Activate clicked button
+      button.classList.add('active');
+      const filterValue = button.getAttribute('data-filter');
 
-            // Filter Cards
-            cards.forEach(card => {
-                if (filterValue === 'all' || card.getAttribute('data-category') === filterValue) {
-                    card.classList.remove('hide');
-                } else {
-                    card.classList.add('hide');
-                }
-            });
-        });
+      // Apply Color
+      button.style.backgroundColor = categoryColors[filterValue] || '#333';
+
+      // Filter Cards
+      cards.forEach(card => {
+        if (filterValue === 'all' || card.getAttribute('data-category') === filterValue) {
+          card.classList.remove('hide');
+        } else {
+          card.classList.add('hide');
+        }
+      });
     });
+  });
 });
 
 // 2. Setup Particles (Background)
