@@ -49,15 +49,16 @@
       "problems": [
         {
           "id": 4,
-          "type": "single",
-          "question": "What is Benzene?",
+          "type": "multi",
+          "question": "Which are aromatic compound?",
           "stats": {"coverage": "Organic", "difficulty": "Medium", "accuracy": "N/A"},
-          "correctAnswer": "A",
+          "correctAnswer": ["A", "B"],
           "options": [
             { "label": "A", "text": "Fluorine (F)", "percent": "85%", "explanation": "Fluorine is the most electronegative element." },
             { "label": "B", "text": "Chlorine (Cl)", "percent": "10%", "explanation": "Less than Fluorine." },
             { "label": "C", "text": "Oxygen (O)", "percent": "3%", "explanation": "Incorrect." },
-            { "label": "D", "text": "Neon (Ne)", "percent": "2%", "explanation": "Noble gases are stable." }
+            { "label": "D", "text": "Neon (Ne)", "percent": "2%", "explanation": "Noble gases are stable." },
+            { "label": "E", "text": "Neon (Ne)", "percent": "47%", "explanation": "Noble gases are stable." }
           ]
         }
       ]

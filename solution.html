@@ -33,50 +33,39 @@
             background-color: #fafafa;
         }
 
-        /* Base Style for the Letter Badge (A, B, C, D) */
+        
+
+        /* Base Badge Style */
         .option-letter-badge {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             width: 30px;
             height: 30px;
-            border-radius: 50%; /* Make it a circle */
+            border-radius: 50%;
             font-weight: bold;
-            margin-right: 10px;
-            border: 2px solid #ddd;
-            color: #555;
-            background: #f9f9f9;
+            font-size: 0.9em;
+            border: 1px solid rgba(0,0,0,0.1); /* Subtle border */
         }
 
-        /* STATE 1: True Positive (You picked it, it was RIGHT) -> GREEN */
-        .state-tp {
-            background-color: #dff9fb;
-            border-color: #2ecc71;
-            color: #2ecc71;
-            box-shadow: 0 0 5px rgba(46, 204, 113, 0.4);
+        /* --- BACKGROUND: THE TRUTH (Is it the correct answer?) --- */
+        .bg-correct {
+            background-color: #2ecc71; /* GREEN: This is a correct answer */
         }
 
-        /* STATE 2: False Positive (You picked it, it was WRONG) -> RED */
-        .state-fp {
-            background-color: #ff7675;
-            border-color: #d63031;
-            color: white;
+        .bg-wrong {
+            background-color: #e67e22; /* ORANGE: This is a wrong answer */
         }
 
-        /* STATE 3: False Negative (You missed it, it was RIGHT) -> ORANGE */
-        .state-fn {
-            background-color: #ffeaa7;
-            border-color: #fdcb6e;
-            color: #d35400;
-            border-style: dashed; /* Dashed line to show something is missing */
+        /* --- TEXT: THE USER'S CHOICE (Did they pick it?) --- */
+        .text-selected {
+            color: white;             /* User Picked it -> Bright White Text */
+            border: 2px solid #333;   /* Optional: Add a dark border to emphasize "Picked" */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Pop out effect */
         }
 
-        /* STATE 4: True Negative (Ignored correctly) -> GRAY */
-        .state-tn {
-            background-color: #eee;
-            border-color: #ccc;
-            color: #aaa;
-            opacity: 0.6;
+        .text-ignored {
+            color: rgba(255, 255, 255, 0.4); /* User Ignored it -> Faded/Transparent Text */
         }
         
 
@@ -291,30 +280,32 @@
     <script>
         const container = document.getElementById('solution-container');
 
-        // 1. New Helper Function: Generates the colored A/B/C/D badges
         function getAnswerBadges(prob) {
-            if (!prob.options) return ''; // Skip for fill-in-the-blank
+                if (!prob.options) return '';
 
-            const userChoices = Array.isArray(prob.userResult.choice) ? prob.userResult.choice : [prob.userResult.choice];
-            const correctAnswers = Array.isArray(prob.correctAnswer) ? prob.correctAnswer : [prob.correctAnswer];
+                const userChoices = Array.isArray(prob.userResult.choice) ? prob.userResult.choice : [prob.userResult.choice];
+                const correctAnswers = Array.isArray(prob.correctAnswer) ? prob.correctAnswer : [prob.correctAnswer];
 
-        return `<div class="badge-container" style="margin-left: 15px; display:flex; gap:5px;">
-        
-            ${prob.options.map(opt => {
-            const isSelected = userChoices.includes(opt.label);
-            const isCorrect = correctAnswers.includes(opt.label);
+                return `<div class="badge-container" style="margin-left: 15px; display:flex; gap:5px;">
+                    ${prob.options.map(opt => {
+                    const isSelected = userChoices.includes(opt.label);
+                    const isCorrect = correctAnswers.includes(opt.label);
 
-            // Determine Color State
-            let stateClass = 'state-tn'; // Default Gray
-            if (isSelected && isCorrect) stateClass = 'state-tp';       // Green
-            else if (isSelected && !isCorrect) stateClass = 'state-fp'; // Red
-            else if (!isSelected && isCorrect) stateClass = 'state-fn'; // Orange
+                    // 1. Determine Background (Truth)
+                    // If it IS a correct answer -> Green. If NOT -> Orange.
+                    const bgClass = isCorrect ? 'bg-correct' : 'bg-wrong';
 
-            return `<span class="option-letter-badge ${stateClass}" style="width:25px; height:25px; font-size:0.8em;">${opt.label}</span>`;
-        }).join('')} </div>`;
+                    // 2. Determine Text (User Selection)
+                    // If user Picked it -> White/Solid. If user Ignored it -> Faded.
+                    const textClass = isSelected ? 'text-selected' : 'text-ignored';
+
+                    return `<span class="option-letter-badge ${bgClass} ${textClass}">${opt.label}</span>`;
+                }).join('')}
+                </div>`;
         }
 
-        // 2. Update the Main Render Loop
+
+      // 2. Update the Main Render Loop
         function renderSolutions() {
             const container = document.getElementById('solution-container');
             container.innerHTML = '';
