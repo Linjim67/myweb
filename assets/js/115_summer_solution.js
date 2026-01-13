@@ -24,7 +24,6 @@ async function loadPage() {
             // 1. Save data globally so other functions can use it
             window.examData = data.examData;
 
-            // 2. Load the user's specific CSS theme (e.g. "115")
             if (data.username) {
                 loadUserTheme(data.username);
             }
