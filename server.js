@@ -53,6 +53,10 @@ app.get('/dashboard', (req, res) => {
     res.sendFile(path.join(__dirname, 'dashboard.html'));
 });
 
+app.get('/solution', (req, res) => {
+    res.sendFile(path.join(__dirname, 'solution.html'));
+});
+
 // ====================================================
 // 5. API ROUTES (Data Handling)
 // ====================================================

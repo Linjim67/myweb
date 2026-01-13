@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exam Solutions</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* --- Solution Specific Styles --- */
+        body {
+            background: #f4f7f6;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        /* BLOCK STYLING */
+        .exam-block {
+            margin-bottom: 30px;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .block-header {
+            background: #2c3e50;
+            color: white;
+            padding: 15px 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        /* PROBLEM ROW (The Summary) */
+        .problem-row {
+            border-bottom: 1px solid #eee;
+        }
+
+        .problem-summary {
+            padding: 15px 20px;
+            display: grid;
+            grid-template-columns: 50px 1fr 150px 100px;
+            /* ID, Stats, UserScore, Arrow */
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .problem-summary:hover {
+            background: #f8f9fa;
+        }
+
+        /* TAGS & STATS */
+        .tag {
+            font-size: 0.8rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: #e17055;
+            color: white;
+            margin-right: 5px;
+        }
+
+        .stat-text {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            display: block;
+        }
+
+        .score-badge {
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+        }
+
+        .score-correct {
+            background: #dff9fb;
+            color: #2ecc71;
+        }
+
+        .score-wrong {
+            background: #fab1a0;
+            color: #d63031;
+        }
+
+        /* EXPANDED CONTENT (Hidden by default) */
+        .problem-details {
+            display: none;
+            padding: 20px;
+            background: #fafafa;
+            border-top: 1px dashed #ddd;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        /* OPTIONS STYLING */
+        .option-item {
+            background: white;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-header {
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .option-header:hover {
+            border-color: #0984e3;
+        }
+
+        /* Option Stats (Bar Chart Effect) */
+        .option-bar {
+            height: 4px;
+            background: #eee;
+            width: 100%;
+            margin-top: 5px;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .option-fill {
+            height: 100%;
+            background: #bdc3c7;
+        }
+
+        /* User Choices highlighting */
+        .chosen-option {
+            border: 2px solid #0984e3;
+        }
+
+        .correct-option .option-fill {
+            background: #2ecc71;
+        }
+
+        /* Green bar for correct stats */
+
+        /* EXPLANATION (Hidden inside option) */
+        .option-explanation {
+            display: none;
+            padding: 10px 15px;
+            background: #f1f2f6;
+            color: #57606f;
+            font-size: 0.95rem;
+            border-top: 1px solid #eee;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <a href="/" style="text-decoration: none; color: #7f8c8d;">← Back to Home</a>
+        <h1 style="margin-top: 10px;">☀️ Summer Exam Solutions</h1>
+        <div id="solution-container">
+        </div>
+    </div>
+
+    <script src="exam_data.js"></script>
+    <script>
+        const container = document.getElementById('solution-container');
+
+        // RENDER FUNCTION
+        function renderSolutions() {
+            examData.forEach((block, blockIndex) => {
+                // 1. Create Block HTML
+                const blockDiv = document.createElement('div');
+                blockDiv.className = 'exam-block';
+                blockDiv.innerHTML = `<div class="block-header">${block.blockTitle}</div>`;
+
+                // 2. Loop through Problems
+                block.problems.forEach(prob => {
+                    const isCorrect = prob.userResult.isCorrect;
+                    const scoreClass = isCorrect ? 'score-correct' : 'score-wrong';
+                    const userScoreText = isCorrect ? `✅ Score: ${prob.userResult.score}` : `❌ Score: ${prob.userResult.score}`;
+
+                    // Create Row
+                    const problemRow = document.createElement('div');
+                    problemRow.className = 'problem-row';
+                    
+                    problemRow.innerHTML = `
+                        <div class="problem-summary" onclick="toggleDetails(${prob.id})">
+                            <div style="font-weight:bold; color:#0984e3;">#${prob.id}</div>
+                            <div>
+                                <span class="tag">${prob.stats.coverage}</span>
+                                <span class="tag" style="background:#00cec9">${prob.stats.difficulty}</span>
+                                <span class="stat-text">Type: ${prob.type.toUpperCase()} | Accuracy: ${prob.stats.accuracy}</span>
+                            </div>
+                            <div class="score-badge ${scoreClass}">${userScoreText}</div>
+                            <div style="text-align:right;">▼</div>
+                        </div>
+
+                        <div class="problem-details" id="detail-${prob.id}">
+                            <div class="question-text">${prob.question}</div>
+                            <div class="options-list">
+                                ${renderOptions(prob)}
+                            </div>
+                        </div>
+                    `;
+                    blockDiv.appendChild(problemRow);
+                });
+
+                container.appendChild(blockDiv);
+            });
+        }
+
+        // HELPER: Render Options Logic
+        function renderOptions(prob) {
+            if (prob.type === 'fill') {
+                return `<div style="padding:15px; background:white; border:1px solid #ddd; border-radius:8px;">
+                            <strong>Your Answer:</strong> ${prob.userResult.input} <br>
+                            <strong>Correct Answer:</strong> ${prob.correctAnswer} <br><br>
+                            <em>Explanation: ${prob.explanation}</em>
+                        </div>`;
+            }
+
+            return prob.options.map(opt => {
+                const isSelected = prob.userResult.choice === opt.label || (Array.isArray(prob.userResult.choice) && prob.userResult.choice.includes(opt.label));
+                const highlightClass = isSelected ? 'chosen-option' : '';
+                
+                return `
+                    <div class="option-item ${highlightClass}" onclick="toggleExplanation(this)">
+                        <div class="option-header">
+                            <span style="font-weight:bold;">${opt.label}. ${opt.text}</span>
+                            <span style="font-size:0.9rem; color:#7f8c8d;">${opt.percent} chosen</span>
+                        </div>
+                        <div style="padding: 0 12px 12px;">
+                            <div class="option-bar"><div class="option-fill" style="width: ${opt.percent}"></div></div>
+                        </div>
+                        <div class="option-explanation">
+                            💡 ${opt.explanation}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // TOGGLE FUNCTIONS
+        function toggleDetails(id) {
+            const detail = document.getElementById(`detail-${id}`);
+            detail.style.display = detail.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function toggleExplanation(element) {
+            // Find the explanation div inside the clicked option
+            const expl = element.querySelector('.option-explanation');
+            expl.style.display = expl.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Start
+        renderSolutions();
+    </script>
+</body>
+
+</html>
