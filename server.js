@@ -10,6 +10,7 @@ const User = require('./models/User');
 const app = express();
 const port = process.env.PORT || 3000;
 app.use(express.static(path.join(__dirname, 'web')));
+app.use('/assets', express.static(path.join(__dirname, 'web/assets')));
 
 // ====================================================
 // 2. MIDDLEWARE (The "Gatekeepers")
