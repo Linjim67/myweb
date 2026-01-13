@@ -28,38 +28,44 @@ async function loadPage() {
         console.log("📦 Server Data Received:", data);
 
         if (data.success) {
-            // 2. THE MERGE FIX: Combine "Exam Questions" with "User Results"
-            // The server sends 'exam' (questions) and 'result' (answers) separately.
-            // We need to stitch them together so the UI can read them.
-
-            // 1. Get the raw object
+            // 1. Get the Raw Data
             let rawExam = data.exam;
+            const userFile = data.result || {};
 
-            // 2. SAFETY CHECK: If it's an object (not an array), convert it!
+            // SAFETY CHECK: Ensure Exam is an Array
             if (!Array.isArray(rawExam)) {
-                console.log("⚠️ Converting Exam Object to Array...");
-
-                // This turns { "b1": {...}, "b2": {...} } into [ {...}, {...} ]
+                // If your JSON is still an object { "block1": ... }, convert it here just in case
                 rawExam = Object.values(rawExam);
-            }            const userResults = data.result || {};
+            }
 
-            // Loop through every block and every problem to attach the user's score
+            // 2. THE NEW MERGE LOGIC (Updated for your new JSON structure)
+            const userAnswers = userFile.answers || {}; // Get the "answers" block
+            const userScores = userFile.scores || {};   // Get the "scores" block
+
             rawExam.forEach(block => {
                 block.problems.forEach(prob => {
-                    // Find the answer for this specific problem ID (e.g., "1")
-                    // If no answer found, give it a default "0 score" object
-                    prob.userResult = userResults[prob.id] || { score: 0, choice: [] };
+                    const pID = String(prob.id); // Ensure ID is a string ("1") to match JSON keys
+
+                    // Grab specific data for this ID
+                    const myChoice = userAnswers[pID];
+                    const myScore = userScores[pID];
+
+                    // Attach it to the problem so the HTML renderer can read it
+                    prob.userResult = {
+                        choice: myChoice !== undefined ? myChoice : [], // Default to empty if missing
+                        score: myScore !== undefined ? myScore : 0      // Default to 0 if missing
+                    };
                 });
             });
 
-            // 3. Save the merged data globally
+            // 3. Save & Render
             window.examData = rawExam;
 
-            // 4. Load the Theme (CSS)
-            // Use the username sent in the request, or default to "115"
-            loadUserTheme("1150");
+            // Pass the username to load the correct theme (e.g. "115")
+            // Make sure data.result.username exists, or fallback to "115"
+            const studentID = userFile.username || "115";
+            loadUserTheme(studentID);
 
-            // 5. Draw the screen
             renderSolutions();
 
         } else {
