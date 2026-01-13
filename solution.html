@@ -355,31 +355,30 @@
 
         function mergeAndRender(exam, result) {
 
-        const userAnswers = result ? result.answers : { };
+            const userAnswers = result ? result.answers : { };
 
-        exam.blocks.forEach(block => {
-            block.problems.forEach(problem => {
-                // Get user's specific answer for this problem ID
-                const userChoice = userAnswers[problem.id];
+            exam.blocks.forEach(block => {
+                block.problems.forEach(problem => {
+                    // Get user's specific answer for this problem ID
+                    const userChoice = userAnswers[problem.id];
 
-                // Inject into the problem object
-                problem.userResult = {
-                    choice: userChoice || null, // null if they didn't answer
-                    score: 0, // You can calculate this here if needed
-                    isCorrect: compareAnswers(userChoice, problem.correctAnswer)
-                };
+                    // Inject into the problem object
+                    problem.userResult = {
+                        choice: userChoice || null, // null if they didn't answer
+                        score: 0, // You can calculate this here if needed
+                        isCorrect: compareAnswers(userChoice, problem.correctAnswer)
+                    };
+                });
             });
-        });
 
-        // Use the global variable expected by your render function
-        window.examData = exam.blocks;
-        renderSolutions(); 
-    }
+            // Use the global variable expected by your render function
+            window.examData = exam.blocks;
+            renderSolutions(); 
+        }
 
         function compareAnswers(user, correct) {
             if (!user) return false;
-                // Simple comparison (works for strings and arrays if sorted)
-                return JSON.stringify(user) === JSON.stringify(correct);
+            return JSON.stringify(user) === JSON.stringify(correct);
         }
 
         loadPage();
