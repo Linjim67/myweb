@@ -20,13 +20,13 @@ async function loadPage() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                username: "115001",   // <--- CHANGE THIS to a real student ID
+                username: "1150",
                 admission_year: "115"
             })
         });
 
         const data = await response.json();
-        console.log("📦 Server Data Received:", data); // Check console to see what you got!
+        console.log("📦 Server Data Received:", data);
 
         if (data.success) {
             // 2. THE MERGE FIX: Combine "Exam Questions" with "User Results"
