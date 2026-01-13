@@ -12,34 +12,60 @@ document.addEventListener('DOMContentLoaded', () => {
    ========================================= */
 async function loadPage() {
     try {
-        // Fetch data from your server
+        console.log("📡 Fetching data from server...");
+
+        // 1. Send request (Hardcoded username for testing!)
+        // Change "115001" to a username that actually has a result file in your folder
         const response = await fetch('/api/solution-data', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({}) // Add body data if needed
+            body: JSON.stringify({
+                username: "115001",   // <--- CHANGE THIS to a real student ID
+                admission_year: "115"
+            })
         });
 
         const data = await response.json();
+        console.log("📦 Server Data Received:", data); // Check console to see what you got!
 
         if (data.success) {
-            // 1. Save data globally so other functions can use it
-            window.examData = data.examData;
+            // 2. THE MERGE FIX: Combine "Exam Questions" with "User Results"
+            // The server sends 'exam' (questions) and 'result' (answers) separately.
+            // We need to stitch them together so the UI can read them.
 
-            if (data.username) {
-                loadUserTheme(data.username);
-            }
+            const rawExam = data.exam; // Fix: Server calls it 'exam', not 'examData'
+            const userResults = data.result || {};
 
-            // 3. Draw the screen
+            // Loop through every block and every problem to attach the user's score
+            rawExam.forEach(block => {
+                block.problems.forEach(prob => {
+                    // Find the answer for this specific problem ID (e.g., "1")
+                    // If no answer found, give it a default "0 score" object
+                    prob.userResult = userResults[prob.id] || { score: 0, choice: [] };
+                });
+            });
+
+            // 3. Save the merged data globally
+            window.examData = rawExam;
+
+            // 4. Load the Theme (CSS)
+            // Use the username sent in the request, or default to "115"
+            loadUserTheme("115001");
+
+            // 5. Draw the screen
             renderSolutions();
+
         } else {
             document.getElementById('solution-container').innerHTML =
                 `<div style="color:red; text-align:center;">${data.message || 'Error loading data'}</div>`;
         }
+
     } catch (error) {
-        console.error("Connection Error:", error);
-        document.getElementById('solution-container').innerText = "Server Connection Failed.";
+        console.error("❌ Critical Error:", error);
+        document.getElementById('solution-container').innerText = "System Error: Check Console.";
     }
 }
+
 
 function loadUserTheme(username) {
     // Extract year (e.g., "1150" -> "115")
