@@ -369,26 +369,28 @@
         }
 
         function mergeAndRender(exam, result) {
-
-            const userAnswers = result ? result.answers : { };
+            // Safety check: if result is null, create empty objects
+            const userAnswers = result && result.answers ? result.answers : {};
+            const userScores = result && result.scores ? result.scores : {}; // <--- NEW: Read scores
 
             exam.blocks.forEach(block => {
                 block.problems.forEach(problem => {
-                    // Get user's specific answer for this problem ID
                     const userChoice = userAnswers[problem.id];
 
-                    // Inject into the problem object
+                    // NEW LOGIC: Look for the manual score in the file.
+                    // If it doesn't exist, default to 0.
+                    const manualScore = userScores[problem.id] !== undefined ? userScores[problem.id] : 0;
+
                     problem.userResult = {
-                        choice: userChoice || null, // null if they didn't answer
-                        score: 0, // You can calculate this here if needed
-                        isCorrect: compareAnswers(userChoice, problem.correctAnswer)
+                        choice: userChoice || null,
+                        score: manualScore, // <--- USE THE MANUAL SCORE
+                        isCorrect: manualScore > 0 // Simple rule: if > 0 points, mark as correct
                     };
                 });
             });
 
-            // Use the global variable expected by your render function
             window.examData = exam.blocks;
-            renderSolutions(); 
+            renderSolutions();
         }
 
         function compareAnswers(user, correct) {
