@@ -251,8 +251,8 @@
 
                         <div class="problem-details" id="detail-${prob.id}">
                             <div class="question-text">${prob.question}</div>
-                            ${problem.image ? `<div class="problem-figure">
-                                <img src="${problem.image}" alt="Problem Figure" onclick="window.open(this.src)">
+                            ${prob.image ? `<div class="problem-figure">
+                                <img src="${prob.image}" alt="Problem Figure" onclick="window.open(this.src)">
                                 </div>` : ''
                             }
                             <div class="options-list"> ${renderOptions(prob)}</div>
