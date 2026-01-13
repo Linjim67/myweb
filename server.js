@@ -156,7 +156,7 @@ app.post('/api/solution-data', (req, res) => {
     const { username, admission_year } = req.body;
 
     // DEBUG: Force 115 if admission_year is missing/113
-    const yearToUse = admission_year || "115";
+    const yearToUse = String(admission_year || "115");
     const classGroup = "1.2";
 
     // 1. Build Paths
