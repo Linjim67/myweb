@@ -39,8 +39,8 @@ async function loadPage() {
             }
 
             // 2. THE NEW MERGE LOGIC (Updated for your new JSON structure)
-            const userAnswers = userFile.answers || {}; // Get the "answers" block
-            const userScores = userFile.scores || {};   // Get the "scores" block
+            const userAnswers = userFile.answers || {};
+            const userScores = userFile.scores || {};
 
             rawExam.forEach(block => {
                 block.problems.forEach(prob => {
@@ -60,9 +60,6 @@ async function loadPage() {
 
             // 3. Save & Render
             window.examData = rawExam;
-
-            // Pass the username to load the correct theme (e.g. "115")
-            // Make sure data.result.username exists, or fallback to "115"
             const studentID = userFile.username || "115";
             loadUserTheme(studentID);
 
@@ -92,50 +89,82 @@ function loadUserTheme(username) {
 }
 
 /* =========================================
-   3. RENDERING LOGIC (The Visuals)
+   1. UPDATED BADGE GENERATOR (Aligns A-E)
+   ========================================= */
+function getAnswerBadges(prob) {
+    if (!prob.options) return '<div class="badge-container"></div>';
+
+    const userChoices = Array.isArray(prob.userResult.choice) ? prob.userResult.choice : [prob.userResult.choice];
+    const correctAnswers = Array.isArray(prob.correctAnswer) ? prob.correctAnswer : [prob.correctAnswer];
+
+    // Force strictly 5 slots: A, B, C, D, E
+    const slots = ['A', 'B', 'C', 'D', 'E'];
+
+    const badgesHtml = slots.map(label => {
+        // Does this option exist in the data?
+        const optExists = prob.options.some(o => o.label === label);
+
+        if (!optExists) {
+            // Render INVISIBLE placeholder to keep alignment
+            return `<span class="badge-placeholder"></span>`;
+        }
+
+        // Logic for Color
+        const isSelected = userChoices.includes(label);
+        const isCorrect = correctAnswers.includes(label);
+        const bgClass = isCorrect ? 'bg-correct' : 'bg-wrong';
+        const textClass = isSelected ? 'text-selected' : 'text-ignored';
+
+        return `<span class="option-letter-badge ${bgClass} ${textClass}">${label}</span>`;
+    }).join('');
+
+    return `<div class="badge-container">${badgesHtml}</div>`;
+}
+
+/* =========================================
+   2. UPDATED RENDERER (Clean Layout)
    ========================================= */
 function renderSolutions() {
     const container = document.getElementById('solution-container');
     if (!container || !window.examData) return;
 
-    container.innerHTML = ''; // Clear loading text
+    container.innerHTML = '';
 
     window.examData.forEach(block => {
-        // Create Block Header
         const blockDiv = document.createElement('div');
         blockDiv.className = 'exam-block';
         blockDiv.innerHTML = `<div class="block-header">${block.title || block.blockTitle}</div>`;
 
-        // Loop through problems
         block.problems.forEach(prob => {
-            // Score Calculation
             const maxPoints = prob.points || 5;
             const userScore = prob.userResult.score || 0;
 
+            // Score Styles
             let scoreClass = 'score-partial', scoreIcon = '⚠️';
             if (userScore === maxPoints) { scoreClass = 'score-correct'; scoreIcon = '✅'; }
-            if (userScore === 0) { scoreClass = 'score-wrong'; scoreIcon = '❌'; }
+            else if (userScore === 0) { scoreClass = 'score-wrong'; scoreIcon = '❌'; }
 
-            // Create Problem Card
             const problemCard = document.createElement('div');
             problemCard.className = 'problem-row';
 
             problemCard.innerHTML = `
                 <div class="problem-summary" onclick="toggleDetails(this)">
-                    <span style="font-weight:bold; color:#0984e3;">#${prob.id}</span>
+                    <span style="font-weight:bold; color:#0984e3; font-size:1.1em;">#${prob.id}</span>
                     
-                    <div>
-                        <span class="tag">${prob.stats ? prob.stats.coverage : 'General'}</span>
-                        <span class="stat-text">Type: ${prob.type} | Acc: ${prob.stats ? prob.stats.accuracy : 'N/A'}</span>
+                    <div style="display:flex; flex-direction:column; justify-content:center;">
+                        <div>
+                            <span class="tag">${prob.stats ? prob.stats.coverage : 'General'}</span>
+                            <span class="tag" style="background:#00b894;">${prob.stats ? prob.stats.difficulty : 'Normal'}</span>
+                        </div>
+                        <span class="stat-text" style="margin-top:5px;">Type: ${prob.type.toUpperCase()} | Acc: ${prob.stats ? prob.stats.accuracy : 'N/A'}</span>
                     </div>
 
                     ${getAnswerBadges(prob)}
 
-                    <div class="score-badge ${scoreClass}">
-                        ${scoreIcon} ${userScore}
+                    <div class="score-box ${scoreClass}">
+                        <div class="score-icon">${scoreIcon}</div>
+                        <div class="score-val">${userScore}</div>
                     </div>
-                    
-                    <div style="text-align:right; color:#ccc;">▼</div>
                 </div>
 
                 <div class="problem-details">
@@ -151,25 +180,6 @@ function renderSolutions() {
     });
 }
 
-/* =========================================
-   4. HELPER FUNCTIONS
-   ========================================= */
-function getAnswerBadges(prob) {
-    if (!prob.options) return '';
-
-    const userChoices = Array.isArray(prob.userResult.choice) ? prob.userResult.choice : [prob.userResult.choice];
-    const correctAnswers = Array.isArray(prob.correctAnswer) ? prob.correctAnswer : [prob.correctAnswer];
-
-    return `<div class="badge-container" style="margin-left: 15px; display:flex; gap:5px;">
-        ${prob.options.map(opt => {
-        const isSelected = userChoices.includes(opt.label);
-        const isCorrect = correctAnswers.includes(opt.label);
-        const bgClass = isCorrect ? 'bg-correct' : 'bg-wrong';
-        const textClass = isSelected ? 'text-selected' : 'text-ignored';
-        return `<span class="option-letter-badge ${bgClass} ${textClass}">${opt.label}</span>`;
-    }).join('')}
-    </div>`;
-}
 
 function renderOptionsList(prob) {
     if (!prob.options) return '';

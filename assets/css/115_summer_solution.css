@@ -40,15 +40,6 @@ body {
     border-bottom: 1px solid #eee;
 }
 
-.problem-summary {
-    padding: 15px 20px;
-    display: grid;
-    /* Columns: ID | Badge Area | Score | Arrow */
-    grid-template-columns: 50px 1fr 150px 50px;
-    align-items: center;
-    cursor: pointer;
-    transition: background 0.2s;
-}
 
 .problem-summary:hover {
     background: #f8f9fa;
@@ -73,32 +64,85 @@ body {
 }
 
 /* =========================================
-   4. SCORE BADGES (Top Right)
+   UPDATED SUMMARY ROW (Layout)
    ========================================= */
-.score-badge {
-    font-weight: bold;
-    padding: 5px 12px;
-    border-radius: 15px;
-    font-size: 0.9rem;
-    text-align: center;
+.problem-summary {
+    padding: 10px 20px;
+    display: grid;
+    /* Grid: [ID] [Info] [Spacer] [Badges (A-E)] [Score] */
+    grid-template-columns: 50px 1fr auto auto;
+    gap: 15px;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.2s;
+    height: 70px;
+    /* Fixed height for consistency */
 }
 
+/* =========================================
+   NEW BADGE GRID (The Matrix)
+   ========================================= */
+.badge-container {
+    display: grid;
+    /* Create exactly 5 slots of 35px each. 
+       This forces A, B, C, D, E to align vertically across all problems. */
+    grid-template-columns: repeat(5, 35px);
+    gap: 5px;
+    /* Space between circles */
+    justify-items: center;
+}
+
+/* Invisible placeholder for missing options (e.g. Empty 'E' slot) */
+.badge-placeholder {
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+}
+
+/* =========================================
+   NEW SQUARE SCORE BOX
+   ========================================= */
+.score-box {
+    display: flex;
+    flex-direction: column;
+    /* Stack Icon on top of Number */
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    /* Soft square */
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    line-height: 1.1;
+}
+
+.score-box .score-icon {
+    font-size: 14px;
+    margin-bottom: 2px;
+}
+
+.score-box .score-val {
+    font-size: 18px;
+}
+
+/* Score Colors */
 .score-correct {
     background: #dff9fb;
     color: #2ecc71;
-    border: 1px solid #b8e994;
+    border: 2px solid #55efc4;
 }
 
 .score-wrong {
-    background: #ff7675;
-    color: white;
-    border: 1px solid #d63031;
+    background: #fab1a0;
+    color: #d63031;
+    border: 2px solid #ff7675;
 }
 
 .score-partial {
     background: #fff3cd;
     color: #d35400;
-    border: 1px solid #f39c12;
+    border: 2px solid #ffeaa7;
 }
 
 /* =========================================
@@ -261,3 +305,61 @@ body {
     margin-left: 10px;
     display: inline-block;
 }
+
+/* =========================================
+   UPDATED SUMMARY ROW (Layout)
+   ========================================= */
+.problem-summary {
+    padding: 10px 20px;
+    display: grid;
+    /* Grid: [ID] [Info] [Spacer] [Badges (A-E)] [Score] */
+    grid-template-columns: 50px 1fr auto auto; 
+    gap: 15px;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.2s;
+    height: 70px; /* Fixed height for consistency */
+}
+
+/* =========================================
+   NEW BADGE GRID (The Matrix)
+   ========================================= */
+.badge-container {
+    display: grid;
+    /* Create exactly 5 slots of 35px each. 
+       This forces A, B, C, D, E to align vertically across all problems. */
+    grid-template-columns: repeat(5, 35px); 
+    gap: 5px; /* Space between circles */
+    justify-items: center;
+}
+
+/* Invisible placeholder for missing options (e.g. Empty 'E' slot) */
+.badge-placeholder {
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+}
+
+/* =========================================
+   NEW SQUARE SCORE BOX
+   ========================================= */
+.score-box {
+    display: flex;
+    flex-direction: column; /* Stack Icon on top of Number */
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 12px; /* Soft square */
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    line-height: 1.1;
+}
+
+.score-box .score-icon { font-size: 14px; margin-bottom: 2px; }
+.score-box .score-val  { font-size: 18px; }
+
+/* Score Colors */
+.score-correct { background: #dff9fb; color: #2ecc71; border: 2px solid #55efc4; }
+.score-wrong   { background: #fab1a0; color: #d63031; border: 2px solid #ff7675; }
+.score-partial { background: #fff3cd; color: #d35400; border: 2px solid #ffeaa7; }
