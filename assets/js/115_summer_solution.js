@@ -15,7 +15,6 @@ async function loadPage() {
         console.log("📡 Fetching data from server...");
 
         // 1. Send request (Hardcoded username for testing!)
-        // Change "115001" to a username that actually has a result file in your folder
         const response = await fetch('/api/solution-data', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
