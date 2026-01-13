@@ -5,10 +5,11 @@ const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 const fs = require('fs');
-const User = require('./models/User'); // Import User Model
+const User = require('./models/User');
 
 const app = express();
 const port = process.env.PORT || 3000;
+app.use(express.static(path.join(__dirname, 'web')));
 
 // ====================================================
 // 2. MIDDLEWARE (The "Gatekeepers")
