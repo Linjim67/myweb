@@ -20,28 +20,28 @@
           ]
         }, 
         {
-            "id": 2,
-            "type": "multi",
-            "question": "Which of the following are strong acids? (Select 2)",
-            "tags": ["Acids/Bases"],
-            "stats": { "difficulty": "Hard", "accuracy": "45%", "coverage": "Stoichiometry" },
-            "correctAnswer": ["A", "C"],
-            "options": [
+          "id": 2,
+          "type": "multi",
+          "question": "Which of the following are strong acids? (Select 2)",
+          "tags": ["Acids/Bases"],
+          "stats": { "difficulty": "Hard", "accuracy": "45%", "coverage": "Stoichiometry" },
+          "correctAnswer": ["A", "C"],
+          "options": [
             { "label": "A", "text": "HCl", "percent": "90%", "explanation": "Correct. Hydrochloric acid is a strong acid." },
             { "label": "B", "text": "CH3COOH", "percent": "40%", "explanation": "Incorrect. Acetic acid is weak." },
             { "label": "C", "text": "H2SO4", "percent": "88%", "explanation": "Correct. Sulfuric acid is strong." },
             { "label": "D", "text": "HF", "percent": "60%", "explanation": "Incorrect. HF is a weak acid." },
             { "label": "E", "text": "NH3", "percent": "10%", "explanation": "Incorrect. Ammonia is a base." }
-            ]
+          ]
         },
         {
-            "id": 3,
-            "type": "fill",
-            "question": "Calculate the molar mass of Water (H2O).",
-            "tags": ["Calculation"],
-            "stats": { "difficulty": "Medium", "accuracy": "92%", "coverage": "Stoichiometry" },
-            "correctAnswer": "18",
-            "explanation": "2 * 1.008 (H) + 16.00 (O) ≈ 18.02 g/mol"
+          "id": 3,
+          "type": "fill",
+          "question": "Calculate the molar mass of Water (H2O).",
+          "tags": ["Calculation"],
+          "stats": { "difficulty": "Medium", "accuracy": "92%", "coverage": "Stoichiometry" },
+          "correctAnswer": "18",
+          "explanation": "2 * 1.008 (H) + 16.00 (O) ≈ 18.02 g/mol"
         }
 
       ]
@@ -50,8 +50,15 @@
       "title": "Block 2: Redox",
       "problems": [
         {
-          "id": "9",
-          "type": "single"
+          "id": 4,
+          "type": "single",
+          "question": "What is Benzene?",
+          "correctAnswer": "A",
+          "stats": {
+            "coverage": "Organic",
+            "difficulty": "Medium",
+            "accuracy": "N/A"
+          }
         }
       ]
     }
