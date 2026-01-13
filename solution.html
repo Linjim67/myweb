@@ -195,131 +195,72 @@
 
     <script src="exam_data.js"></script>
     <script>
-        const container = document.getElementById('solution-container');
+        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
-        // RENDER FUNCTION
-        function renderSolutions() {
-            examData.forEach((block, blockIndex) => {
-                // 1. Create Block HTML
-                const blockDiv = document.createElement('div');
-                blockDiv.className = 'exam-block';
-                blockDiv.innerHTML = `<div class="block-header">${block.blockTitle}</div>`;
-
-                // 2. Loop through Problems
-                block.problems.forEach(prob => {
-                    const isCorrect = prob.userResult.isCorrect;
-                    const scoreClass = isCorrect ? 'score-correct' : 'score-wrong';
-                    const userScoreText = isCorrect ? `✅ Score: ${prob.userResult.score}` : `❌ Score: ${prob.userResult.score}`;
-
-                    // Create Row
-                    const problemRow = document.createElement('div');
-                    problemRow.className = 'problem-row';
-                    
-                    problemRow.innerHTML = `
-                        <div class="problem-summary" onclick="toggleDetails(${prob.id})">
-                            <div style="font-weight:bold; color:#0984e3;">#${prob.id}</div>
-                            <div>
-                                <span class="tag">${prob.stats.coverage}</span>
-                                <span class="tag" style="background:#00cec9">${prob.stats.difficulty}</span>
-                                <span class="stat-text">Type: ${prob.type.toUpperCase()} | Accuracy: ${prob.stats.accuracy}</span>
-                            </div>
-                            <div class="score-badge ${scoreClass}">${userScoreText}</div>
-                            <div style="text-align:right;">▼</div>
-                        </div>
-
-                        <div class="problem-details" id="detail-${prob.id}">
-                            <div class="question-text">${prob.question}</div>
-                            <div class="options-list">
-                                ${renderOptions(prob)}
-                            </div>
-                        </div>
-                    `;
-                    blockDiv.appendChild(problemRow);
-                });
-
-                container.appendChild(blockDiv);
-            });
-        }
-
-
-        function renderOptions(prob) {
-                // Handle Fill-in-the-blank (Type 3) separately
-                if (prob.type === 'fill') {
-                    return `<div style="padding:15px; background:white; border:1px solid #ddd; border-radius:8px;">
-                    <strong>Your Answer:</strong> ${prob.userResult.input} <br>
-                    <strong>Correct Answer:</strong> ${prob.correctAnswer} <br><br>
-                    <em>Explanation: ${prob.explanation}</em>
-                </div>`;
-                }
-
-                // Handle Multiple Choice (Type 1 & 2)
-                return prob.options.map(opt => {
-                    // 1. NORMALIZE DATA: Ensure everything is an Array for easy comparison
-                    // (If it's Type 1 "A", it becomes ["A"]. If it's Type 2 ["A","C"], it stays array)
-                    const userChoices = Array.isArray(prob.userResult.choice) ? prob.userResult.choice : [prob.userResult.choice];
-                    const correctAnswers = Array.isArray(prob.correctAnswer) ? prob.correctAnswer : [prob.correctAnswer];
-
-                    // 2. DETERMINE STATE
-                    const isSelected = userChoices.includes(opt.label);
-                    const isCorrect = correctAnswers.includes(opt.label);
-
-                    let statusHTML = '';
-                    let rowClass = ''; // To highlight the whole row
-
-                    if (isSelected && isCorrect) {
-                        // Case 1: Correctly Chosen (User ✅, Answer ✅)
-                        statusHTML = `<span class="status-badge status-correct-choice">✅ Correct Selection</span>`;
-                        rowClass = 'chosen-option';
-                    }
-                    else if (isSelected && !isCorrect) {
-                        // Case 2: Wrongly Chosen (User ✅, Answer ❌)
-                        statusHTML = `<span class="status-badge status-wrong-choice">❌ Incorrect Choice</span>`;
-                        rowClass = 'chosen-option'; // Still highlight because user picked it
-                    }
-                    else if (!isSelected && isCorrect) {
-                        // Case 3: Missed Answer (User ❌, Answer ✅)
-                        statusHTML = `<span class="status-badge status-missed">⚠️ Missed Answer</span>`;
-                    }
-                    else {
-                        // Case 4: Correctly Ignored (User ❌, Answer ❌)
-                        // Usually we show nothing, or a faint "Not Answer"
-                        statusHTML = `<span class="status-badge status-neutral">Ignored</span>`;
-                    }
-
-                    // 3. RENDER HTML
-                    return `
-            <div class="option-item ${rowClass}" onclick="toggleExplanation(this)">
-                <div class="option-header">
-                    <span style="font-weight:bold;">${opt.label}. ${opt.text}</span>
-                    ${statusHTML} </div>
-                
-                <div style="padding: 0 12px 12px;">
-                    <div class="option-bar"><div class="option-fill" style="width: ${opt.percent}"></div></div>
-                </div>
-
-                <div class="option-explanation">
-                    <strong>Analysis:</strong> ${opt.explanation}
-                </div>
-            </div>
-        `;
-                }).join('');
+        async function loadPage() {
+            if (!currentUser) {
+                alert("Please login first.");
+                window.location.href = '/login';
+                return;
             }
 
+            try {
+                // 1. Call the new Server API
+                const response = await fetch('/api/solution-data', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: currentUser.username,
+                        admission_year: currentUser.admission_year
+                    })
+                });
 
-        // TOGGLE FUNCTIONS
-        function toggleDetails(id) {
-            const detail = document.getElementById(`detail-${id}`);
-            detail.style.display = detail.style.display === 'block' ? 'none' : 'block';
+                const data = await response.json();
+
+                if (!data.success) {
+                    alert("Error: " + data.message);
+                    return;
+                }
+
+                // 2. Merge Data (Universal + Personal)
+                mergeAndRender(data.exam, data.result);
+
+            } catch (error) {
+                console.error("Connection Error:", error);
+            }
         }
 
-        function toggleExplanation(element) {
-            // Find the explanation div inside the clicked option
-            const expl = element.querySelector('.option-explanation');
-            expl.style.display = expl.style.display === 'block' ? 'none' : 'block';
+        function mergeAndRender(exam, result) {
+            // If no result found for user, show empty/default state
+            const userAnswers = result ? result.answers : {};
+
+            exam.blocks.forEach(block => {
+                block.problems.forEach(problem => {
+                    // Get user's specific answer for this problem ID
+                    const userChoice = userAnswers[problem.id];
+
+                    // Inject into the problem object
+                    problem.userResult = {
+                        choice: userChoice || null, // null if they didn't answer
+                        score: 0, // You can calculate this here if needed
+                        isCorrect: compareAnswers(userChoice, problem.correctAnswer)
+                    };
+                });
+            });
+
+            // Use the global variable expected by your render function
+            window.examData = exam.blocks;
+            renderSolutions();
         }
 
-        // Start
-        renderSolutions();
+        function compareAnswers(user, correct) {
+            if (!user) return false;
+            // Simple comparison (works for strings and arrays if sorted)
+            return JSON.stringify(user) === JSON.stringify(correct);
+        }
+
+        // Start loading when page opens
+        loadPage();
     </script>
 </body>
 
