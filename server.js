@@ -74,14 +74,6 @@ app.post('/api/solution-data', (req, res) => {
     const universalPath = path.join(baseDir, 'exam_summer.json');
     const personalPath = path.join(baseDir, `${username}_result.json`);
 
-    // --- 🔍 DEBUG LOGS ---
-    console.log("------------------------------------------------");
-    console.log(`🔍 Request for: ${username} (Year: ${yearToUse})`);
-    console.log(`📂 Looking in folder: ${baseDir}`);
-    console.log(`📄 Universal File: ${universalPath} -> Exists? ${fs.existsSync(universalPath)}`);
-    console.log(`📄 Personal File: ${personalPath} -> Exists? ${fs.existsSync(personalPath)}`);
-    console.log("------------------------------------------------");
-
     // 2. Read Files
     try {
         // Check if Universal Exam exists
