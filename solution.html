@@ -7,7 +7,53 @@
     <title>Exam Solutions</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* --- Solution Specific Styles --- */
+
+        /* Base Style for the Letter Badge (A, B, C, D) */
+        .option-letter-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%; /* Make it a circle */
+            font-weight: bold;
+            margin-right: 10px;
+            border: 2px solid #ddd;
+            color: #555;
+            background: #f9f9f9;
+        }
+
+        /* STATE 1: True Positive (You picked it, it was RIGHT) -> GREEN */
+        .state-tp {
+            background-color: #dff9fb;
+            border-color: #2ecc71;
+            color: #2ecc71;
+            box-shadow: 0 0 5px rgba(46, 204, 113, 0.4);
+        }
+
+        /* STATE 2: False Positive (You picked it, it was WRONG) -> RED */
+        .state-fp {
+            background-color: #ff7675;
+            border-color: #d63031;
+            color: white;
+        }
+
+        /* STATE 3: False Negative (You missed it, it was RIGHT) -> ORANGE */
+        .state-fn {
+            background-color: #ffeaa7;
+            border-color: #fdcb6e;
+            color: #d35400;
+            border-style: dashed; /* Dashed line to show something is missing */
+        }
+
+        /* STATE 4: True Negative (Ignored correctly) -> GRAY */
+        .state-tn {
+            background-color: #eee;
+            border-color: #ccc;
+            color: #aaa;
+            opacity: 0.6;
+        }
+        
 
         .problem-figure {
             margin: 15px 0;
@@ -267,67 +313,70 @@
 
 
         function renderOptions(prob) {
-                // Handle Fill-in-the-blank (Type 3) separately
-                if (prob.type === 'fill') {
-                    return `<div style="padding:15px; background:white; border:1px solid #ddd; border-radius:8px;">
-                    <strong>Your Answer:</strong> ${prob.userResult.input} <br>
-                    <strong>Correct Answer:</strong> ${prob.correctAnswer} <br><br>
-                    <em>Explanation: ${prob.explanation}</em>
-                </div>`;
+            // 1. Prepare Data (Ensure everything is an array for comparison)
+            const userChoices = Array.isArray(prob.userResult.choice)
+                ? prob.userResult.choice
+                : (prob.userResult.choice ? [prob.userResult.choice] : []); // Handle null/empty
+
+            const correctAnswers = Array.isArray(prob.correctAnswer)
+                ? prob.correctAnswer
+                : [prob.correctAnswer];
+
+            return prob.options.map(opt => {
+                // 2. DETERMINE THE STATE
+                const isSelected = userChoices.includes(opt.label);
+                const isCorrect = correctAnswers.includes(opt.label);
+
+                let stateClass = '';
+                let statusText = '';
+
+                if (isSelected && isCorrect) {
+                    // ✅ True Positive: Selected & Correct
+                    stateClass = 'state-tp';
+                    statusText = 'Correct Selection';
+                }
+                else if (isSelected && !isCorrect) {
+                    // ❌ False Positive: Selected & Wrong
+                    stateClass = 'state-fp';
+                    statusText = 'Incorrect Choice';
+                }
+                else if (!isSelected && isCorrect) {
+                    // ⚠️ False Negative: Missed & Correct
+                    stateClass = 'state-fn';
+                    statusText = 'Missed Answer';
+                }
+                else {
+                    // ⚪ True Negative: Not Selected & Wrong (Correctly Ignored)
+                    stateClass = 'state-tn';
+                    statusText = '';
                 }
 
-                // Handle Multiple Choice (Type 1 & 2)
-                return prob.options.map(opt => {
-                    // 1. NORMALIZE DATA: Ensure everything is an Array for easy comparison
-                    // (If it's Type 1 "A", it becomes ["A"]. If it's Type 2 ["A","C"], it stays array)
-                    const userChoices = Array.isArray(prob.userResult.choice) ? prob.userResult.choice : [prob.userResult.choice];
-                    const correctAnswers = Array.isArray(prob.correctAnswer) ? prob.correctAnswer : [prob.correctAnswer];
+                // 3. RENDER THE OPTION ROW
+                return `
+                <div class="option-item" onclick="toggleExplanation(this)">
+                    <div class="option-header" style="display: flex; align-items: center;">
+                        
+                        <div class="option-letter-badge ${stateClass}">
+                            ${opt.label}
+                        </div>
 
-                    // 2. DETERMINE STATE
-                    const isSelected = userChoices.includes(opt.label);
-                    const isCorrect = correctAnswers.includes(opt.label);
+                        <div style="flex-grow: 1;">
+                            <span style="font-weight:bold;">${opt.text}</span>
+                            ${statusText ? `<span style="font-size: 0.8em; margin-left: 8px; opacity: 0.8;">(${statusText})</span>` : ''}
+                        </div>
+                    </div>
+                    
+                    <div style="padding: 5px 0 0 45px;"> 
+                        <div class="option-bar"><div class="option-fill" style="width: ${opt.percent}"></div></div>
+                    </div>
 
-                    let statusHTML = '';
-                    let rowClass = ''; // To highlight the whole row
-
-                    if (isSelected && isCorrect) {
-                        // Case 1: Correctly Chosen (User ✅, Answer ✅)
-                        statusHTML = `<span class="status-badge status-correct-choice">✅ Correct Selection</span>`;
-                        rowClass = 'chosen-option';
-                    }
-                    else if (isSelected && !isCorrect) {
-                        // Case 2: Wrongly Chosen (User ✅, Answer ❌)
-                        statusHTML = `<span class="status-badge status-wrong-choice">❌ Incorrect Choice</span>`;
-                        rowClass = 'chosen-option'; // Still highlight because user picked it
-                    }
-                    else if (!isSelected && isCorrect) {
-                        // Case 3: Missed Answer (User ❌, Answer ✅)
-                        statusHTML = `<span class="status-badge status-missed">⚠️ Missed Answer</span>`;
-                    }
-                    else {
-                        // Case 4: Correctly Ignored (User ❌, Answer ❌)
-                        // Usually we show nothing, or a faint "Not Answer"
-                        statusHTML = `<span class="status-badge status-neutral">Ignored</span>`;
-                    }
-
-                    // 3. RENDER HTML
-                    return `
-                <div class="option-item ${rowClass}" onclick="toggleExplanation(this)">
-                <div class="option-header">
-                    <span style="font-weight:bold;">${opt.label}. ${opt.text}</span>
-                    ${statusHTML} </div>
-                
-                <div style="padding: 0 12px 12px;">
-                    <div class="option-bar"><div class="option-fill" style="width: ${opt.percent}"></div></div>
+                    <div class="option-explanation" style="margin-left: 45px;">
+                        <strong>Analysis:</strong> ${opt.explanation}
+                    </div>
                 </div>
-
-                <div class="option-explanation">
-                    <strong>Analysis:</strong> ${opt.explanation}
-                </div>
-            </div>
-        `;
-                }).join('');
-            }
+            `;
+            }).join('');
+        }
 
 
         // TOGGLE FUNCTIONS

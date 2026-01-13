@@ -11,7 +11,6 @@
           "image": "/privatee/115/1.2/images/1.jpg",
           "question": "Which element has the highest electronegativity?",
           "correctAnswer": "A",
-          "tags": "Periodic Table",
           "stats": {"difficulty": "Easy", "accuracy": "85%","coverage": "Inorganic"},
           "options": [
             { "label": "A", "text": "Fluorine (F)", "percent": "85%", "explanation": "Fluorine is the most electronegative element." },
@@ -24,7 +23,6 @@
           "id": 2,
           "type": "multi",
           "question": "Which of the following are strong acids? (Select 2)",
-          "tags": ["Acids/Bases"],
           "stats": { "difficulty": "Hard", "accuracy": "45%", "coverage": "Stoichiometry" },
           "correctAnswer": ["A", "C"],
           "options": [
@@ -39,7 +37,6 @@
           "id": 3,
           "type": "fill",
           "question": "Calculate the molar mass of Water (H2O).",
-          "tags": ["Calculation"],
           "stats": { "difficulty": "Medium", "accuracy": "92%", "coverage": "Stoichiometry" },
           "correctAnswer": "18",
           "explanation": "2 * 1.008 (H) + 16.00 (O) ≈ 18.02 g/mol"
@@ -54,12 +51,14 @@
           "id": 4,
           "type": "single",
           "question": "What is Benzene?",
+          "stats": {"coverage": "Organic", "difficulty": "Medium", "accuracy": "N/A"},
           "correctAnswer": "A",
-          "stats": {
-            "coverage": "Organic",
-            "difficulty": "Medium",
-            "accuracy": "N/A"
-          }
+          "options": [
+            { "label": "A", "text": "Fluorine (F)", "percent": "85%", "explanation": "Fluorine is the most electronegative element." },
+            { "label": "B", "text": "Chlorine (Cl)", "percent": "10%", "explanation": "Less than Fluorine." },
+            { "label": "C", "text": "Oxygen (O)", "percent": "3%", "explanation": "Incorrect." },
+            { "label": "D", "text": "Neon (Ne)", "percent": "2%", "explanation": "Noble gases are stable." }
+          ]
         }
       ]
     }
