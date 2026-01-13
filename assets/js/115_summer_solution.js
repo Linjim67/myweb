@@ -33,8 +33,16 @@ async function loadPage() {
             // The server sends 'exam' (questions) and 'result' (answers) separately.
             // We need to stitch them together so the UI can read them.
 
-            const rawExam = data.exam; // Fix: Server calls it 'exam', not 'examData'
-            const userResults = data.result || {};
+            // 1. Get the raw object
+            let rawExam = data.exam;
+
+            // 2. SAFETY CHECK: If it's an object (not an array), convert it!
+            if (!Array.isArray(rawExam)) {
+                console.log("⚠️ Converting Exam Object to Array...");
+
+                // This turns { "b1": {...}, "b2": {...} } into [ {...}, {...} ]
+                rawExam = Object.values(rawExam);
+            }            const userResults = data.result || {};
 
             // Loop through every block and every problem to attach the user's score
             rawExam.forEach(block => {
@@ -50,7 +58,7 @@ async function loadPage() {
 
             // 4. Load the Theme (CSS)
             // Use the username sent in the request, or default to "115"
-            loadUserTheme("115001");
+            loadUserTheme("1150");
 
             // 5. Draw the screen
             renderSolutions();
