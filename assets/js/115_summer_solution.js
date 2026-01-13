@@ -44,7 +44,7 @@ async function loadPage() {
 function loadUserTheme(username) {
     // Extract year (e.g., "1150" -> "115")
     const admissionYear = username.substring(0, 3);
-    const cssPath = `./assets/css/${admissionYear}_summer_solution.css`;
+    const cssPath = `/assets/css/${admissionYear}_summer_solution.css`;
 
     const link = document.createElement('link');
     link.rel = 'stylesheet';
@@ -160,7 +160,6 @@ function renderOptionsList(prob) {
     }).join('');
 }
 
-// ⚠️ IMPORTANT: Functions called by HTML 'onclick' must be global
 window.toggleDetails = function (element) {
     const details = element.nextElementSibling;
     if (details) {
