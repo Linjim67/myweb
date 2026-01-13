@@ -312,71 +312,74 @@
         }
 
 
-        function renderOptions(prob) {
-            // 1. Prepare Data (Ensure everything is an array for comparison)
-            const userChoices = Array.isArray(prob.userResult.choice)
-                ? prob.userResult.choice
-                : (prob.userResult.choice ? [prob.userResult.choice] : []); // Handle null/empty
+    function renderOptions(prob) {
+        // 1. SAFETY CHECK: If this problem has no options (like Fill-in-the-Blank), stop!
+        if (!prob.options || !Array.isArray(prob.options)) {
+            // Option A: If it's a text answer, show the user's input
+            if (prob.type === 'fill') {
+                return `<div style="padding:15px; background:#f9f9f9; border:1px solid #eee; margin-top:10px;">
+                        <strong>Your Answer:</strong> ${prob.userResult.choice || "(No Answer)"} <br>
+                        <strong>Correct Answer:</strong> ${prob.correctAnswer}
+                    </div>`;
+            }
+            // Option B: Just return empty if something is wrong
+            return '';
+        }
 
-            const correctAnswers = Array.isArray(prob.correctAnswer)
-                ? prob.correctAnswer
-                : [prob.correctAnswer];
+        // 2. Normalize Data (Make sure we are comparing arrays)
+        const userChoices = Array.isArray(prob.userResult.choice)
+            ? prob.userResult.choice
+            : (prob.userResult.choice ? [prob.userResult.choice] : []);
 
-            return prob.options.map(opt => {
-                // 2. DETERMINE THE STATE
-                const isSelected = userChoices.includes(opt.label);
-                const isCorrect = correctAnswers.includes(opt.label);
+        const correctAnswers = Array.isArray(prob.correctAnswer)
+            ? prob.correctAnswer
+            : [prob.correctAnswer];
 
-                let stateClass = '';
-                let statusText = '';
+        // 3. Render the Options Loop (The part that was crashing)
+        return prob.options.map(opt => {
+            // --- Determine the State (TP, FP, FN, TN) ---
+            const isSelected = userChoices.includes(opt.label);
+            const isCorrect = correctAnswers.includes(opt.label);
 
-                if (isSelected && isCorrect) {
-                    // ✅ True Positive: Selected & Correct
-                    stateClass = 'state-tp';
-                    statusText = 'Correct Selection';
-                }
-                else if (isSelected && !isCorrect) {
-                    // ❌ False Positive: Selected & Wrong
-                    stateClass = 'state-fp';
-                    statusText = 'Incorrect Choice';
-                }
-                else if (!isSelected && isCorrect) {
-                    // ⚠️ False Negative: Missed & Correct
-                    stateClass = 'state-fn';
-                    statusText = 'Missed Answer';
-                }
-                else {
-                    // ⚪ True Negative: Not Selected & Wrong (Correctly Ignored)
-                    stateClass = 'state-tn';
-                    statusText = '';
-                }
+            let stateClass = '';
+            let statusText = '';
 
-                // 3. RENDER THE OPTION ROW
-                return `
-                <div class="option-item" onclick="toggleExplanation(this)">
-                    <div class="option-header" style="display: flex; align-items: center;">
-                        
-                        <div class="option-letter-badge ${stateClass}">
-                            ${opt.label}
-                        </div>
+            if (isSelected && isCorrect) {
+                stateClass = 'state-tp'; // Green (True Positive)
+                statusText = 'Correct Selection';
+            }
+            else if (isSelected && !isCorrect) {
+                stateClass = 'state-fp'; // Red (False Positive)
+                statusText = 'Incorrect Choice';
+            }
+            else if (!isSelected && isCorrect) {
+                stateClass = 'state-fn'; // Orange (False Negative)
+                statusText = 'Missed Answer';
+            }
+            else {
+                stateClass = 'state-tn'; // Gray (True Negative)
+                statusText = '';
+            }
 
-                        <div style="flex-grow: 1;">
-                            <span style="font-weight:bold;">${opt.text}</span>
-                            ${statusText ? `<span style="font-size: 0.8em; margin-left: 8px; opacity: 0.8;">(${statusText})</span>` : ''}
-                        </div>
+            // --- Render HTML ---
+            return `
+            <div class="option-item" onclick="toggleExplanation(this)">
+                <div class="option-header" style="display: flex; align-items: center;">
+                    <div class="option-letter-badge ${stateClass}">
+                        ${opt.label}
                     </div>
-                    
-                    <div style="padding: 5px 0 0 45px;"> 
-                        <div class="option-bar"><div class="option-fill" style="width: ${opt.percent}"></div></div>
-                    </div>
-
-                    <div class="option-explanation" style="margin-left: 45px;">
-                        <strong>Analysis:</strong> ${opt.explanation}
+                    <div style="flex-grow: 1;">
+                        <span style="font-weight:bold;">${opt.text}</span>
+                        ${statusText ? `<span style="font-size: 0.8em; margin-left: 8px; opacity: 0.8;">(${statusText})</span>` : ''}
                     </div>
                 </div>
-            `;
-            }).join('');
-        }
+                <div class="option-explanation" style="margin-left: 45px;">
+                    <strong>Analysis:</strong> ${opt.explanation || "No explanation provided."}
+                </div>
+            </div>
+        `;
+        }).join('');
+    }
 
 
         // TOGGLE FUNCTIONS
