@@ -8,6 +8,31 @@
     <link rel="stylesheet" href="style.css">
     <style>
 
+        /* Correct Answer: Green Border & Background */
+        .correct-answer {
+            border: 2px solid #2ecc71 !important;
+            background-color: #f0fdf4;
+        }
+
+        /* Wrong Selection: Red Border */
+        .wrong-selection {
+            border: 2px solid #e74c3c !important;
+            background-color: #fef2f2;
+        }
+
+        /* Standard Option Item */
+        .option-item {
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option-item:hover {
+            background-color: #fafafa;
+        }
+
         /* Base Style for the Letter Badge (A, B, C, D) */
         .option-letter-badge {
             display: inline-flex;
@@ -266,6 +291,67 @@
     <script>
         const container = document.getElementById('solution-container');
 
+        // 1. New Helper Function: Generates the colored A/B/C/D badges
+        function getAnswerBadges(prob) {
+            if (!prob.options) return ''; // Skip for fill-in-the-blank
+
+            const userChoices = Array.isArray(prob.userResult.choice) ? prob.userResult.choice : [prob.userResult.choice];
+            const correctAnswers = Array.isArray(prob.correctAnswer) ? prob.correctAnswer : [prob.correctAnswer];
+
+        return `<div class="badge-container" style="margin-left: 15px; display:flex; gap:5px;">
+        
+            ${prob.options.map(opt => {
+            const isSelected = userChoices.includes(opt.label);
+            const isCorrect = correctAnswers.includes(opt.label);
+
+            // Determine Color State
+            let stateClass = 'state-tn'; // Default Gray
+            if (isSelected && isCorrect) stateClass = 'state-tp';       // Green
+            else if (isSelected && !isCorrect) stateClass = 'state-fp'; // Red
+            else if (!isSelected && isCorrect) stateClass = 'state-fn'; // Orange
+
+            return `<span class="option-letter-badge ${stateClass}" style="width:25px; height:25px; font-size:0.8em;">${opt.label}</span>`;
+        }).join('')} </div>`;
+        }
+
+        // 2. Update the Main Render Loop
+        function renderSolutions() {
+            const container = document.getElementById('solution-container');
+            container.innerHTML = '';
+
+            window.examData.forEach(block => {
+                // ... (Block Title Code) ...
+
+                block.problems.forEach(prob => {
+                    // ... (Score Logic) ...
+
+                    const problemCard = document.createElement('div');
+                    problemCard.className = 'problem-card';
+                    problemCard.innerHTML = `
+                        <div class="problem-header">
+                            <div style="display:flex; align-items:center; flex-wrap:wrap; gap:10px;">
+                                <span class="problem-id">#${prob.id}</span>
+                                ${userScoreText} ${getAnswerBadges(prob)} 
+                            </div>
+                            
+                            <div style="margin-top:5px;">
+                                <span class="card-tag">${prob.stats ? prob.stats.coverage : 'General'}</span>
+                                <span class="card-tag">${prob.stats ? prob.stats.difficulty : 'Unknown'}</span>
+                            </div>
+                        </div>
+            
+                        ${prob.image ? `<div class="problem-figure"><img src="${prob.image}" onclick="window.open(this.src)"></div>` : ''}
+                        <div class="problem-text">${prob.question}</div>
+
+                        <div class="options-list">
+                            ${renderOptions(prob)}
+                        </div>
+                    `;
+                    container.appendChild(problemCard);
+                });
+            });
+        }
+
         function renderSolutions() {
             examData.forEach((block, blockIndex) => {
                 // 1. Create Block HTML
@@ -312,74 +398,39 @@
         }
 
 
-    function renderOptions(prob) {
-        // 1. SAFETY CHECK: If this problem has no options (like Fill-in-the-Blank), stop!
-        if (!prob.options || !Array.isArray(prob.options)) {
-            // Option A: If it's a text answer, show the user's input
-            if (prob.type === 'fill') {
-                return `<div style="padding:15px; background:#f9f9f9; border:1px solid #eee; margin-top:10px;">
-                        <strong>Your Answer:</strong> ${prob.userResult.choice || "(No Answer)"} <br>
-                        <strong>Correct Answer:</strong> ${prob.correctAnswer}
-                    </div>`;
-            }
-            // Option B: Just return empty if something is wrong
-            return '';
+        function renderOptions(prob) {
+            if (!prob.options) return '';
+
+            // Normalize Data
+            const userChoices = Array.isArray(prob.userResult.choice) ? prob.userResult.choice : [prob.userResult.choice];
+            const correctAnswers = Array.isArray(prob.correctAnswer) ? prob.correctAnswer : [prob.correctAnswer];
+
+            return prob.options.map(opt => {
+                const isSelected = userChoices.includes(opt.label);
+                const isCorrect = correctAnswers.includes(opt.label);
+
+                // Simple Border Logic
+                let optionClass = 'option-item';
+                if (isCorrect) optionClass += ' correct-answer'; // Green Border
+                if (isSelected && !isCorrect) optionClass += ' wrong-selection'; // Red Border
+
+                // Add checkmark/cross icon for clarity
+                const icon = isCorrect ? '✅' : (isSelected ? '❌' : '');
+
+                return `
+                    <div class="${optionClass}" onclick="toggleExplanation(this)">
+                        <div class="option-header">
+                            <span style="font-weight:bold; width:25px;">${opt.label}.</span>
+                            <span style="flex-grow:1;">${opt.text}</span>
+                            <span>${icon}</span>
+                        </div>
+                        <div class="option-explanation">
+                            <strong>Analysis:</strong> ${opt.explanation || "No explanation."}
+                        </div>
+                    </div>
+                `;
+            }).join('');
         }
-
-        // 2. Normalize Data (Make sure we are comparing arrays)
-        const userChoices = Array.isArray(prob.userResult.choice)
-            ? prob.userResult.choice
-            : (prob.userResult.choice ? [prob.userResult.choice] : []);
-
-        const correctAnswers = Array.isArray(prob.correctAnswer)
-            ? prob.correctAnswer
-            : [prob.correctAnswer];
-
-        // 3. Render the Options Loop (The part that was crashing)
-        return prob.options.map(opt => {
-            // --- Determine the State (TP, FP, FN, TN) ---
-            const isSelected = userChoices.includes(opt.label);
-            const isCorrect = correctAnswers.includes(opt.label);
-
-            let stateClass = '';
-            let statusText = '';
-
-            if (isSelected && isCorrect) {
-                stateClass = 'state-tp'; // Green (True Positive)
-                statusText = 'Correct Selection';
-            }
-            else if (isSelected && !isCorrect) {
-                stateClass = 'state-fp'; // Red (False Positive)
-                statusText = 'Incorrect Choice';
-            }
-            else if (!isSelected && isCorrect) {
-                stateClass = 'state-fn'; // Orange (False Negative)
-                statusText = 'Missed Answer';
-            }
-            else {
-                stateClass = 'state-tn'; // Gray (True Negative)
-                statusText = '';
-            }
-
-            // --- Render HTML ---
-            return `
-            <div class="option-item" onclick="toggleExplanation(this)">
-                <div class="option-header" style="display: flex; align-items: center;">
-                    <div class="option-letter-badge ${stateClass}">
-                        ${opt.label}
-                    </div>
-                    <div style="flex-grow: 1;">
-                        <span style="font-weight:bold;">${opt.text}</span>
-                        ${statusText ? `<span style="font-size: 0.8em; margin-left: 8px; opacity: 0.8;">(${statusText})</span>` : ''}
-                    </div>
-                </div>
-                <div class="option-explanation" style="margin-left: 45px;">
-                    <strong>Analysis:</strong> ${opt.explanation || "No explanation provided."}
-                </div>
-            </div>
-        `;
-        }).join('');
-    }
 
 
         // TOGGLE FUNCTIONS
