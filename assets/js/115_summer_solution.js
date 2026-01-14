@@ -603,14 +603,20 @@ function renderExamMode() {
    SUBMIT EXAM (Send to Backend)
    ========================================= */
 async function submitExam() {
+    // ... (Part 1: Collection of answers is the same as before) ...
     const answers = {};
-    const userId = prompt("Enter your Student ID:", "1150"); // Simple ID prompt
+    let userId = prompt("Please enter your Student ID to submit:", "1150");
     if (!userId) return;
 
+    // Collect answers from inputs
     window.examData.forEach(block => {
+        if (!block.problems) return;
         block.problems.forEach(prob => {
             const pID = prob.id.toString();
+            // ... (Your existing scraping logic for single/multi/fill) ...
+            // Copy-paste your scraping logic here or keep it if you are just updating the bottom part
 
+            // [Simply ensure 'answers' object is populated here]
             if (prob.type === 'single') {
                 const el = document.querySelector(`input[name="q${pID}"]:checked`);
                 if (el) answers[pID] = el.value;
@@ -635,23 +641,58 @@ async function submitExam() {
         });
     });
 
-    // Send to Server
+    // ... (Part 2: Send to Server) ...
     try {
-        const response = await fetch('http://localhost:3000/api/submit', {
+        const response = await fetch('/api/submit', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ user_id: userId, answers: answers })
         });
 
         const result = await response.json();
+
         if (result.success) {
-            alert(`Exam Submitted!\nTotal Score: ${result.scores.total}`);
-            // Optional: Switch back to solution view with new scores
-            // window.userData = { answers: answers, scores: result.scores };
-            // renderSolutions();
+            // === NEW PART: SHOW RESULTS IMMEDIATELY ===
+
+            // 1. Update the global window.examData with the new grades
+            // We loop through the data and attach the "userResult" object
+            window.examData.forEach(block => {
+                if (block.problems) {
+                    block.problems.forEach(prob => {
+                        const pID = prob.id.toString();
+
+                        // Grab the score calculated by the server
+                        // If undefined, they got 0
+                        const earnedScore = result.scores[pID] || 0;
+
+                        // Grab the answer the user just typed
+                        const userAns = answers[pID] || null;
+
+                        // Attach this to the problem so renderSolutions() can read it
+                        prob.userResult = {
+                            choice: userAns,
+                            score: earnedScore
+                        };
+                    });
+                }
+            });
+
+            // 2. Alert the user briefly
+            alert(`Grading Complete!\nYour Total Score: ${result.total}`);
+
+            // 3. Re-render the page in "Solution Mode"
+            // This will replace all <inputs> with the "YOU vs ANS" red/green view
+            renderSolutions();
+
+            // 4. Scroll to top so they see the first question
+            window.scrollTo(0, 0);
+
+        } else {
+            alert("Submission Failed: " + result.message);
         }
-    } catch (err) {
-        alert("Server Error: Make sure node server.js is running!");
-        console.error(err);
+
+    } catch (error) {
+        console.error("Error:", error);
+        alert("Server Error. Check console.");
     }
 }

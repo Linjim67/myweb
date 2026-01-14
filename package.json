@@ -16,7 +16,6 @@
     "express": "^5.2.1",
     "mongoose": "^9.1.2"
   },
-  "devDependencies": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Linjim67/myweb.git"

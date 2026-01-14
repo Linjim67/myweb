@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const path = require('path');
 const fs = require('fs');
 const User = require('./models/User');
+require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -23,8 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 // ====================================================
 // 3. DATABASE CONNECTION
 // ====================================================
-const mongoURI = process.env.MONGO_URI; // Make sure this is set in your environment!
-
+const mongoURI = process.env.MONGO_URI;
 if (!mongoURI) {
     console.error("❌ Error: MONGO_URI is missing.");
 } else {
