@@ -143,8 +143,9 @@ function getAnswerBadges(prob) {
 
 
 /* =========================================
-   RENDERER (Updated for Fill-In & Explanations)
+   RENDERER
    ========================================= */
+
 function renderSolutions() {
     const container = document.getElementById('solution-container');
     if (!container || !window.examData) return;
@@ -165,48 +166,45 @@ function renderSolutions() {
             if (userScore === maxPoints) scoreClass = 'score-perfect';
             else if (userScore === 0) scoreClass = 'score-zero';
 
-            // --- NEW: CONTENT LOGIC ---
-
-            // 1. Determine Middle Content (Badges OR Text Lines)
+            // --- CONTENT LOGIC ---
             let middleContent = '';
+
             if (prob.type === 'fill') {
-                // FILL-IN: Show candidate answer vs true answer
+                // FILL-IN: Text Summary
                 const userVal = prob.userResult.choice || "(Empty)";
                 const trueVal = prob.correctAnswer || "";
-
-                // Color code the user's answer line
-                const userColor = (userScore === maxPoints) ? '#2ecc71' : '#e74c3c'; // Green or Red
+                const userColor = (userScore === maxPoints) ? '#2ecc71' : '#e74c3c';
 
                 middleContent = `
                     <div class="fill-summary-container">
                         <div class="fill-line">
                             <span class="fill-label">YOU:</span>
-                            <span style="color:${userColor}; font-weight:bold; font-family:monospace;">${userVal}</span>
+                            <span style="color:${userColor}; font-weight:bold; font-family:monospace; font-size:1rem;">${userVal}</span>
                         </div>
                         <div class="fill-line">
                             <span class="fill-label">ANS:</span>
-                            <span style="color:#416361; font-weight:bold; font-family:monospace;">${trueVal}</span>
+                            <span style="color:#416361; font-weight:bold; font-family:monospace; font-size:1rem;">${trueVal}</span>
                         </div>
                     </div>
                 `;
             } else {
-                // MULTI/SINGLE: Show the Matrix Badges
+                // MULTI/SINGLE: Badges
                 middleContent = getAnswerBadges(prob);
             }
 
-            // 2. Explanation Logic (Show ONLY if explanation exists)
-            const explanationHtml = prob.explanation
-                ? `<div class="general-explanation"><strong>📝 Explanation:</strong><br>${prob.explanation}</div>`
+            // --- EXPLANATION LOGIC ---
+            // We check both prob.explanation (standard) and prob.exp (short)
+            const expText = prob.explanation || prob.exp || "";
+            const explanationHtml = expText
+                ? `<div class="general-explanation"><strong>📝 Explanation:</strong><br>${expText}</div>`
                 : '';
 
-
-            // --- CREATE CARD ---
+            // --- CARD HTML ---
             const problemCard = document.createElement('div');
             problemCard.className = 'problem-row';
 
             problemCard.innerHTML = `
                 <div class="problem-summary" onclick="handleRowClick(this, event)">
-                    
                     <span class="clickable-id" 
                           style="font-weight:bold; color:#416361; font-size:1.1em; padding:5px;"
                           onclick="expandFullQuestion(this, event)">

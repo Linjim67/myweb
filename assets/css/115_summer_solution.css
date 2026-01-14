@@ -243,23 +243,28 @@ input:checked+.slider:before {
 }
 
 /* =========================================
-   NEW: FILL-IN TEXT STYLES
+   FILL-IN TEXT STYLES (Aligned)
    ========================================= */
 .fill-summary-container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    /* Align Left */
+    /* Aligns text to the Left */
+
+    /* CRITICAL FIX: Match the width of the Badge Grid (6 * 35px + gaps) */
+    min-width: 240px;
+
     font-size: 0.85rem;
     line-height: 1.4;
-    width: 100%;
 }
 
 .fill-line {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 10px;
+    /* More space between label and value */
+    width: 100%;
 }
 
 .fill-label {
@@ -268,7 +273,8 @@ input:checked+.slider:before {
     font-size: 0.75rem;
     text-transform: uppercase;
     width: 35px;
-    /* Fixed width for alignment */
+    /* Fixed width ensures numbers line up vertically */
+    text-align: left;
 }
 
 /* General Explanation Box (Below the Question) */
