@@ -5,6 +5,7 @@
       {
         "id": 1,
         "type": "single",
+        "allocation": 3,
         "image": "/privatee/115/1.2/images/1.jpg",
         "question": "Which element has the highest electronegativity?",
         "correctAnswer": "A",
@@ -19,6 +20,7 @@
       {
         "id": 2,
         "type": "multi",
+        "allocation": 5,
         "question": "Which of the following are strong acids? (Select 2)",
         "stats": { "difficulty": "Hard", "accuracy": "45%", "coverage": "Stoichiometry" },
         "correctAnswer": ["A", "C"],
@@ -33,6 +35,7 @@
       {
         "id": 3,
         "type": "fill",
+        "allocation": 3,
         "question": "Calculate the molar mass of Water (H2O).",
         "stats": { "difficulty": "Medium", "accuracy": "92%", "coverage": "Stoichiometry" },
         "correctAnswer": "18",
@@ -46,6 +49,7 @@
       {
         "id": 4,
         "type": "multi",
+        "allocation": 5,
         "question": "Which are aromatic compound?",
         "stats": { "coverage": "Organic", "difficulty": "Medium", "accuracy": "N/A" },
         "correctAnswer": ["A", "B"],

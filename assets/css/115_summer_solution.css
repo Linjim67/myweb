@@ -205,7 +205,7 @@ body {
 
 .badge-container {
     display: grid;
-    grid-template-columns: repeat(5, 35px);
+    grid-template-columns: repeat(6, 35px);
     gap: 5px;
     justify-items: center;
 }

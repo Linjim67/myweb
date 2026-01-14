@@ -99,7 +99,7 @@ function getAnswerBadges(prob) {
     const correctAnswers = Array.isArray(prob.correctAnswer) ? prob.correctAnswer : [prob.correctAnswer];
 
     // Force A-E Grid
-    const slots = ['A', 'B', 'C', 'D', 'E'];
+    const slots = ['A', 'B', 'C', 'D', 'E', 'F'];
 
     const badgesHtml = slots.map(label => {
         // 1. Check if option exists in the question
