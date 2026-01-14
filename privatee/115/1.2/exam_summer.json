@@ -124,7 +124,7 @@
       {
         "id": 9,
         "type": "multi",
-        "question": "關於疊氮酸(HN<sub>3</sub>)分子與氮三離子(N<sub>3</sub><sup>-</sup>)的敘述，哪些正確？<br>已知：熔點 193 K、沸點 310 K；結構 H-N-<b>N</b>&equiv;N。",
+        "question": "關於疊氮酸(HN<sub>3</sub>)分子與氮三離子(N<sub>3</sub><sup>-</sup>)的敘述，哪些正確？<br>已知：熔點 193 K、沸點 310 K；結構 H-N-<strong>N</strong>&equiv;N。",
         "correctAnswer": ["A", "B", "C"],
         "stats": { "difficulty": "Easy", "accuracy": "34%", "coverage": "D4: Chemical Bonding" },
         "options": [
