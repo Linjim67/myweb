@@ -378,12 +378,12 @@
         "sectionIntro": "右圖為 0.10 mM 的結構 A 與 B 在 pH 7 緩衝溶液的可見-紫外光光譜圖，結構 A 為實線、B 則為虛線。標註的數值為該峰對應的吸收度。",
         "sectionImage": "/assets/images/115/spr41.png",
         "type": "fill",
-        "allocation": 6,
+        "allocation": "6",
         "question": "已知需要連續數個共軛雙鍵(單雙鍵交錯)，才能讓分子吸收可見-紫外波段範圍的光。<br>則位於 260 nm 吸收峰對應到 (27-1) 、而位於 340 nm 吸收峰對應到 (27-2) 。<br>請填入分子片段(moiety)的代號甲至己。",
         "correctAnswer": {
           "27-1": "丙",
           "27-2": "己"
-        }
+        },
         "stats": { "difficulty": "Hard", "accuracy": "11%", "coverage": "D4: Spectroscopy" },
         "explanation": "260 nm 吸收來自腺嘌呤(丙)；340 nm 吸收來自還原態Nicotinamide(己)。"
       },
@@ -399,7 +399,7 @@
       {
         "id": 29,
         "type": "fill",
-        "allocation": 6,
+        "allocation": "6",
         "question": "某樣品水溶液中的溶質僅含有結構 A 與 B，將其稀釋 5 倍後，在 b=1 cm 環境下，測量在 260 nm、340 nm 的吸收度，分別為 0.90 與 0.18。<br>試依此計算，樣品原液中的結構 A 濃度為 (29-1) mM 與 B 的濃度為 (29-2) mM。",
         "correctAnswer": {
           "29-1": 0.15, 
@@ -447,9 +447,9 @@
       {
         "id": 32,
         "type": "fill",
-        "allocation": 5,
+        "allocation": "5",
         "image": "/assets/images/115/s32.png",
-        "question": "阿亨將 13.8 g 的 X 加入一真空的密閉容器中，在外壓為 1 atm 下緩慢地加熱。測量容器內氣體體積 V 與溫度 T 的關係，得到下圖。則此有機物的分子量為 _______ 。",
+        "question": "阿亨將 13.8 g 的 X 加入一真空的密閉容器中，在外壓為 1 atm 下緩慢地加熱。測量容器內氣體體積 V 與溫度 T 的關係，得到下圖。則此有機物的分子量為 _______ 。(5分)",
         "correctAnswer": "46",
         "stats": { "difficulty": "Medium", "accuracy": "45%", "coverage": "D6: Ideal gas" },
         "explanation": "高溫區(氣體)符合 PV = nRT。<br>斜率 m = nR/P = 0.0246。<br>n = (0.0246 * 1 atm) / 0.082 = 0.3 mol。<br>MW = 13.8 g / 0.3 mol = 46 g/mol。"
@@ -477,7 +477,7 @@
       {
         "id": 34,
         "type": "fill",
-        "allocation": 9,
+        "allocation": "9",
         "image": "/assets/images/115/s34.png",
         "question": "請將以下離子的代號與上圖的編號配對，即填入編號A-F至空格中。(每格1.5分)",
         "correctAnswer": {
@@ -494,7 +494,7 @@
       {
         "id": 35,
         "type": "fill",
-        "allocation": 6,
+        "allocation": "6",
         "image": "/assets/images/115/s35.png",
         "question": "試寫出以下物質的體積莫耳濃度。(每格2分)",
         "correctAnswer": {
