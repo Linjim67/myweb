@@ -379,16 +379,17 @@
         "sectionImage": "/assets/images/115/spr41.png",
         "type": "fill",
         "allocation": 6,
-        "question": "已知需要連續數個共軛雙鍵(單雙鍵交錯)，才能讓分子吸收可見-紫外波段範圍的光。<br>則位於 260 nm 吸收峰對應到 ________ 、而位於 340 nm 吸收峰對應到 ________。<br>請填入分子片段(moiety)的代號甲至己。",
-        "correctAnswer": "260nm: 丙 / 340nm: 己",
-        "userResult": { "choice": "", "score": 0 },
+        "question": "已知需要連續數個共軛雙鍵(單雙鍵交錯)，才能讓分子吸收可見-紫外波段範圍的光。<br>則位於 260 nm 吸收峰對應到 (27-1) 、而位於 340 nm 吸收峰對應到 (27-2) 。<br>請填入分子片段(moiety)的代號甲至己。",
+        "correctAnswer": {
+          "27-1": "丙",
+          "27-2": "己"
+        }
         "stats": { "difficulty": "Hard", "accuracy": "11%", "coverage": "D4: Spectroscopy" },
         "explanation": "260 nm 吸收來自腺嘌呤(丙)；340 nm 吸收來自還原態Nicotinamide(己)。"
       },
       {
         "id": 28,
         "type": "fill",
-        "allocation": 4,
         "question": "若實驗選擇光徑 b = 1 cm。物質 B 在 340 nm 時有個吸收峰，濃度 0.10 mM 時，其光吸收度 A 約為 0.60。則物質 B 在此波長的莫耳吸光度 ε 為 ________ M<sup>-1</sup> cm<sup>-1</sup>。",
         "correctAnswer": "6000",
         "userResult": { "choice": "", "score": 0 },
@@ -398,10 +399,12 @@
       {
         "id": 29,
         "type": "fill",
-        "allocation": 4,
-        "question": "某樣品水溶液中的溶質僅含有結構 A 與 B，將其稀釋 5 倍後，在 b=1 cm 環境下，測量在 260 nm、340 nm 的吸收度，分別為 0.90 與 0.18。<br>試依此計算，樣品原液中的結構 A 濃度為 ____ mM 與 B 的濃度為 ____ mM。",
-        "correctAnswer": "A: 0.15, B: 0.15",
-        "userResult": { "choice": "", "score": 0 },
+        "allocation": 6,
+        "question": "某樣品水溶液中的溶質僅含有結構 A 與 B，將其稀釋 5 倍後，在 b=1 cm 環境下，測量在 260 nm、340 nm 的吸收度，分別為 0.90 與 0.18。<br>試依此計算，樣品原液中的結構 A 濃度為 (29-1) mM 與 B 的濃度為 (29-2) mM。",
+        "correctAnswer": {
+          "29-1": 0.15, 
+          "29-2": 0.15
+        },
         "stats": { "difficulty": "Sophisticated", "accuracy": "0%", "coverage": "D4: Spectroscopy" },
         "explanation": "由 340nm 數據得 C<sub>B</sub>(稀釋) = 0.18/6000 = 0.03 mM → 原液 B = 0.15 mM。<br>由 260nm 數據扣除 B 貢獻後，得 A 貢獻，計算後原液 A = 0.15 mM。"
       }
@@ -474,7 +477,7 @@
       {
         "id": 34,
         "type": "fill",
-        "allocation": "9",
+        "allocation": 9,
         "image": "/assets/images/115/s34.png",
         "question": "請將以下離子的代號與上圖的編號配對，即填入編號A-F至空格中。(每格1.5分)",
         "correctAnswer": {
@@ -491,7 +494,7 @@
       {
         "id": 35,
         "type": "fill",
-        "allocation": "6",
+        "allocation": 6,
         "image": "/assets/images/115/s35.png",
         "question": "試寫出以下物質的體積莫耳濃度。(每格2分)",
         "correctAnswer": {
