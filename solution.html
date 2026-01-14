@@ -12,6 +12,23 @@
 
 <body>
 
+    <div class="control-panel">
+        <div class="control-item">
+            Animate
+            <label class="switch">
+                <input type="checkbox" id="toggle-animate" onchange="toggleAnimation()">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <div class="control-item">
+            Expand All
+            <label class="switch">
+                <input type="checkbox" id="toggle-expand" onchange="toggleExpandAll()">
+                <span class="slider"></span>
+            </label>
+        </div>
+    </div>
+
     <div class="container">
         <div id="solution-container">Loading solutions...</div>
     </div>
