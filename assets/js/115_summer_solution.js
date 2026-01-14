@@ -88,6 +88,7 @@ function loadUserTheme(username) {
     document.head.appendChild(link);
 }
 
+
 /* =========================================
    1. BADGE GENERATOR (Aligns A-E)
    ========================================= */
@@ -202,6 +203,7 @@ function renderSolutions() {
     });
 }
 
+
 function renderOptionsList(prob) {
     if (!prob.options) return '';
 
@@ -275,46 +277,49 @@ function toggleExplanation(optionDiv) {
    ========================================= */
 function toggleAnimation() {
     const isOn = document.getElementById('toggle-animate').checked;
+    // Toggles the class that enables the CSS transition
     document.body.classList.toggle('animate-enabled', isOn);
 }
 
 function toggleExpandAll() {
     const isOn = document.getElementById('toggle-expand').checked;
 
-    // Find all Problem Details
     const allDetails = document.querySelectorAll('.problem-details');
     const allExplanations = document.querySelectorAll('.option-explanation');
     const allOptions = document.querySelectorAll('.option-item');
 
-    allDetails.forEach(d => d.style.display = isOn ? 'block' : 'none');
-
-    // If Expand All is ON, we also show ALL explanations
     if (isOn) {
-        allExplanations.forEach(e => e.style.display = 'block');
-        allOptions.forEach(o => o.classList.add('show-explanation'));
+        // Add class to expand everything
+        allDetails.forEach(d => d.classList.add('expanded'));
+        allExplanations.forEach(e => e.classList.add('expanded'));
+        allOptions.forEach(o => o.classList.add('show-explanation')); // Keeps visual style
     } else {
-        allExplanations.forEach(e => e.style.display = 'none');
+        // Remove class to collapse everything
+        allDetails.forEach(d => d.classList.remove('expanded'));
+        allExplanations.forEach(e => e.classList.remove('expanded'));
         allOptions.forEach(o => o.classList.remove('show-explanation'));
     }
 }
 
-
+/* =========================================
+   CLICK HANDLERS (Updated for Animation)
+   ========================================= */
 
 // Behavior 1: Click ID -> Expand Details + Show ALL Explanations
 function expandFullQuestion(idSpan, event) {
-    event.stopPropagation(); // Stop it from triggering the row click
+    event.stopPropagation();
 
-    // Open the Row
+    // 1. Expand the Question
     const summary = idSpan.closest('.problem-summary');
     const details = summary.nextElementSibling;
-    details.style.display = 'block';
+    details.classList.add('expanded'); // <--- CSS Transition triggers here
 
-    // Open ALL Explanations inside this question
+    // 2. Expand ALL Options inside
     const allOptions = details.querySelectorAll('.option-item');
     allOptions.forEach(opt => {
         opt.classList.add('show-explanation');
         const exp = opt.querySelector('.option-explanation');
-        if (exp) exp.style.display = 'block';
+        if (exp) exp.classList.add('expanded');
     });
 }
 
@@ -322,51 +327,54 @@ function expandFullQuestion(idSpan, event) {
 function handleBadgeClick(badge, event) {
     event.stopPropagation();
 
-    // 1. Open the Row
     const summary = badge.closest('.problem-summary');
     const details = summary.nextElementSibling;
-    details.style.display = 'block';
 
-    // 2. Find the letter clicked (A, B, C...)
+    // 1. Ensure Question is Open
+    if (!details.classList.contains('expanded')) {
+        details.classList.add('expanded');
+    }
+
+    // 2. Find and Open Target Option
     const letter = badge.innerText.trim();
-
-    // 3. Find the specific option in the details list
     const targetOption = details.querySelector(`.option-item[data-label="${letter}"]`);
 
     if (targetOption) {
-        // Close others? The prompt didn't say, but usually safer to just open the target.
         targetOption.classList.add('show-explanation');
         const exp = targetOption.querySelector('.option-explanation');
-        if (exp) exp.style.display = 'block';
-
-        // Optional: Scroll to it
-        targetOption.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (exp) {
+            exp.classList.add('expanded');
+            // Optional: Scroll to it after a tiny delay so animation starts first
+            setTimeout(() => {
+                targetOption.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
     }
 }
 
-// Behavior 3: Click Blank (Row) -> Expand Details ONLY (Hide Explanations)
+// Behavior 3: Click Blank (Row) -> Toggle Details ONLY
 function handleRowClick(summary, event) {
-    // Standard Toggle
     const details = summary.nextElementSibling;
-    const isHidden = window.getComputedStyle(details).display === 'none';
 
-    if (isHidden) {
-        details.style.display = 'block';
-        // Ensure explanations are hidden (reset state)
+    // Toggle the class
+    const isNowOpen = details.classList.toggle('expanded');
+
+    // If closing, we should probably close the inner explanations too for neatness
+    if (!isNowOpen) {
         const allExps = details.querySelectorAll('.option-explanation');
-        allExps.forEach(e => e.style.display = 'none');
-    } else {
-        details.style.display = 'none';
+        allExps.forEach(e => e.classList.remove('expanded'));
     }
 }
 
-// Helper: Toggle single explanation inside the list
+// Helper: Toggle single explanation
 function toggleExplanation(optionDiv, event) {
-    event.stopPropagation(); // Don't close the whole row
-    const exp = optionDiv.querySelector('.option-explanation');
-    const isVisible = exp.style.display === 'block';
+    event.stopPropagation();
 
-    exp.style.display = isVisible ? 'none' : 'block';
-    if (isVisible) optionDiv.classList.remove('show-explanation');
-    else optionDiv.classList.add('show-explanation');
+    const exp = optionDiv.querySelector('.option-explanation');
+
+    // Toggle Class instead of display
+    const isNowOpen = exp.classList.toggle('expanded');
+
+    if (isNowOpen) optionDiv.classList.add('show-explanation');
+    else optionDiv.classList.remove('show-explanation');
 }
