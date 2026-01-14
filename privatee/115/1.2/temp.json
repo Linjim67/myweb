@@ -1,0 +1,41 @@
+    [
+        {
+        "id": 4,
+        "type": "multi",
+        "allocation": 5,
+        "question": "Which are aromatic compound?",
+        "stats": { "coverage": "Organic", "difficulty": "Medium", "accuracy": "N/A" },
+        "correctAnswer": ["A", "B"],
+        "options": [
+          { "label": "A", "text": "Fluorine (F)", "percent": "85%", "explanation": "Fluorine is the most electronegative element." },
+          { "label": "B", "text": "Chlorine (Cl)", "percent": "10%", "explanation": "Less than Fluorine." },
+          { "label": "C", "text": "Oxygen (O)", "percent": "3%", "explanation": "Incorrect." },
+          { "label": "D", "text": "Neon (Ne)", "percent": "2%", "explanation": "Noble gases are stable." },
+          { "label": "E", "text": "Neon (Ne)", "percent": "47%", "explanation": "Noble gases are stable." }
+        ]
+      },
+      {
+        "id": 1,
+        "type": "single",
+        "allocation": 3,
+        "image": "/assets/images/115/s01.png",
+        "question": "右圖為新興毒品喪屍煙彈(甲苄咪酯)的化學成分。關於此分子的敘述，哪些正確？",
+        "correctAnswer": "A",
+        "stats": { "difficulty": "Easy", "accuracy": "85%", "coverage": "Inorganic" },
+        "options": [
+          { "label": "A", "text": "Fluorine (F)", "percent": "85%", "explanation": "Fluorine is the most electronegative element." },
+          { "label": "B", "text": "Chlorine (Cl)", "percent": "10%", "explanation": "Less than Fluorine." },
+          { "label": "C", "text": "Oxygen (O)", "percent": "3%", "explanation": "Incorrect." },
+          { "label": "D", "text": "Neon (Ne)", "percent": "2%", "explanation": "Noble gases are stable." }
+        ]
+      },
+      {
+        "id": 5,
+        "type": "fill",
+        "allocation": 3,
+        "question": "Calculate the molar mass of Water (H2O).",
+        "stats": { "difficulty": "Medium", "accuracy": "92%", "coverage": "Stoichiometry" },
+        "correctAnswer": "30",
+        "explanation": "2 * 1.008 (H) + 16.00 (O) ≈ 18.02 g/mol"
+      }
+    ]

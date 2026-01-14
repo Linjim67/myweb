@@ -1,45 +1,127 @@
 [
   {
-    "title": "Block 1: Basic Concepts",
+    "title": "Block 1: 單題",
     "problems": [
       {
         "id": 1,
-        "type": "single",
-        "allocation": 3,
-        "image": "/privatee/115/1.2/images/1.jpg",
-        "question": "Which element has the highest electronegativity?",
-        "correctAnswer": "A",
-        "stats": { "difficulty": "Easy", "accuracy": "85%", "coverage": "Inorganic" },
+        "type": "multi",
+        "allocation": 5,
+        "image": "/assets/images/115/s01.png",
+        "question": "右圖為新興毒品喪屍煙彈(甲苄咪酯)的化學成分。關於此分子的敘述，哪些正確？",
+        "correctAnswer": ["A", "C", "D"],
+        "stats": { "difficulty": "Easy", "accuracy": "68%", "coverage": "D4: Organic" },
         "options": [
-          { "label": "A", "text": "Fluorine (F)", "percent": "85%", "explanation": "Fluorine is the most electronegative element." },
-          { "label": "B", "text": "Chlorine (Cl)", "percent": "10%", "explanation": "Less than Fluorine." },
-          { "label": "C", "text": "Oxygen (O)", "percent": "3%", "explanation": "Incorrect." },
-          { "label": "D", "text": "Neon (Ne)", "percent": "2%", "explanation": "Noble gases are stable." }
+          { "label": "A", "text": "含14個碳。", "percent": "87%", "explanation": "根據鍵線式轉換原則，此化合物化學式為 C<sub>14</sub>H<sub>16</sub>N<sub>2</sub>O<sub>2</sub>" },
+          { "label": "B", "text": "含17個氫。", "percent": "13%", "explanation": "根據鍵線式轉換原則，此化合物化學式為 C<sub>14</sub>H<sub>16</sub>N<sub>2</sub>O<sub>2</sub>" },
+          { "label": "C", "text": "具有芳香環。", "percent": "70%", "explanation": "含有苯環與imidazole，故具有芳香環。<br>芳香環是指有數個共軛雙鍵形成的環狀結構。" },
+          { "label": "D", "text": "為酯類化合物。", "percent": "78%", "explanation": "含有官能基-C(O)O-，為酯類。" },
+          { "label": "E", "text": "易溶於水。", "percent": "17%", "explanation": "不含有親水性官能基如-OH、-COOH、-NH<sub>2</sub>等，卻有酯官能基，故難溶於水。" }
         ]
       },
       {
         "id": 2,
         "type": "multi",
         "allocation": 5,
-        "question": "Which of the following are strong acids? (Select 2)",
-        "stats": { "difficulty": "Hard", "accuracy": "45%", "coverage": "Stoichiometry" },
+        "question": "實驗室常備以下器材：<br> 1. 試管&emsp;&emsp;&emsp; 2. 滴管 &emsp;&emsp;&emsp; 3. 燒杯&emsp;&emsp;&emsp; 4. 量筒 <br> 5. 錐形瓶&emsp;&emsp; 6. 滴定管&emsp;&emsp; 7. 定量瓶&emsp;&emsp; 8. 分度吸量管 <br> 已知容量有兩種標示：TD (To Deliver，用於轉移液體)、TC(To Contain，用於盛裝液體)，則下列關於容量器材的敘述，哪些正確？",
         "correctAnswer": ["A", "C"],
+        "stats": { "difficulty": "Medium", "accuracy": "46%", "coverage": "D3: Lab intro" },
         "options": [
-          { "label": "A", "text": "HCl", "percent": "90%", "explanation": "Correct. Hydrochloric acid is a strong acid." },
-          { "label": "B", "text": "CH3COOH", "percent": "40%", "explanation": "Incorrect. Acetic acid is weak." },
-          { "label": "C", "text": "H2SO4", "percent": "88%", "explanation": "Correct. Sulfuric acid is strong." },
-          { "label": "D", "text": "HF", "percent": "60%", "explanation": "Incorrect. HF is a weak acid." },
-          { "label": "E", "text": "NH3", "percent": "10%", "explanation": "Incorrect. Ammonia is a base." }
+          { "label": "A", "text": "器材2、6、8都是TD型。", "percent": "83%", "explanation": "體積準在運送後的液體，表示此工具目的是運送，也就是<br>2. 滴管：上面有刻度，表示滴入多少體積、殘留的容量不重要也不考慮、<br>6. 滴定管：和滴管同理、<br>8. 分度吸量管：一個準確的手持滴管。分度(依刻度)、吸、量(取)、(的)管，用於轉移液體。" },
+          { "label": "B", "text": "器材6若為特氟龍栓塞，則僅能盛裝酸液。", "percent": "26%", "explanation": "以前常用的栓塞為玻璃製，但會被鹼腐蝕，只能承裝酸液。<br>另一種常用栓塞為橡膠製，但會被酸腐蝕，只能承裝鹼液。<br>後世發明強耐酸耐鹼性，甚至耐熱性的特福龍，可以承裝酸液與鹼液。鐵氟龍也是不沾鍋的塗層。" },
+          { "label": "C", "text": "器材2分為玻璃滴管與塑膠滴管，僅前者能吸取強酸。", "percent": "61%", "explanation": "與前述原理類似，玻璃可以承裝酸液。而酸液容易腐蝕塑膠或橡膠等有機物質。" },
+          { "label": "D", "text": "若要將濃鹽酸稀釋成0.100 M，只需要用到器材7與8。", "percent": "39%", "explanation": "器材8用於準確量取濃鹽酸，器材7用於得知稀釋後的溶液體積，看似完整。不過，取完濃鹽酸不能直接倒入容量瓶，因為酸液稀釋會放熱，熱脹導致容量瓶體積不準，而且十分危險。需要先在燒杯內稀釋，剩餘少量的水再放入容量瓶添加。<br>註：容量瓶受熱後，其實會導致承裝體積減少：因為從玻璃中心膨脹後，容器內壁擃張，內部容器反而減少。" },
+          { "label": "E", "text": "上述1-8之容量器材，沒有任何一個能夠量測出3.14 mL這樣的數據紀錄。", "percent": "30%", "explanation": "估計值0.01 mL，代表此容器具有0.1 mL的刻度，量筒就符合了。" }
         ]
       },
       {
         "id": 3,
-        "type": "fill",
-        "allocation": 3,
-        "question": "Calculate the molar mass of Water (H2O).",
-        "stats": { "difficulty": "Medium", "accuracy": "92%", "coverage": "Stoichiometry" },
-        "correctAnswer": "18",
-        "explanation": "2 * 1.008 (H) + 16.00 (O) ≈ 18.02 g/mol"
+        "type": "multi",
+        "allocation": 5,
+        "question": "阿亨欲稀釋市售的濃度18.0 M、比重1.80濃硫酸，以配製0.50 M、比重為1.05的稀硫酸共540 mL。經簡單計算後，阿亨量取特定體積的水，緩慢地加入特定體積的濃硫酸中。則關於此稀釋過程與濃度的相關敘述，哪些正確？",
+        "correctAnswer": ["D", "E"],
+        "stats": { "difficulty": "Medium", "accuracy": "18%", "coverage": "D2: Soln" },
+        "options": [
+          { "label": "A", "text": "阿亨根本在搞笑。首先，濃硫酸稀釋，要由濃硫酸緩慢滴入浸泡在冰水浴的水中。其次，比重的單位 [g/cm<sup>3</sup>] 應該要寫出來。", "percent": "43%", "explanation": "前半段正確，因為密度的關係，稀釋時由酸(密度大)倒入水更容易混合均勻，由整杯水一起增溫，會加得比較慢。<br>不過比重，顧名思義(科學沒有像文言文一樣根本猜不出來)，比較重量。比較需要基準和控制變因，我們固定體積，和水比重量，也就是物體質量與水質量的比值。都是質量，沒有單位。而比重加上單位[g/cm<sup>3</sup>]恰好就是密度，因為水的密度恰為1，質量比在定體積下就是密度比。" },
+          { "label": "B", "text": "0.50 M的硫酸水溶液的氫離子濃度相當於pH = 0.0的鹽酸溶液。", "percent": "52%", "explanation": "硫酸是二質子酸，也是強酸。但各位時常忽略一件事：第一段解離(H<sub>2</sub>SO<sub>4</sub>&#x2192; H<sup>+</sup>+HSO<sub>4</sub><sup>-</sup>)是強酸沒錯，也就是無論H<sub>2</sub>SO<sub>4濃度，都會完全反應。但是第二段解離(HSO<sub>4</sub><sup>-</sup> &#x21CC; H<sup>+</sup>+SO<sub>4</sub><sup>2-</sup>只會部分反應，因為HSO<sub>4</sub><sup>-</sup>是個中強酸。在本題，只會有2%的亞硫酸氫根(HSO<sub>4</sub><sup>-</sup>)解離。這樣氫離子濃度約為0.52 M，不等於鹽酸的氫離子濃度1.0 M。" },
+          { "label": "C", "text": "市售濃硫酸的重量莫耳濃度為40 m、重量百分濃度98%。", "percent": "30%", "explanation": "重量莫耳濃度[m]=溶質莫耳數[]mol &divide; 溶劑質量[kg]。取1000 mL溶液：<br>有18 M &times; 1 L = 18 mol溶質，即18 &times; 98 = 1764 g硫酸。<br>有1000 &times; 1.8 = 1800 g溶液，扣掉1764 g硫酸後，就知道水重36 g = 0.036 kg。<br>重量百分濃度：98&divide; (98+2)=98%、重量莫耳濃度：18 mol &divide; 0.036 kg=50 m" },
+          { "label": "D", "text": "稀釋的步驟中，要量取15 mL的濃硫酸。", "percent": "74%", "explanation": "稀釋前後，溶液總質量的變化量就是加的水量、硫酸分子的質量前後不改變。<br>硫酸最後要0.54 L &times; 0.5 M = V L &times; 18 M，得需要濃硫酸 V = 0.015 L = 15 mL。" },
+          { "label": "E", "text": "稀釋的步驟中，要取約540 mL的水。", "percent": "22%", "explanation": "根據前一題，濃硫酸溶液總質量15 mL &times; 1.80 [g/cm<sup>3</sup>] = 27 g，而稀釋液總質量為540 mL &times; 1.05 [g/cm<sup>3</sup>] = 567 g，扣除濃硫酸質量就是加入水的重量，為540 g，即540 mL。有些人用體積相減，而非總質量相減來得到答案，但這是錯誤的。平常我們都假設「體積具有加成性」，這個假設的出現頻率不亞於假設沒有摩擦力。但這個假設大多是錯誤的，正確的前提是溶液密度前後不改變。因為(化學)反應只能保證前後質量守恆，要密度相同時，才會有體積守恆，進而將體積相加相減。" }
+        ]
+      },
+      {
+        "id": 4,
+        "type": "multi",
+        "allocation": 5,
+        "question": "早在19世紀初期，Dulong提出了金屬比熱C與金屬的原子量M相乘是定值，可以被近似成 6.0 [cal&#xB7;g<sup>-1</sup>&#xB7;K<sup>-1</sup>]。因為當時已知的原子量數據很少，測量比熱以推測原子量是個很好的方式。阿亨將40.0 g元素金屬M加熱到 100 &dig;C ，投入50.0 g、溫度 23.0 &dig;C 的水中，待達溫度平衡後，水溫為 25.0 &dig;C 。關於此的相關敘述，哪些正確？",
+        "correctAnswer": ["C", "E"],
+        "stats": { "difficulty": "Easy", "accuracy": "24%", "coverage": "D4: Perodic table" },
+        "options": [
+          { "label": "A", "text": "此方式可以估計Cs的原子量", "percent": "52%", "explanation": "Cs是銫，鹼金族，碰水會大爆炸。" },
+          { "label": "B", "text": "此方式可以估計Si的原子量", "percent": "26%", "explanation": "Si是矽，石部，不屬於金屬。" },
+          { "label": "C", "text": "水總共吸收100 cal的熱量", "percent": "96%", "explanation": "熱量&Delta;H=ms &Delta; T，帶入水：&Delta; H = (50 g)(1 cal/g&#xB7;&deg; C)(25&deg; C-23&deg; C)=100 cal" },
+          { "label": "D", "text": "金屬M的原子量約為180 g/mol", "percent": "83%", "explanation": "金屬比熱為：s=(100 cal)&divide; (40 g)(100-25 &deg;C)=0.033 [cal/g&#xB7;&deg; C] 帶入題幹公式，有：M &times; 0.033 = 6.0，得M=180，沒有單位。註：原子量表面上是g/mol，但是實際上沒有單位。原子量和比重類似，用<sup>12</sup>C的12.0000 amu作為標準進行比值，單位相消。" },
+          { "label": "E", "text": "若金屬M為W (鎢，原子量183)，則此原子量的估計方式呈負偏差。", "percent": "52%", "explanation": "正偏差：測出來的結論 > 實際值，負偏差則相反。180<183，為負偏差。" }
+        ]
+      },
+      {
+        "id": 5,
+        "type": "multi",
+        "allocation": 5,
+        "question": "在實驗室目睹到氟氣外洩時，可就不是你的福氣了，建議你趕快跑。氟氣具有標誌性的顏色，且______，會和鹼性水溶液劇烈反應。已知氟氣與鹼性水溶液反應後，有兩種可能的反應，產物可能是OF<sub>2</sub>或O<sub>2</sub>，依鹼液濃度而定。下列相關敘述，哪些正確？",
+        "correctAnswer": ["A", "B", "E"],
+        "stats": { "difficulty": "Hard", "accuracy": "43%", "coverage": "D4: Redox" },
+        "options": [
+          { "label": "A", "text": "空格內可以填入：氟為強氧化劑，也可以填入：氟的還原電位高。", "percent": "52%", "explanation": "氟氣只能變成氟離子，半反應式：F<sub>2</sub> + 2e<sup>-</sup> &#x2192; 2F<sup>-</sup>。<br>得電子，還原反應，此反應的傾向很大，電位很大，所以還原電位大。<br>得電子，被還原，自己還原，別人氧化，代表是強氧化劑：作為幫別人氧化的角色。"},
+          { "label": "B", "text": "分子OF<sub>2</sub>中，O的氧化數為+2、F的氧化數則為-1。", "percent": "78%", "explanation": "週期表最右上角的非惰性元素的電負度最大，最容易搶電子。此分子F拿電子，因為是7A，每個F至多拿1顆，帶-1。O元素被拿2顆，所以氧化數為+2。" },
+          { "label": "C", "text": "產生OF<sub>2</sub>的反應式平衡後，反應式的各物質係數和為10。", "percent": "17%", "explanation": "鹼性溶液反應，沒意外反應物有OH<sup>-</sup>。O的氧化數從-2(OH<sup>-</sup>)到+2，F的氧化數從0(F<sub>2</sub>)到-1，所以O元素與F元素反應量的比應為1:4。不過一個OF<sub>2</sub>分子已經規定好比例1:2了，那多餘的兩個F元素怎麼還原？那就只能變成F<sup>-</sup>了。故反應式為2F<sub>2</sub>+2OH<sup>-</sup> &#x2192 OF<sub>2</sub>+2F<sup>-</sup>，剩下缺氫缺氧缺水的部分就是補氫離子、氫氧根離子與水分子。所以反應右側補H<sub>2</sub>O，反應平衡完成，係數和為8。" },
+          { "label": "D", "text": "產生O<sub>2</sub>的反應式平衡後，反應式的各物質係數和為12。", "percent": "22%", "explanation": "相近於C選項之分析，O被氧化的半反應式：4OH<sup>-</sup> &#x2192 O<sub>2</sub>+4e<sup>-</sup>+2H<sub>2</sub>O <br>，與兩倍量的F<sub>2</sub>反應，故有：2F<sub>2</sub>+4OH<sup>-</sup> &#x2692 O<sub>2</sub>+4F<sup>-</sup>+2H<sub>2</sub>"},
+          { "label": "E", "text": "在pH值較高的水溶液中，主要產生O<sub>2</sub>、而pH值較小的水溶液產生OF<sub>2</sub>。", "percent": "43%", "explanation": "對於一分子的F<sub>2</sub>通入溶液後，產生OF<sub>2</sub>的反應式需要1個OH<sup>2</sup>即可、而產生O<sub>2</sub>的反應需要2個。後者對於OH<sup>-</sub>的需求較高，代表所要求的pH值較大。" }
+        ]
+      },
+      {
+        "id": 6,
+        "type": "multi",
+        "allocation": 5,
+        "question": "已知 A、B、C、D、E 都是含有氯元素的化合物，我們不知道這些化合物的分子式，但知道關於這五種化合物之間的氧化還原反應：<br>(1) A &rarr; B + NaCl<br>(2) B + H<sub>2</sub>O &rarr; C + H<sub>2</sub> (電解反應)<br>(3) D + NaOH &rarr; A + B + H<sub>2</sub>O<br>(4) E + NaOH &rarr; B + C + H<sub>2</sub>O<br>試判斷這五種化合物中，氯原子的氧化數大小比較：",
+        "correctAnswer": ["C", "D"],
+        "stats": { "difficulty": "Hard", "accuracy": "19%", "coverage": "D" },
+        "options": [
+          { "label": "A", "text": "A>B", "percent": "52%", "explanation": "Cl屬於第17週期(7A)，氧化數範圍應介於-1~7。<br>反應式(1)：A &rarr; B + (-1)，故氧化數B>A，因為A再怎麼小不會到-1，這樣A=B-1時，B>A。<br> 反應式(2)：C多了一個氧，所以氧化數應變大，C>B。電解只是給予能量，使得原先不能反應的反應反應。<br>反應式(3)(4)：為歸中反應，表示 [中間氧化數] &rarr; [大氧化數] + [小氧化數]。D介於AB間、E介於BC間。<br>根據以上關係，有B>D>A與C>E>B，合併得C>E>B>D>A。" },
+          { "label": "B", "text": "B>C", "percent": "52%", "explanation": "參考A選項" },
+          { "label": "C", "text": "E>B>A", "percent": "43%", "explanation": "參考A選項" },
+          { "label": "D", "text": "C>D>A", "percent": "35%", "explanation": "參考A選項" },
+          { "label": "E", "text": "A>E", "percent": "39%", "explanation": "參考A選項" }
+        ]
+      },
+      {
+        "id": 7,
+        "type": "multi",
+        "allocation": 5,
+        "question": "某工廠排放至大氣的氣體僅由N<sub>2</sub>、O<sub>2</sub>與CO<sub>2</sub>組成。研究員欲了解排放的氣體組成，於是在 T 下收集 V [L]廢氣進行分析。已知此溫度下，氣體的莫耳體積為 25.0 L/mol。研究員通入收集的廢氣，點燃過量的鎂帶。待反應完全後，得到了黑色、黃色與白色的固體物質，其質量分別為 12 g、300 g與 160 g。選出正確的選項。",
+        "correctAnswer": ["B", "C", "E"],
+        "stats": { "difficulty": "Hard", "accuracy": "27%", "coverage": "D6: Ideal gas"},
+        "options": [
+          { "label": "A", "text": "黃色物質是氮化鎂，化學式為MgN，其中N的氧化數為-2。", "percent": "43%", "explanation": "錯誤。鎂(Mg)為2A族(+2)，氮(N)為5A族(-3)，故氮化鎂化學式應為 Mg<sub>3</sub>N<sub>2</sub>，N的氧化數為 -3。" },
+          { "label": "B", "text": "混合氣體中，N<sub>2</sub>、O<sub>2</sub>與CO<sub>2</sub>的組成比例為3:1:1。", "percent": "35%", "explanation": "正確。黑色固體為 C (12g=1mol)，來自 CO<sub>2</sub>，故 CO<sub>2</sub>=1mol (產生2mol MgO=80g)。<br>黃色固體為 Mg<sub>3</sub>N<sub>2</sub> (300g=3mol)，來自 N<sub>2</sub>，故 N<sub>2</sub>=3mol。<br>白色固體為 MgO (總重160g)，扣除來自 CO<sub>2</sub> 的80g，剩餘80g (2mol) 來自 O<sub>2</sub>，故 O<sub>2</sub>=1mol。<br>比例 N<sub>2</sub>:O<sub>2</sub>:CO<sub>2</sub> = 3:1:1。" },
+          { "label": "C", "text": "研究員收集的氣體質量為 160 g、體積為 125 L。", "percent": "52%", "explanation": "正確。<br>質量 = 3mol&times;28 + 1mol&times;32 + 1mol&times;44 = 84+32+44 = 160g。<br>體積 = 總莫耳數(5mol) &times; 25.0 L/mol = 125 L。" },
+          { "label": "D", "text": "混合氣體的密度約為 1.28 g/cm<sup>3</sup>。", "percent": "35%", "explanation": "錯誤。密度 D = M/V = 160g / 125L = 1.28 g/L，而非 g/cm<sup>3</sup>。" },
+          { "label": "E", "text": "反應過程中，鎂會放出又強又亮的白光。", "percent": "78%", "explanation": "正確。鎂燃燒時會發出強烈的白光(紫外線與可見光)。" }
+        ]
+      },
+      {
+        "id": 8,
+        "type": "multi",
+        "allocation": 5,
+        "question": "AB: 呈上題，選出正確的選項。<br>CDE: 若研究員加入反應當中的鎂帶質量恰為(A)所計算的質量，意即鎂帶恰好用盡。研究員將固體加入水中，濾除不溶解的固體過後，配製成 5.0 L 的水溶液。",
+        "correctAnswer": ["B", "D"],
+        "stats": { "difficulty": "Hard", "accuracy": "39%", "coverage": "D1: Stoichiometry" },
+        "options": [
+          { "label": "A", "text": "完全反應所需的鎂條質量最少為 300 g。", "percent": "26%", "explanation": "錯誤。所需Mg莫耳數：<br>與N<sub>2</sub>(3mol): 3Mg + N<sub>2</sub> &rarr; Mg<sub>3</sub>N<sub>2</sub> (需9mol)<br>與O<sub>2</sub>(1mol): 2Mg + O<sub>2</sub> &rarr; 2MgO (需2mol)<br>與CO<sub>2</sub>(1mol): 2Mg + CO<sub>2</sub> &rarr; 2MgO + C (需2mol)<br>共需 13 mol Mg。質量 = 13 &times; 24 = 312 g。" },
+          { "label": "B", "text": "反應過程中遵守質量守恆。", "percent": "78%", "explanation": "正確。一般化學反應均遵守質量守恆定律。" },
+          { "label": "C", "text": "僅有黑色的固體被濾除。", "percent": "39%", "explanation": "錯誤。加入水中後，Mg<sub>3</sub>N<sub>2</sub>反應生成 NH<sub>3</sub>(aq) 與 Mg(OH)<sub>2</sub>(s)；MgO 與水反應生成 Mg(OH)<sub>2</sub>(s) 或不溶。故濾渣包含黑色的 C 與白色的 Mg(OH)<sub>2</sub>(s) / 未溶MgO。" },
+          { "label": "D", "text": "溶液具有刺鼻的氣味，固體則否。", "percent": "48%", "explanation": "正確。溶液中含有氨(NH<sub>3</sub>)，具刺鼻味；固體主要為碳與氫氧化鎂，無味。" },
+          { "label": "E", "text": "取 10 mL 的溶液，需要用 0.10 M 硫酸滴定 120 mL 才到達當量點。", "percent": "22%", "explanation": "錯誤。<br>生成 NH<sub>3</sub> 莫耳數 = Mg<sub>3</sub>N<sub>2</sub>(3mol) &times; 2 = 6 mol。<br>[NH<sub>3</sub>] = 6 mol / 5.0 L = 1.2 M。<br>取 10mL (0.01L)，含 NH<sub>3</sub> 0.012 mol。<br>滴定：2 &times; [H<sub>2</sub>SO<sub>4</sub>] &times; V = n(NH<sub>3</sub>)<br>2 &times; 0.10 &times; V = 0.012 &rArr; V = 0.06 L = 60 mL。" }
+        ]
       }
     ]
   },
@@ -47,28 +129,89 @@
     "title": "Block 2: Redox",
     "problems": [
       {
-        "id": 4,
+        "id": 9,
         "type": "multi",
         "allocation": 5,
-        "question": "Which are aromatic compound?",
-        "stats": { "coverage": "Organic", "difficulty": "Medium", "accuracy": "N/A" },
-        "correctAnswer": ["A", "B"],
+        "question": "關於疊氮酸(HN<sub>3</sub>)分子與氮三離子(N<sub>3</sub><sup>-</sup>)的敘述，哪些正確？<br>已知：熔點 193 K、沸點 310 K；結構 H-N-<b>N</b>&equiv;N。",
+        "correctAnswer": ["A", "B", "C"],
+        "stats": { "difficulty": "Easy", "accuracy": "34%", "coverage": "D4: Chemical Bonding" },
         "options": [
-          { "label": "A", "text": "Fluorine (F)", "percent": "85%", "explanation": "Fluorine is the most electronegative element." },
-          { "label": "B", "text": "Chlorine (Cl)", "percent": "10%", "explanation": "Less than Fluorine." },
-          { "label": "C", "text": "Oxygen (O)", "percent": "3%", "explanation": "Incorrect." },
-          { "label": "D", "text": "Neon (Ne)", "percent": "2%", "explanation": "Noble gases are stable." },
-          { "label": "E", "text": "Neon (Ne)", "percent": "47%", "explanation": "Noble gases are stable." }
+          { "label": "A", "text": "在常溫常壓下，為液態化合物。", "percent": "65%", "explanation": "正確。常溫(298 K) 介於熔點(193 K)與沸點(310 K)之間，故為液態。" },
+          { "label": "B", "text": "分子內中間的氮(粗體N)沒有孤對價電子。", "percent": "57%", "explanation": "正確。中間的氮原子(sp混成)形成4個鍵(如共振結構 H-N=N<sup>+</sup>=N<sup>-</sup> 或 H-N-N<sup>+</sup>&equiv;N)，形式電荷為+1，無孤對電子。" },
+          { "label": "C", "text": "在水溶液可解離成 N<sub>3</sub><sup>-</sup>，為 HN<sub>3</sub> 的共軛鹼。", "percent": "61%", "explanation": "正確。酸失去質子(H<sup>+</sup>)後形成的物種即為共軛鹼。" },
+          { "label": "D", "text": "每莫耳 HN<sub>3</sub> 分子重 43 g、含有 16 莫耳的電子。", "percent": "35%", "explanation": "錯誤。分子量 = 1+14&times;3 = 43 g/mol (正確)；但電子數 = 1(H) + 7&times;3(N) = 22 mol 電子。" },
+          { "label": "E", "text": "在常溫常壓下，此分子的密度是空氣的 1.5 倍。", "percent": "48%", "explanation": "錯誤。此為陷阱。HN<sub>3</sub> 在常溫為「液體」，密度遠大於氣態空氣。若指氣體密度比(蒸氣密度)，則 43/28.8 &approx; 1.5，但物理狀態前提不符。" }
         ]
       },
       {
-        "id": 5,
-        "type": "fill",
+        "id": 10,
+        "type": "single",
         "allocation": 3,
-        "question": "Calculate the molar mass of Water (H2O).",
-        "stats": { "difficulty": "Medium", "accuracy": "92%", "coverage": "Stoichiometry" },
-        "correctAnswer": "30",
-        "explanation": "2 * 1.008 (H) + 16.00 (O) ≈ 18.02 g/mol"
+        "question": "已知將亞硝酸鈉(NaNO<sub>2</sub>)與聯氨(N<sub>2</sub>H<sub>4</sub>)配製成水溶液後，混合反應，可以製備出疊氮化鈉(NaN<sub>3</sub>)，此反應的產率達 80%。<br>反應式：NaNO<sub>2</sub> + N<sub>2</sub>H<sub>4</sub> &rarr; NaN<sub>3</sub> + 2H<sub>2</sub>O<br>阿亨取 8.28 g 的亞硝酸鈉、與 3.20 g 的聯氨進行反應，則預期可以合成出多少質量的疊氮化鈉？",
+        "correctAnswer": "A",
+        "stats": { "difficulty": "Easy", "accuracy": "70%", "coverage": "D1: Stoichiometry" },
+        "options": [
+          { "label": "A", "text": "5.20 g", "percent": "70%", "explanation": "正確。<br>1. 莫耳數：NaNO<sub>2</sub> (MW=69) = 8.28/69 = 0.12 mol；N<sub>2</sub>H<sub>4</sub> (MW=32) = 3.20/32 = 0.10 mol。<br>2. 限量試劑：係數比 1:1，故 N<sub>2</sub>H<sub>4</sub> 為限量試劑。<br>3. 理論產量：生成 NaN<sub>3</sub> 0.10 mol。<br>4. 實際產量：0.10 &times; 80% = 0.08 mol。<br>5. 質量：0.08 mol &times; 65 g/mol = 5.20 g。" },
+          { "label": "B", "text": "6.24 g", "percent": "13%", "explanation": "錯誤。此為誤用 NaNO<sub>2</sub> 計算的結果 (0.12*0.8*65)。" },
+          { "label": "C", "text": "6.76 g", "percent": "9%", "explanation": "錯誤。" },
+          { "label": "D", "text": "7.80 g", "percent": "9%", "explanation": "錯誤。" }
+        ]
+      },
+      {
+        "id": 11,
+        "type": "single",
+        "allocation": 3,
+        "question": "呈上，此反應的原子效率為多少？(提示：產率大小不影響原子效率)",
+        "correctAnswer": "B",
+        "stats": { "difficulty": "Easy", "accuracy": "48%", "coverage": "D1: Stoichiometry" },
+        "options": [
+          { "label": "A", "text": "71.6%", "percent": "13%", "explanation": "錯誤。" },
+          { "label": "B", "text": "64.4%", "percent": "48%", "explanation": "正確。<br>原子效率 = (目標產物分子量 / 所有反應物分子量和) &times; 100%<br>= MW(NaN<sub>3</sub>) / [MW(NaNO<sub>2</sub>) + MW(N<sub>2</sub>H<sub>4</sub>)]<br>= 65 / (69 + 32) = 65 / 101 &approx; 64.35%。" },
+          { "label": "C", "text": "57.1%", "percent": "26%", "explanation": "錯誤。" },
+          { "label": "D", "text": "33.3%", "percent": "13%", "explanation": "錯誤。" }
+        ]
+      },
+      {
+        "id": 12,
+        "type": "single",
+        "allocation": 3,
+        "question": "試推測氮三離子(N<sub>3</sub><sup>-</sup>)的氮-氮鍵長？<br>已知 HN<sub>3</sub> 的鍵長數據為 113、116、125。",
+        "correctAnswer": "B",
+        "stats": { "difficulty": "Hard", "accuracy": "43%", "coverage": "D4: Chemical Bonding" },
+        "options": [
+          { "label": "A", "text": "113", "percent": "13%", "explanation": "錯誤。113 pm 較短，對應 HN<sub>3</sub> 中具有三鍵性質的 N-N 鍵。" },
+          { "label": "B", "text": "116", "percent": "43%", "explanation": "正確。N<sub>3</sub><sup>-</sup> 具有共振結構 [N=N=N]<sup>-</sup>，結構對稱，鍵長應均等且介於雙鍵與三鍵之間。實驗數據顯示 116 pm 為合理的中間值 (且為對稱離子的特徵值)。" },
+          { "label": "C", "text": "125", "percent": "17%", "explanation": "錯誤。125 pm 較長，對應 HN<sub>3</sub> 中接氫端的單/雙鍵性質 N-N 鍵。" },
+          { "label": "D", "text": "113與116", "percent": "26%", "explanation": "錯誤。N<sub>3</sub><sup>-</sup> 因共振而鍵長相等，只有一個數值。" }
+        ]
+      },
+      {
+        "id": 13,
+        "type": "single",
+        "allocation": 3,
+        "question": "氮-氮鍵長單位 [長度單位] 最有可能是以下何種？",
+        "correctAnswer": "A",
+        "stats": { "difficulty": "Easy", "accuracy": "39%", "coverage": "D1: Units" },
+        "options": [
+          { "label": "A", "text": "pm", "percent": "39%", "explanation": "正確。原子半徑與化學鍵長通常在 100 pm (1 &Aring;) 等級。113 pm = 1.13 &Aring;，符合鍵長範圍。" },
+          { "label": "B", "text": "nm", "percent": "9%", "explanation": "錯誤。113 nm 為紫外線波長等級，對鍵長而言太大 (鍵長約 0.1 nm)。" },
+          { "label": "C", "text": "&mu;m", "percent": "4%", "explanation": "錯誤。微米為細胞等級。" },
+          { "label": "D", "text": "&Aring;", "percent": "48%", "explanation": "錯誤。若是 113 &Aring; 則長達 11.3 nm，太大 (應為 1.13 &Aring;)。" }
+        ]
+      },
+      {
+        "id": 14,
+        "type": "single",
+        "allocation": 3,
+        "question": "疊氮化鈉(NaN<sub>3</sub>)是汽車內安全氣囊的成分之一，當遭受到強力撞擊，此分子會立即分解，產生金屬元素與一種穩定氣體(N<sub>2</sub>)。<br>若某汽車製造商要求安全氣囊被撞擊後，在NTP (V<sub>m</sub>=24.5 L/mol) 下可產生 14.7 L 的氣體，則每個安全氣囊內，至少要加入多少質量的疊氮化鈉？",
+        "correctAnswer": "B",
+        "stats": { "difficulty": "Medium", "accuracy": "52%", "coverage": "D6: Ideal gas" },
+        "options": [
+          { "label": "A", "text": "13.0 g", "percent": "9%", "explanation": "錯誤。" },
+          { "label": "B", "text": "26.0 g", "percent": "52%", "explanation": "正確。<br>1. 反應式：2NaN<sub>3</sub> &rarr; 2Na + 3N<sub>2</sub><br>2. N<sub>2</sub> 莫耳數 = 14.7 / 24.5 = 0.6 mol。<br>3. 需 NaN<sub>3</sub> 莫耳數 = 0.6 &times; (2/3) = 0.4 mol。<br>4. 質量 = 0.4 mol &times; 65 g/mol = 26.0 g。" },
+          { "label": "C", "text": "39.0 g", "percent": "30%", "explanation": "錯誤。此為誤算 1:1 的結果。" },
+          { "label": "D", "text": "52.0 g", "percent": "9%", "explanation": "錯誤。" }
+        ]
       }
     ]
   }

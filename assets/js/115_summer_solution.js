@@ -170,10 +170,9 @@ function renderSolutions() {
             let middleContent = '';
 
             if (prob.type === 'fill') {
-                // FILL-IN: Text Summary
                 const userVal = prob.userResult.choice || "(Empty)";
                 const trueVal = prob.correctAnswer || "";
-                const userColor = (userScore === maxPoints) ? '#2ecc71' : '#e74c3c';
+                const userColor = (userScore === maxPoints) ? '#416361' : '#e74c3c';
 
                 middleContent = `
                     <div class="fill-summary-container">
@@ -196,7 +195,7 @@ function renderSolutions() {
             // We check both prob.explanation (standard) and prob.exp (short)
             const expText = prob.explanation || prob.exp || "";
             const explanationHtml = expText
-                ? `<div class="general-explanation"><strong>📝 Explanation:</strong><br>${expText}</div>`
+                ? `<div class="general-explanation"><strong>Explanation:</strong><br>${expText}</div>`
                 : '';
 
             // --- CARD HTML ---
