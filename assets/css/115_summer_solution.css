@@ -67,7 +67,7 @@ body {
     font-size: 0.8rem;
     padding: 2px 8px;
     border-radius: 4px;
-    background: #E17055;
+    background: #ECA594;
     /* Terracotta */
     color: white;
     margin-right: 5px;
@@ -120,7 +120,7 @@ body {
 }
 
 /* =========================================
-   5. OPTION ITEMS (THE LIST)
+   5. OPTION ITEMS
    ========================================= */
 .option-item {
     background: white;
@@ -135,9 +135,7 @@ body {
 
 .option-item:hover {
     background-color: #F0ECE1;
-    /* Beige Hover */
     border-color: #678F8D;
-    /* Muted Teal Border */
 }
 
 .option-header {
@@ -155,7 +153,7 @@ body {
 }
 
 .wrong-selection {
-    border: 2px solid #E17055 !important;
+    border: 2px solid #ECA594 !important;
     /* Terracotta */
     background-color: #E3C9C6;
     /* Light Pink Background */
@@ -241,7 +239,7 @@ body {
 
 /* --- CASE (1,0): FALSE POSITIVE (Wrong & Chosen) --- */
 .case-fp {
-    background-color: #E17055;
+    background-color: #ECA594;
     /* Terracotta */
     color: white;
     border: 2px solid #416361;
@@ -251,7 +249,7 @@ body {
 
 /* --- CASE (0,1): FALSE NEGATIVE (Correct & Missed) --- */
 .case-fn {
-    background-color: #E17055;
+    background-color: #ECA594;
     /* Terracotta */
     color: rgba(255, 255, 255, 0.5);
     border: none;
@@ -286,7 +284,7 @@ body {
     height: 50px;
     border-radius: 12px;
     font-weight: bold;
-    box-shadow: 0 2px 5px rgba(65, 99, 97, 0.1);
+    box-shadow: 0 2px 5px #678F8D;
     line-height: 1.1;
 }
 
@@ -313,9 +311,9 @@ body {
 .score-wrong {
     background: #E3C9C6;
     /* Light Pink */
-    color: #E17055;
+    color: #ECA594;
     /* Terracotta Text */
-    border: 2px solid #E17055;
+    border: 2px solid #ECA594;
 }
 
 /* Partial Score */
