@@ -1,365 +1,315 @@
 /* =========================================
    1. GLOBAL LAYOUT
    ========================================= */
-body {
-    background: #f4f7f6;
-    color: #333;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    margin: 0;
-}
+    body {
+        background: #f4f7f6;
+        color: #333;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        margin: 0;
+    }
 
-.container {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 20px;
-}
+    .container {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 20px;
+    }
 
 /* =========================================
    2. EXAM BLOCKS & HEADERS
    ========================================= */
-.exam-block {
-    margin-bottom: 30px;
-    background: white;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-}
+    .exam-block {
+        margin-bottom: 30px;
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
 
-.block-header {
-    background: #2c3e50;
-    color: white;
-    padding: 15px 20px;
-    font-size: 1.2rem;
-    font-weight: bold;
-}
+    .block-header {
+        background: #2c3e50;
+        color: white;
+        padding: 15px 20px;
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
 
 /* =========================================
    3. PROBLEM ROW (SUMMARY VIEW)
    ========================================= */
-.problem-row {
-    border-bottom: 1px solid #eee;
-}
+
+    .problem-summary {
+        padding: 10px 20px;
+        display: grid;
+        /* Grid: [ID] [Info] [Spacer] [Badges (A-E)] [Score] */
+        grid-template-columns: 50px 1fr auto auto;
+        gap: 15px;
+        align-items: center;
+        cursor: pointer;
+        transition: background 0.2s;
+        height: 70px;
+        /* Fixed height for consistency */
+    }
+    .problem-row {
+        border-bottom: 1px solid #eee;
+    }
 
 
-.problem-summary:hover {
-    background: #f8f9fa;
-}
+    .problem-summary:hover {
+        background: #f8f9fa;
+    }
 
-/* Tags (Difficulty/Topic) */
-.tag {
-    font-size: 0.8rem;
-    padding: 2px 8px;
-    border-radius: 4px;
-    background: #e17055;
-    color: white;
-    margin-right: 5px;
-    display: inline-block;
-}
+    /* Tags (Difficulty/Topic) */
+    .tag {
+        font-size: 0.8rem;
+        padding: 2px 8px;
+        border-radius: 4px;
+        background: #e17055;
+        color: white;
+        margin-right: 5px;
+        display: inline-block;
+    }
 
-.stat-text {
-    font-size: 0.85rem;
-    color: #7f8c8d;
-    display: block;
-    margin-top: 4px;
-}
+    .stat-text {
+        font-size: 0.85rem;
+        color: #7f8c8d;
+        display: block;
+        margin-top: 4px;
+    }
 
-/* =========================================
-   UPDATED SUMMARY ROW (Layout)
-   ========================================= */
-.problem-summary {
-    padding: 10px 20px;
-    display: grid;
-    /* Grid: [ID] [Info] [Spacer] [Badges (A-E)] [Score] */
-    grid-template-columns: 50px 1fr auto auto;
-    gap: 15px;
-    align-items: center;
-    cursor: pointer;
-    transition: background 0.2s;
-    height: 70px;
-    /* Fixed height for consistency */
-}
-
-/* =========================================
-   NEW BADGE GRID (The Matrix)
-   ========================================= */
-.badge-container {
-    display: grid;
-    /* Create exactly 5 slots of 35px each. 
-       This forces A, B, C, D, E to align vertically across all problems. */
-    grid-template-columns: repeat(5, 35px);
-    gap: 5px;
-    /* Space between circles */
-    justify-items: center;
-}
-
-/* Invisible placeholder for missing options (e.g. Empty 'E' slot) */
-.badge-placeholder {
-    width: 30px;
-    height: 30px;
-    display: inline-block;
-}
-
-/* =========================================
-   NEW SQUARE SCORE BOX
-   ========================================= */
-.score-box {
-    display: flex;
-    flex-direction: column;
-    /* Stack Icon on top of Number */
-    align-items: center;
-    justify-content: center;
-    width: 50px;
-    height: 50px;
-    border-radius: 12px;
-    /* Soft square */
-    font-weight: bold;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    line-height: 1.1;
-}
-
-.score-box .score-icon {
-    font-size: 14px;
-    margin-bottom: 2px;
-}
-
-.score-box .score-val {
-    font-size: 18px;
-}
-
-/* Score Colors */
-.score-correct {
-    background: #dff9fb;
-    color: #2ecc71;
-    border: 2px solid #55efc4;
-}
-
-.score-wrong {
-    background: #fab1a0;
-    color: #d63031;
-    border: 2px solid #ff7675;
-}
-
-.score-partial {
-    background: #fff3cd;
-    color: #d35400;
-    border: 2px solid #ffeaa7;
-}
 
 /* =========================================
    5. EXPANDED CONTENT & FIGURES
    ========================================= */
-.problem-details {
-    display: none;
-    /* Hidden by default */
-    padding: 20px;
-    background: #fafafa;
-    border-top: 1px dashed #ddd;
-}
+    .problem-details {
+        display: none;
+        padding: 20px;
+        background: #fafafa;
+        border-top: 1px dashed #ddd;
+    }
 
-.question-text {
-    font-size: 1.1rem;
-    margin-bottom: 20px;
-    font-weight: 500;
-    line-height: 1.5;
-}
+    .question-text {
+        font-size: 1.1rem;
+        margin-bottom: 20px;
+        font-weight: 500;
+        line-height: 1.5;
+    }
 
-.problem-figure {
-    margin: 15px 0;
-    text-align: center;
-}
+    .problem-figure {
+        margin: 15px 0;
+        text-align: center;
+    }
 
-.problem-figure img {
-    max-width: 100%;
-    max-height: 300px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-    cursor: zoom-in;
-    transition: transform 0.2s;
-    background: white;
-}
+    .problem-figure img {
+        max-width: 100%;
+        max-height: 300px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        cursor: zoom-in;
+        transition: transform 0.2s;
+        background: white;
+    }
 
-.problem-figure img:hover {
-    transform: scale(1.02);
-}
+    .problem-figure img:hover {
+        transform: scale(1.02);
+    }
 
 /* =========================================
    6. OPTION ITEMS (THE LIST)
    ========================================= */
-.option-item {
-    background: white;
-    padding: 12px;
-    margin: 10px 0;
-    border: 1px solid #eee;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s;
-}
+    .option-item {
+        background: white;
+        padding: 12px;
+        margin: 10px 0;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
 
-.option-item:hover {
-    background-color: #fafafa;
-    border-color: #bdc3c7;
-}
+    .option-item:hover {
+        background-color: #fafafa;
+        border-color: #bdc3c7;
+    }
 
-.option-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+    .option-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
 /* --- Option Validity States (Borders) --- */
-.correct-answer {
-    border: 2px solid #2ecc71 !important;
-    background-color: #f0fdf4;
-}
+    .correct-answer {
+        border: 2px solid #2ecc71 !important;
+        background-color: #f0fdf4;
+    }
 
-.wrong-selection {
-    border: 2px solid #e74c3c !important;
-    background-color: #fef2f2;
-}
+    .wrong-selection {
+        border: 2px solid #e74c3c !important;
+        background-color: #fef2f2;
+    }
 
-.chosen-option {
-    border: 2px solid #0984e3;
-    /* Blue highlight if neutral */
-}
+    .chosen-option {
+        border: 2px solid #0984e3;
+        /* Blue highlight if neutral */
+    }
 
-/* --- Percentage Bars --- */
-.option-bar {
-    height: 4px;
-    background: #eee;
-    width: 100%;
-    margin-top: 8px;
-    border-radius: 2px;
-    overflow: hidden;
-}
+    /* --- Percentage Bars --- */
+    .option-bar {
+        height: 4px;
+        background: #eee;
+        width: 100%;
+        margin-top: 8px;
+        border-radius: 2px;
+        overflow: hidden;
+    }
 
-.option-fill {
-    height: 100%;
-    background: #bdc3c7;
-}
+    .option-fill {
+        height: 100%;
+        background: #bdc3c7;
+    }
 
-/* Green bar for correct stats */
-.correct-option .option-fill {
-    background: #2ecc71;
-}
+    /* Green bar for correct stats */
+    .correct-option .option-fill {
+        background: #2ecc71;
+    }
 
-/* --- Explanation Dropdown --- */
-.option-explanation {
-    display: none;
-    padding: 10px 15px;
-    margin-top: 10px;
-    background: #f1f2f6;
-    color: #57606f;
-    font-size: 0.95rem;
-    border-top: 1px solid #eee;
-    border-radius: 0 0 4px 4px;
-}
+    /* --- Explanation Dropdown --- */
+    .option-explanation {
+        display: none;
+        padding: 10px 15px;
+        margin-top: 10px;
+        background: #f1f2f6;
+        color: #57606f;
+        font-size: 0.95rem;
+        border-top: 1px solid #eee;
+        border-radius: 0 0 4px 4px;
+    }
 
 /* =========================================
-   7. MATRIX BADGES (The Colored Circles)
+   MATRIX BADGES: TRUTH TABLE STYLES
    ========================================= */
-.option-letter-badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    font-weight: bold;
-    font-size: 0.9em;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-}
 
-/* --- BACKGROUND: THE TRUTH (Is it Correct?) --- */
-.bg-correct {
-    background-color: #2ecc71;
-}
+    .badge-container {
+        display: grid;
+        /* Create exactly 5 slots of 35px each. 
+        This forces A, B, C, D, E to align vertically across all problems. */
+        grid-template-columns: repeat(5, 35px);
+        gap: 5px;
+        /* Space between circles */
+        justify-items: center;
+    }
 
-/* Green */
-.bg-wrong {
-    background-color: #e67e22;
-}
+    /* Invisible placeholder for missing options (e.g. Empty 'E' slot) */
+    .badge-placeholder {
+        width: 30px;
+        height: 30px;
+        display: inline-block;
+    }
 
-/* Orange */
+    /* Common Badge Shape */
+    .option-letter-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        font-weight: bold;
+        font-size: 1rem;
+        box-sizing: border-box;
+    }
 
-/* --- TEXT: THE SELECTION (Did User Pick It?) --- */
-.text-selected {
-    color: white;
-    border: 2px solid #444;
-    /* Dark border for visibility */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
+    /* --- CASE (1,1): TRUE POSITIVE (You picked Correctly) --- 
+    Green Circle, White Text, Black Edge */
+    .case-tp {
+        background-color: #2ecc71;
+        color: white;
+        border: 2px solid #333;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
 
-.text-ignored {
-    color: rgba(255, 255, 255, 0.4);
-    /* Faded */
-}
+    /* --- CASE (1,0): FALSE POSITIVE (You picked Wrongly) --- 
+    Red Circle, White Text, Black Edge */
+    .case-fp {
+        background-color: #e74c3c;
+        color: white;
+        border: 2px solid #333;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    /* --- CASE (0,1): FALSE NEGATIVE (You Missed It) --- 
+    Red Circle, Faded Text, No Edge */
+    .case-fn {
+        background-color: #e74c3c;
+        color: rgba(255, 255, 255, 0.4);
+        border: none;
+    }
+
+    /* --- CASE (0,0): TRUE NEGATIVE (You Ignored Correctly) --- 
+    Green Circle, Faded Text, No Edge */
+    .case-tn {
+        background-color: #2ecc71;
+        color: rgba(255, 255, 255, 0.4);
+        border: none;
+    }
+
+    /* Invisible placeholder for missing options (e.g. Empty 'E' slot) */
+    .badge-placeholder {
+        width: 35px;
+        height: 35px;
+        display: inline-block;
+        visibility: hidden;
+    }
 
 /* =========================================
    8. MISC / UTILITY
    ========================================= */
-.status-badge {
-    font-size: 0.75rem;
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-weight: bold;
-    margin-left: 10px;
-    display: inline-block;
-}
+    .status-badge {
+        font-size: 0.75rem;
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-weight: bold;
+        margin-left: 10px;
+        display: inline-block;
+    }
 
 /* =========================================
    UPDATED SUMMARY ROW (Layout)
    ========================================= */
-.problem-summary {
-    padding: 10px 20px;
-    display: grid;
-    /* Grid: [ID] [Info] [Spacer] [Badges (A-E)] [Score] */
-    grid-template-columns: 50px 1fr auto auto; 
-    gap: 15px;
-    align-items: center;
-    cursor: pointer;
-    transition: background 0.2s;
-    height: 70px; /* Fixed height for consistency */
-}
+    .problem-summary {
+        padding: 10px 20px;
+        display: grid;
+        /* Grid: [ID] [Info] [Spacer] [Badges (A-E)] [Score] */
+        grid-template-columns: 50px 1fr auto auto; 
+        gap: 15px;
+        align-items: center;
+        cursor: pointer;
+        transition: background 0.2s;
+        height: 70px; /* Fixed height for consistency */
+    }
+
+
 
 /* =========================================
-   NEW BADGE GRID (The Matrix)
+   SQUARE SCORE BOX
    ========================================= */
-.badge-container {
-    display: grid;
-    /* Create exactly 5 slots of 35px each. 
-       This forces A, B, C, D, E to align vertically across all problems. */
-    grid-template-columns: repeat(5, 35px); 
-    gap: 5px; /* Space between circles */
-    justify-items: center;
-}
 
-/* Invisible placeholder for missing options (e.g. Empty 'E' slot) */
-.badge-placeholder {
-    width: 30px;
-    height: 30px;
-    display: inline-block;
-}
+    .score-box {
+        display: flex;
+        flex-direction: column; /* Stack Icon on top of Number */
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+        border-radius: 12px; /* Soft square */
+        font-weight: bold;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        line-height: 1.1;
+    }
 
-/* =========================================
-   NEW SQUARE SCORE BOX
-   ========================================= */
-.score-box {
-    display: flex;
-    flex-direction: column; /* Stack Icon on top of Number */
-    align-items: center;
-    justify-content: center;
-    width: 50px;
-    height: 50px;
-    border-radius: 12px; /* Soft square */
-    font-weight: bold;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    line-height: 1.1;
-}
+    .score-box .score-icon { font-size: 14px; margin-bottom: 2px; }
+    .score-box .score-val  { font-size: 18px; }
 
-.score-box .score-icon { font-size: 14px; margin-bottom: 2px; }
-.score-box .score-val  { font-size: 18px; }
-
-/* Score Colors */
-.score-correct { background: #dff9fb; color: #2ecc71; border: 2px solid #55efc4; }
-.score-wrong   { background: #fab1a0; color: #d63031; border: 2px solid #ff7675; }
-.score-partial { background: #fff3cd; color: #d35400; border: 2px solid #ffeaa7; }
+    .score-correct { background: #dff9fb; color: #2ecc71; border: 2px solid #55efc4; }
+    .score-wrong   { background: #fab1a0; color: #d63031; border: 2px solid #ff7675; }
+    .score-partial { background: #fff3cd; color: #d35400; border: 2px solid #ffeaa7; }

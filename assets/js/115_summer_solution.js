@@ -89,40 +89,60 @@ function loadUserTheme(username) {
 }
 
 /* =========================================
-   1. UPDATED BADGE GENERATOR (Aligns A-E)
+   1. BADGE GENERATOR (Aligns A-E)
    ========================================= */
 function getAnswerBadges(prob) {
     if (!prob.options) return '<div class="badge-container"></div>';
 
+    // Normalize inputs
     const userChoices = Array.isArray(prob.userResult.choice) ? prob.userResult.choice : [prob.userResult.choice];
     const correctAnswers = Array.isArray(prob.correctAnswer) ? prob.correctAnswer : [prob.correctAnswer];
 
-    // Force strictly 5 slots: A, B, C, D, E
+    // Force A-E Grid
     const slots = ['A', 'B', 'C', 'D', 'E'];
 
     const badgesHtml = slots.map(label => {
-        // Does this option exist in the data?
+        // 1. Check if option exists in the question
         const optExists = prob.options.some(o => o.label === label);
 
         if (!optExists) {
-            // Render INVISIBLE placeholder to keep alignment
+            // Invisible placeholder to maintain alignment
             return `<span class="badge-placeholder"></span>`;
         }
 
-        // Logic for Color
-        const isSelected = userChoices.includes(label);
-        const isCorrect = correctAnswers.includes(label);
-        const bgClass = isCorrect ? 'bg-correct' : 'bg-wrong';
-        const textClass = isSelected ? 'text-selected' : 'text-ignored';
+        // 2. Determine State (1 or 0)
+        const userChose = userChoices.includes(label);    // (1) or (0)
+        const isAnswer = correctAnswers.includes(label); // (1) or (0)
 
-        return `<span class="option-letter-badge ${bgClass} ${textClass}">${label}</span>`;
+        // 3. Apply Truth Table Logic
+        let stateClass = '';
+
+        if (userChose && isAnswer) {
+            // Case (1,1): True Positive -> Green, Border
+            stateClass = 'case-tp';
+        }
+        else if (userChose && !isAnswer) {
+            // Case (1,0): False Positive -> Red, Border
+            stateClass = 'case-fp';
+        }
+        else if (!userChose && isAnswer) {
+            // Case (0,1): False Negative -> Red, Faded
+            stateClass = 'case-fn';
+        }
+        else {
+            // Case (0,0): True Negative -> Green, Faded
+            stateClass = 'case-tn';
+        }
+
+        return `<span class="option-letter-badge ${stateClass}">${label}</span>`;
     }).join('');
 
     return `<div class="badge-container">${badgesHtml}</div>`;
 }
 
+
 /* =========================================
-   2. UPDATED RENDERER (Clean Layout)
+   2. RENDERER (Clean Layout)
    ========================================= */
 function renderSolutions() {
     const container = document.getElementById('solution-container');
