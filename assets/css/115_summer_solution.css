@@ -30,9 +30,7 @@ body {
 
 .block-header {
     background: #416361;
-    /* Dark Green/Teal */
     color: #F0ECE1;
-    /* Off-white text */
     padding: 15px 20px;
     font-size: 1.2rem;
     font-weight: bold;
@@ -58,8 +56,7 @@ body {
 }
 
 .problem-summary:hover {
-    background: #C5E0DC;
-    /* Light Teal Hover */
+    background-color: #E8E4D9 !important;
 }
 
 /* Tags (Difficulty/Topic) */
@@ -123,19 +120,44 @@ body {
    5. OPTION ITEMS
    ========================================= */
 .option-item {
-    background: white;
     padding: 12px;
-    margin: 10px 0;
+    margin: 8px 0;
     border: 1px solid #BFB9B2;
-    /* Greige Border */
-    border-radius: 8px;
+    border-radius: 6px;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: background 0.2s;
+    background: white;
+    /* Default */
 }
 
 .option-item:hover {
-    background-color: #F0ECE1;
-    border-color: #678F8D;
+    background-color: #E8E4D9;
+}
+
+/* --- CASE 1: TP / TN (Correctly Handled) ---
+   "Light Beige" (Original: #F0ECE1, Lighter: #F8F5F0) */
+.opt-tp,
+.opt-tn {
+    background-color: #F8F5F0 !important;
+    border: 1px solid #BFB9B2;
+}
+
+/* --- CASE 2: FN (False Negative - Missed Correct Answer) ---
+   "Green" */
+.opt-fn {
+    background-color: #C5E0DC !important;
+    /* Light Teal/Green BG */
+    border: 2px solid #77A88D !important;
+    /* Sage Green Border */
+}
+
+/* --- CASE 3: FP (False Positive - Wrong Selection) ---
+   "Red" */
+.opt-fp {
+    background-color: #FADBD8 !important;
+    /* Light Red BG */
+    border: 2px solid #E17055 !important;
+    /* Terracotta Border */
 }
 
 .option-header {
@@ -143,46 +165,26 @@ body {
     justify-content: space-between;
     align-items: center;
 }
-
-/* --- Option Validity States (Borders) --- */
-.correct-answer {
-    border: 2px solid #77A88D !important;
-    /* Sage Green */
-    background-color: #C5E0DC;
-    /* Light Teal Background */
-}
-
-.wrong-selection {
-    border: 2px solid #ECA594 !important;
-    /* Terracotta */
-    background-color: #E3C9C6;
-    /* Light Pink Background */
-}
-
-.chosen-option {
-    border: 2px solid #678F8D;
-    /* Muted Teal Selection */
-}
-
-/* --- Percentage Bars --- */
-.option-bar {
-    height: 4px;
-    background: #F0ECE1;
-    width: 100%;
+/* Percentage Bar Styling */
+.option-bar-container {
+    height: 6px;
+    background: #e0e0e0;
+    border-radius: 3px;
     margin-top: 8px;
-    border-radius: 2px;
     overflow: hidden;
 }
 
-.option-fill {
+.option-bar-fill {
     height: 100%;
-    background: #BFB9B2;
-    /* Greige default fill */
+    background-color: #BFB9B2;
+    /* Default Grey */
 }
 
-.correct-option .option-fill {
-    background: #77A88D;
-    /* Sage Green fill */
+/* Highlight the bar color if it's the correct answer */
+.opt-fn .option-bar-fill,
+.opt-tp .option-bar-fill {
+    background-color: #77A88D;
+    /* Green Bar */
 }
 
 /* --- Explanation Dropdown --- */
@@ -277,51 +279,40 @@ body {
 
 .score-box {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 50px;
+    width: 60px;
+    /* Slightly wider for "3 / 5" */
     height: 50px;
-    border-radius: 12px;
+    border-radius: 8px;
+    /* Less rounded, more technical */
     font-weight: bold;
-    box-shadow: 0 2px 5px #678F8D;
-    line-height: 1.1;
-}
-
-.score-box .score-icon {
-    font-size: 14px;
-    margin-bottom: 2px;
-}
-
-.score-box .score-val {
-    font-size: 18px;
-}
-
-/* Perfect Score */
-.score-correct {
-    background: #C5E0DC;
-    /* Light Teal */
+    font-size: 1.1rem;
     color: #416361;
     /* Dark Teal Text */
-    border: 2px solid #77A88D;
-    /* Sage Green Border */
-}
-
-/* Zero Score */
-.score-wrong {
-    background: #E3C9C6;
-    /* Light Pink */
-    color: #ECA594;
-    /* Terracotta Text */
-    border: 2px solid #ECA594;
-}
-
-/* Partial Score */
-.score-partial {
     background: #F0ECE1;
-    /* Beige */
-    color: #678F8D;
-    /* Muted Teal Text */
-    border: 2px solid #BFB9B2;
-    /* Greige Border */
+    /* Default Beige */
+    border: 1px solid #BFB9B2;
+}
+
+/* Color overrides based on score percentage */
+.score-perfect {
+    background: #C5E0DC;
+    /* Light Teal */
+    border: 2px solid #77A88D;
+    color: #2D4A48;
+}
+
+.score-zero {
+    background: #FADBD8;
+    /* Light Red */
+    border: 2px solid #E17055;
+    color: #C0392B;
+}
+
+.score-partial {
+    background: #FFF3CD;
+    /* Light Yellow */
+    border: 2px solid #F1C40F;
+    color: #7D6608;
 }

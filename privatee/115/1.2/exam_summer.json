@@ -19,7 +19,6 @@
       {
         "id": 2,
         "type": "multi",
-        "tags": "Easy",
         "question": "Which of the following are strong acids? (Select 2)",
         "stats": { "difficulty": "Hard", "accuracy": "45%", "coverage": "Stoichiometry" },
         "correctAnswer": ["A", "C"],
@@ -34,7 +33,6 @@
       {
         "id": 3,
         "type": "fill",
-        "tags":"Medium",
         "question": "Calculate the molar mass of Water (H2O).",
         "stats": { "difficulty": "Medium", "accuracy": "92%", "coverage": "Stoichiometry" },
         "correctAnswer": "18",

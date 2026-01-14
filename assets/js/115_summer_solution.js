@@ -144,6 +144,9 @@ function getAnswerBadges(prob) {
 /* =========================================
    2. RENDERER (Clean Layout)
    ========================================= */
+/* =========================================
+   UPDATED RENDERER (Score / Allocation)
+   ========================================= */
 function renderSolutions() {
     const container = document.getElementById('solution-container');
     if (!container || !window.examData) return;
@@ -156,40 +159,41 @@ function renderSolutions() {
         blockDiv.innerHTML = `<div class="block-header">${block.title || block.blockTitle}</div>`;
 
         block.problems.forEach(prob => {
-            const maxPoints = prob.points || 5;
+            // 1. Get Points (Allocation from JSON)
+            const maxPoints = prob.allocation || prob.points || 5;
             const userScore = prob.userResult.score || 0;
 
-            // Score Styles
-            let scoreClass = 'score-partial', scoreIcon = '⚠️';
-            if (userScore === maxPoints) { scoreClass = 'score-correct'; scoreIcon = '✅'; }
-            else if (userScore === 0) { scoreClass = 'score-wrong'; scoreIcon = '❌'; }
+            // 2. Determine Score Box Style
+            let scoreClass = 'score-partial';
+            if (userScore === maxPoints) scoreClass = 'score-perfect';
+            else if (userScore === 0) scoreClass = 'score-zero';
 
             const problemCard = document.createElement('div');
             problemCard.className = 'problem-row';
 
             problemCard.innerHTML = `
                 <div class="problem-summary" onclick="toggleDetails(this)">
-                    <span style="font-weight:bold; color:#0984e3; font-size:1.1em;">#${prob.id}</span>
+                    <span style="font-weight:bold; color:#416361; font-size:1.1em;">#${prob.id}</span>
                     
                     <div style="display:flex; flex-direction:column; justify-content:center;">
                         <div>
                             <span class="tag">${prob.stats ? prob.stats.coverage : 'General'}</span>
-                            <span class="tag" style="background:#00b894;">${prob.stats ? prob.stats.difficulty : 'Normal'}</span>
+                            <span class="tag" style="background:#77A88D;">${prob.stats ? prob.stats.difficulty : 'Normal'}</span>
                         </div>
-                        <span class="stat-text" style="margin-top:5px;">Type: ${prob.type.toUpperCase()} | Acc: ${prob.stats ? prob.stats.accuracy : 'N/A'}</span>
+                        <span class="stat-text">Type: ${prob.type.toUpperCase()} | Acc: ${prob.stats ? prob.stats.accuracy : 'N/A'}</span>
                     </div>
 
                     ${getAnswerBadges(prob)}
 
                     <div class="score-box ${scoreClass}">
-                        <div class="score-icon">${scoreIcon}</div>
-                        <div class="score-val">${userScore}</div>
+                        ${userScore} / ${maxPoints}
                     </div>
                 </div>
 
                 <div class="problem-details">
                     ${prob.image ? `<div class="problem-figure"><img src="${prob.image}" onclick="window.open(this.src)"></div>` : ''}
                     <div class="question-text">${prob.question}</div>
+                    
                     <div>${renderOptionsList(prob)}</div>
                 </div>
             `;
@@ -200,34 +204,51 @@ function renderSolutions() {
     });
 }
 
-
+/* =========================================
+   UPDATED OPTION LIST (Colors & Percents)
+   ========================================= */
 function renderOptionsList(prob) {
     if (!prob.options) return '';
 
+    // Normalize Data
     const userChoices = Array.isArray(prob.userResult.choice) ? prob.userResult.choice : [prob.userResult.choice];
     const correctAnswers = Array.isArray(prob.correctAnswer) ? prob.correctAnswer : [prob.correctAnswer];
 
     return prob.options.map(opt => {
-        const isSelected = userChoices.includes(opt.label);
-        const isCorrect = correctAnswers.includes(opt.label);
+        const label = opt.label;
 
-        let optionClass = 'option-item';
-        if (isCorrect) optionClass += ' correct-answer';
-        if (isSelected && !isCorrect) optionClass += ' wrong-selection';
+        // --- 1. Determine Truth Table State ---
+        const isSelected = userChoices.includes(label);
+        const isCorrect = correctAnswers.includes(label);
+
+        let rowClass = '';
+        if (isSelected && isCorrect) rowClass = 'opt-tp'; // True Positive (Beige)
+        else if (!isSelected && !isCorrect) rowClass = 'opt-tn'; // True Negative (Beige)
+        else if (!isSelected && isCorrect) rowClass = 'opt-fn'; // False Negative (Green - Missed!)
+        else if (isSelected && !isCorrect) rowClass = 'opt-fp'; // False Positive (Red - Wrong!)
+
+        // --- 2. Percentage Bar ---
+        const percentVal = opt.percent || "0%";
 
         return `
-            <div class="${optionClass}">
+            <div class="option-item ${rowClass}" onclick="toggleExplanation(this)">
                 <div class="option-header">
-                    <span style="font-weight:bold; margin-right:10px;">${opt.label}.</span>
-                    <span style="flex-grow:1;">${opt.text}</span>
+                    <span style="font-weight:bold;">${label}. ${opt.text}</span>
+                    <span style="font-size:0.9em; color:#666;">${percentVal}</span>
                 </div>
-                <div class="option-explanation" style="display:block;">
-                    <strong>Analysis:</strong> ${opt.explanation || "N/A"}
+                
+                <div class="option-bar-container">
+                    <div class="option-bar-fill" style="width: ${percentVal};"></div>
+                </div>
+
+                <div class="option-explanation">
+                    ${opt.explanation || 'No explanation provided.'}
                 </div>
             </div>
         `;
     }).join('');
 }
+
 
 window.toggleDetails = function (element) {
     const details = element.nextElementSibling;
