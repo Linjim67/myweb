@@ -142,6 +142,9 @@ function getAnswerBadges(prob) {
 }
 
 
+/* =========================================
+   RENDERER (Updated for Fill-In & Explanations)
+   ========================================= */
 function renderSolutions() {
     const container = document.getElementById('solution-container');
     if (!container || !window.examData) return;
@@ -157,14 +160,50 @@ function renderSolutions() {
             const maxPoints = prob.allocation || prob.points || 5;
             const userScore = prob.userResult.score || 0;
 
+            // Score Logic
             let scoreClass = 'score-partial';
             if (userScore === maxPoints) scoreClass = 'score-perfect';
             else if (userScore === 0) scoreClass = 'score-zero';
 
+            // --- NEW: CONTENT LOGIC ---
+
+            // 1. Determine Middle Content (Badges OR Text Lines)
+            let middleContent = '';
+            if (prob.type === 'fill') {
+                // FILL-IN: Show candidate answer vs true answer
+                const userVal = prob.userResult.choice || "(Empty)";
+                const trueVal = prob.correctAnswer || "";
+
+                // Color code the user's answer line
+                const userColor = (userScore === maxPoints) ? '#2ecc71' : '#e74c3c'; // Green or Red
+
+                middleContent = `
+                    <div class="fill-summary-container">
+                        <div class="fill-line">
+                            <span class="fill-label">YOU:</span>
+                            <span style="color:${userColor}; font-weight:bold; font-family:monospace;">${userVal}</span>
+                        </div>
+                        <div class="fill-line">
+                            <span class="fill-label">ANS:</span>
+                            <span style="color:#416361; font-weight:bold; font-family:monospace;">${trueVal}</span>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // MULTI/SINGLE: Show the Matrix Badges
+                middleContent = getAnswerBadges(prob);
+            }
+
+            // 2. Explanation Logic (Show ONLY if explanation exists)
+            const explanationHtml = prob.explanation
+                ? `<div class="general-explanation"><strong>📝 Explanation:</strong><br>${prob.explanation}</div>`
+                : '';
+
+
+            // --- CREATE CARD ---
             const problemCard = document.createElement('div');
             problemCard.className = 'problem-row';
 
-            // NOTE: We moved onclick events to specific children to handle the 3 different behaviors
             problemCard.innerHTML = `
                 <div class="problem-summary" onclick="handleRowClick(this, event)">
                     
@@ -182,7 +221,7 @@ function renderSolutions() {
                         <span class="stat-text">Type: ${prob.type.toUpperCase()} | Acc: ${prob.stats ? prob.stats.accuracy : 'N/A'}</span>
                     </div>
 
-                    ${getAnswerBadges(prob)}
+                    ${middleContent}
 
                     <div class="score-box ${scoreClass}">
                         <span class="score-val">${userScore}</span>
@@ -192,8 +231,12 @@ function renderSolutions() {
 
                 <div class="problem-details" id="details-${prob.id}">
                     ${prob.image ? `<div class="problem-figure"><img src="${prob.image}" onclick="window.open(this.src)"></div>` : ''}
+                    
                     <div class="question-text">${prob.question}</div>
+                    
                     <div id="options-${prob.id}">${renderOptionsList(prob)}</div>
+
+                    ${explanationHtml}
                 </div>
             `;
             blockDiv.appendChild(problemCard);

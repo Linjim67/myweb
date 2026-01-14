@@ -1,44 +1,12 @@
-/* =========================================
-   SQUARE SCORE BOX
-   ========================================= */
-.score-box {
-    display: flex;
-    flex-direction: column;
-    /* Stack Icon on top of Number */
-    align-items: center;
-    justify-content: center;
-    width: 50px;
-    height: 50px;
-    border-radius: 12px;
-    /* Soft square */
-    font-weight: bold;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    line-height: 1.1;
-}
-
-.score-box .score-icon {
-    font-size: 14px;
-    margin-bottom: 2px;
-}
-
-.score-box .score-val {
-    font-size: 18px;
-}
-
-.score-correct {
-    background: #dff9fb;
-    color: #2ecc71;
-    border: 2px solid #55efc4;
-}
-
-.score-wrong {
-    background: #fab1a0;
-    color: #d63031;
-    border: 2px solid #ff7675;
-}
-
-.score-partial {
-    background: #fff3cd;
-    color: #d35400;
-    border: 2px solid #ffeaa7;
+.animate-enabled .problem-details,
+.animate-enabled .option-explanation {
+    transition: all 0.3s linear(1, 1, 1, 1, 1, 1, 0.9999, 0.9999, 0.9998, 0.9998, 0.9997,
+            0.9995, 0.9994, 0.9992, 0.9989, 0.9986, 0.9983, 0.9979, 0.9974, 0.9969, 0.9963, 0.9956,
+            0.9949, 0.994, 0.993, 0.992, 0.9908, 0.9895, 0.9881, 0.9865, 0.9849, 0.983, 0.981, 0.9789,
+            0.9766, 0.9741, 0.9714, 0.9686, 0.9655, 0.9623, 0.9588, 0.9551, 0.9511, 0.947, 0.9426, 0.9379,
+            0.933, 0.9277, 0.9222, 0.9165, 0.9104, 0.904, 0.8973, 0.8902, 0.8829, 0.8751, 0.867, 0.8586, 0.8498,
+            0.8406, 0.831, 0.821, 0.8105, 0.7997, 0.7884, 0.7767, 0.7645, 0.7518, 0.7387, 0.7251, 0.711, 0.6963,
+            0.6812, 0.6655, 0.6493, 0.6325, 0.6152, 0.5973, 0.5788, 0.5597, 0.54, 0.5197, 0.4987, 0.4771, 0.4549,
+            0.432, 0.4084, 0.3841, 0.3591, 0.3334, 0.307, 0.2798, 0.2519, 0.2232, 0.1937, 0.1635, 0.1324, 0.1006,
+            0.0679, 0.0344, 0);
 }
