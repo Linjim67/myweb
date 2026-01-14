@@ -15,5 +15,14 @@
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "mongoose": "^9.1.2"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Linjim67/myweb.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Linjim67/myweb/issues"
+  },
+  "homepage": "https://github.com/Linjim67/myweb#readme"
 }

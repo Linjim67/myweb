@@ -482,3 +482,163 @@ function toggleExplanation(optionDiv, event) {
     if (isNowOpen) optionDiv.classList.add('show-explanation');
     else optionDiv.classList.remove('show-explanation');
 }
+
+/* =========================================
+   EXAM MODE: RENDERER
+   ========================================= */
+function renderExamMode() {
+    const container = document.getElementById('solution-container');
+    container.innerHTML = ''; // Clear previous content
+
+    window.examData.forEach(block => {
+        const blockDiv = document.createElement('div');
+        blockDiv.className = 'exam-block';
+
+        // Header & Intro
+        let html = `<div class="block-header">${block.title}</div>`;
+        if (block.intro) html += `<div class="block-intro">${block.intro}</div>`;
+        if (block.introImage) html += `<div class="problem-figure"><img src="${block.introImage}"></div>`;
+
+        blockDiv.innerHTML = html;
+
+        // Loop Problems
+        block.problems.forEach(prob => {
+            const pID = prob.id;
+
+            // Section Intro
+            if (prob.sectionIntro) {
+                const introDiv = document.createElement('div');
+                introDiv.className = 'section-intro';
+                introDiv.innerHTML = `<div class="intro-text">${prob.sectionIntro}</div>`;
+                if (prob.sectionImage) introDiv.innerHTML += `<div class="problem-figure"><img src="${prob.sectionImage}"></div>`;
+                blockDiv.appendChild(introDiv);
+            }
+
+            // --- INPUT GENERATION ---
+            let inputHtml = '';
+
+            // A. SINGLE CHOICE (Radio)
+            if (prob.type === 'single') {
+                inputHtml = `<div class="options-list">`;
+                prob.options.forEach(opt => {
+                    inputHtml += `
+                        <label class="exam-option">
+                            <input type="radio" name="q${pID}" value="${opt.label}">
+                            <span class="opt-label">${opt.label}</span>
+                            <span class="opt-text">${opt.text}</span>
+                        </label>`;
+                });
+                inputHtml += `</div>`;
+            }
+            // B. MULTI CHOICE (Checkbox)
+            else if (prob.type === 'multi') {
+                inputHtml = `<div class="options-list">`;
+                prob.options.forEach(opt => {
+                    inputHtml += `
+                        <label class="exam-option">
+                            <input type="checkbox" name="q${pID}" value="${opt.label}">
+                            <span class="opt-label">${opt.label}</span>
+                            <span class="opt-text">${opt.text}</span>
+                        </label>`;
+                });
+                inputHtml += `</div>`;
+            }
+            // C. FILL-IN (Text Inputs)
+            else if (prob.type === 'fill') {
+                if (typeof prob.correctAnswer === 'object') {
+                    // Multi-part (30-1, 30-2...)
+                    inputHtml = `<div class="fill-inputs-grid">`;
+                    Object.keys(prob.correctAnswer).forEach(key => {
+                        inputHtml += `
+                            <div class="fill-input-wrapper">
+                                <span class="input-tag">${key}</span>
+                                <input type="text" name="q${key}" class="exam-input" placeholder="Answer...">
+                            </div>`;
+                    });
+                    inputHtml += `</div>`;
+                } else {
+                    // Single
+                    inputHtml = `<input type="text" name="q${pID}" class="exam-input" placeholder="Type answer here...">`;
+                }
+            }
+
+            // Create Card
+            const card = document.createElement('div');
+            card.className = 'problem-row';
+            card.innerHTML = `
+                <div class="problem-details" style="display:block;">
+                    <div class="problem-meta">Question #${pID} <span class="points-badge">(${prob.allocation || 3} pts)</span></div>
+                    ${prob.image ? `<div class="problem-figure"><img src="${prob.image}"></div>` : ''}
+                    <div class="question-text">${prob.question}</div>
+                    <div class="exam-inputs-area">${inputHtml}</div>
+                </div>`;
+
+            blockDiv.appendChild(card);
+        });
+        container.appendChild(blockDiv);
+    });
+
+    // Add Submit Button at the bottom
+    const submitBtn = document.createElement('button');
+    submitBtn.innerText = "Submit Exam";
+    submitBtn.className = "submit-exam-btn";
+    submitBtn.onclick = submitExam;
+    container.appendChild(submitBtn);
+}
+
+/* =========================================
+   SUBMIT EXAM (Send to Backend)
+   ========================================= */
+async function submitExam() {
+    const answers = {};
+    const userId = prompt("Enter your Student ID:", "1150"); // Simple ID prompt
+    if (!userId) return;
+
+    window.examData.forEach(block => {
+        block.problems.forEach(prob => {
+            const pID = prob.id.toString();
+
+            if (prob.type === 'single') {
+                const el = document.querySelector(`input[name="q${pID}"]:checked`);
+                if (el) answers[pID] = el.value;
+            }
+            else if (prob.type === 'multi') {
+                const els = document.querySelectorAll(`input[name="q${pID}"]:checked`);
+                if (els.length > 0) answers[pID] = Array.from(els).map(e => e.value);
+            }
+            else if (prob.type === 'fill') {
+                if (typeof prob.correctAnswer === 'object') {
+                    const subAns = {};
+                    Object.keys(prob.correctAnswer).forEach(key => {
+                        const el = document.querySelector(`input[name="q${key}"]`);
+                        if (el && el.value) subAns[key] = el.value;
+                    });
+                    if (Object.keys(subAns).length > 0) answers[pID] = subAns;
+                } else {
+                    const el = document.querySelector(`input[name="q${pID}"]`);
+                    if (el && el.value) answers[pID] = el.value;
+                }
+            }
+        });
+    });
+
+    // Send to Server
+    try {
+        const response = await fetch('http://localhost:3000/api/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_id: userId, answers: answers })
+        });
+
+        const result = await response.json();
+        if (result.success) {
+            alert(`Exam Submitted!\nTotal Score: ${result.scores.total}`);
+            // Optional: Switch back to solution view with new scores
+            // window.userData = { answers: answers, scores: result.scores };
+            // renderSolutions();
+        }
+    } catch (err) {
+        alert("Server Error: Make sure node server.js is running!");
+        console.error(err);
+    }
+}
