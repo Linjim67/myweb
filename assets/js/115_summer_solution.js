@@ -186,7 +186,8 @@ function renderSolutions() {
                     ${getAnswerBadges(prob)}
 
                     <div class="score-box ${scoreClass}">
-                        ${userScore} / ${maxPoints}
+                        <span class="score-val">${userScore}</span>
+                        <span class="score-alloc">/${maxPoints}</span>
                     </div>
                 </div>
 
@@ -250,9 +251,25 @@ function renderOptionsList(prob) {
 }
 
 
-window.toggleDetails = function (element) {
-    const details = element.nextElementSibling;
-    if (details) {
-        details.style.display = (details.style.display === 'block') ? 'none' : 'block';
+/* =========================================
+   INTERACTION HANDLERS
+   ========================================= */
+
+// 1. Toggle the "Details" (Question Image & Options)
+function toggleDetails(summaryDiv) {
+    const detailsDiv = summaryDiv.nextElementSibling;
+    if (detailsDiv) {
+        const isHidden = detailsDiv.style.display === 'none' || detailsDiv.style.display === '';
+        detailsDiv.style.display = isHidden ? 'block' : 'none';
+
+        // Optional: Highlight the summary row when open
+        summaryDiv.style.background = isHidden ? '#E8E4D9' : '';
     }
-};
+}
+
+// 2. Toggle the "Explanation" (Option Dropdown)
+function toggleExplanation(optionDiv) {
+    // We toggle a class on the PARENT div (.option-item)
+    // The CSS rule ".show-explanation .option-explanation" handles the display
+    optionDiv.classList.toggle('show-explanation');
+}

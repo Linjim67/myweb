@@ -278,41 +278,78 @@ body {
    ========================================= */
 
 .score-box {
+    position: relative;
+    /* Allows corner positioning */
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    background: #F0ECE1;
+    border: 1px solid #BFB9B2;
+    color: #416361;
+
+    /* Center the Big Number */
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 60px;
-    /* Slightly wider for "3 / 5" */
-    height: 50px;
-    border-radius: 8px;
-    /* Less rounded, more technical */
-    font-weight: bold;
-    font-size: 1.1rem;
-    color: #416361;
-    /* Dark Teal Text */
-    background: #F0ECE1;
-    /* Default Beige */
-    border: 1px solid #BFB9B2;
 }
 
-/* Color overrides based on score percentage */
+/* The Big Score (Centered) */
+.score-val {
+    font-size: 1.6rem;
+    font-weight: bold;
+    line-height: 1;
+    margin-bottom: 5px;
+    /* Slight lift to make room for corner text */
+}
+
+/* The Allocation (Bottom Right Corner) */
+.score-alloc {
+    position: absolute;
+    bottom: 2px;
+    right: 4px;
+    font-size: 0.7rem;
+    color: inherit;
+    /* Inherit color from parent status */
+    font-weight: normal;
+    opacity: 0.8;
+}
+
+/* Color overrides */
 .score-perfect {
     background: #C5E0DC;
-    /* Light Teal */
     border: 2px solid #77A88D;
     color: #2D4A48;
 }
 
 .score-zero {
     background: #FADBD8;
-    /* Light Red */
     border: 2px solid #E17055;
     color: #C0392B;
 }
 
 .score-partial {
     background: #FFF3CD;
-    /* Light Yellow */
     border: 2px solid #F1C40F;
     color: #7D6608;
+}
+
+
+/* =========================================
+   EXPLANATION TOGGLE (Fixing the Disappearance)
+   ========================================= */
+.option-explanation {
+    display: none;
+    /* Hidden by default */
+    padding: 10px 15px;
+    margin-top: 10px;
+    background: #F0ECE1;
+    color: #416361;
+    font-size: 0.95rem;
+    border-top: 1px solid #BFB9B2;
+    border-radius: 0 0 4px 4px;
+}
+
+/* When the JavaScript adds this class, it will show */
+.show-explanation .option-explanation {
+    display: block;
 }
