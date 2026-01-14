@@ -195,17 +195,19 @@ function renderSolutions() {
             // === MIDDLE CONTENT ===
             let middleContent = '';
 
+            // ... inside the loop ...
+
             if (prob.type === 'fill') {
-                // A. MULTI-PART FILL (e.g. 27-1, 27-2)
+                // A. MULTI-PART FILL (e.g. 27-1, 27-2, 30-1...)
                 if (typeof prob.correctAnswer === 'object' && prob.correctAnswer !== null) {
                     let linesHtml = '';
                     const userChoices = prob.userResult.choice || {};
+                    const subKeys = Object.keys(prob.correctAnswer);
 
+                    // Generate HTML for each line
                     for (const [subKey, trueVal] of Object.entries(prob.correctAnswer)) {
                         const userVal = userChoices[subKey] || "-";
                         const isCorrect = (userVal === trueVal);
-
-                        // UPDATED COLOR HERE
                         const userColor = isCorrect ? '#416361' : '#e74c3c';
 
                         linesHtml += `
@@ -218,14 +220,19 @@ function renderSolutions() {
                                 <span style="color:#416361; font-weight:bold;">${trueVal}</span>
                             </div>`;
                     }
-                    middleContent = `<div class="fill-summary-container" style="justify-content:center;">${linesHtml}</div>`;
+
+                    // --- NEW LOGIC: Layout Switcher ---
+                    // If more than 3 items, use the Grid (Columns). Otherwise, standard Flex (Vertical).
+                    if (subKeys.length > 3) {
+                        middleContent = `<div class="fill-grid-3">${linesHtml}</div>`;
+                    } else {
+                        middleContent = `<div class="fill-summary-container" style="justify-content:center;">${linesHtml}</div>`;
+                    }
 
                 } else {
-                    // B. SINGLE FILL
+                    // B. SINGLE FILL (Standard)
                     const userVal = prob.userResult.choice || "(Empty)";
                     const trueVal = prob.correctAnswer || "";
-
-                    // UPDATED COLOR HERE (The specific line you asked for)
                     const userColor = (userScore === maxPoints) ? '#416361' : '#e74c3c';
 
                     middleContent = `
