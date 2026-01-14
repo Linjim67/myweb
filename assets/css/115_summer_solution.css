@@ -641,3 +641,37 @@ input:checked+.slider:before {
     margin-bottom: 0;
     white-space: nowrap;
 }
+
+
+
+/* =========================================
+   SPECIAL LAYOUT: 1 Header + 2x2 Grid
+   ========================================= */
+.fill-header-layout {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+/* The top part (30-1) spans full width */
+.fill-header-row {
+    width: 100%;
+    margin-bottom: 8px;
+    /* Space below the header */
+    border-bottom: 1px dashed #eee;
+    /* Optional: distinct separator */
+    padding-bottom: 4px;
+}
+
+/* The bottom part (30-2 to 30-5) is a 2x2 Grid */
+.fill-grid-2x2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    /* 2 Columns */
+    grid-auto-flow: column;
+    /* Fill Down, then Right */
+    grid-template-rows: auto auto;
+    /* Exactly 2 Rows */
+    gap: 5px 30px;
+    /* Vertical / Horizontal Gaps */
+}

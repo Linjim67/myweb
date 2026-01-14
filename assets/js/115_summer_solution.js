@@ -179,8 +179,9 @@ function renderSolutions() {
                 if (prob.sectionImage) introDiv.innerHTML += `<div class="problem-figure"><img src="${prob.sectionImage}" onclick="window.open(this.src)"></div>`;
                 blockDiv.appendChild(introDiv);
             }
+            // ... inside block.problems.forEach(prob => { ...
 
-            // SMART SCORING
+            // === SMART SCORING ===
             let defaultPoints = 5;
             if (prob.type === 'single' || prob.type === 'fill') defaultPoints = 3;
             else if (prob.type === 'multi') defaultPoints = 5;
@@ -189,51 +190,76 @@ function renderSolutions() {
             const userScore = prob.userResult.score || 0;
 
             let scoreClass = 'score-partial';
-            if (userScore === maxPoints) scoreClass = 'score-perfect';
-            else if (userScore === 0) scoreClass = 'score-zero';
+            if (userScore == maxPoints) scoreClass = 'score-perfect';
+            else if (userScore == 0) scoreClass = 'score-zero';
 
             // === MIDDLE CONTENT ===
             let middleContent = '';
 
-            // ... inside the loop ...
-
             if (prob.type === 'fill') {
-                // A. MULTI-PART FILL (e.g. 27-1, 27-2, 30-1...)
                 if (typeof prob.correctAnswer === 'object' && prob.correctAnswer !== null) {
-                    let linesHtml = '';
                     const userChoices = prob.userResult.choice || {};
                     const subKeys = Object.keys(prob.correctAnswer);
 
-                    // Generate HTML for each line
-                    for (const [subKey, trueVal] of Object.entries(prob.correctAnswer)) {
-                        const userVal = userChoices[subKey] || "-";
-                        const isCorrect = (userVal === trueVal);
-                        const userColor = isCorrect ? '#416361' : '#e74c3c';
+                    // Helper to generate a single line HTML
+                    const createLine = (key, trueVal) => {
+                        // FIX 2: Trim strings to avoid mismatch due to spaces
+                        const rawUser = userChoices[key] || "-";
+                        const userVal = rawUser.toString().trim();
+                        const cleanTrue = trueVal.toString().trim();
 
-                        linesHtml += `
+                        const isCorrect = (userVal === cleanTrue);
+                        const userColor = isCorrect ? '#416361' : '#e74c3c'; // Green or Red
+
+                        return `
                             <div class="fill-sub-line">
-                                <span class="sub-tag">${subKey}</span>
+                                <span class="sub-tag">${key}</span>
                                 <span class="sub-label-tiny">YOU</span>
                                 <span style="color:${userColor}; font-weight:bold; margin-right:5px;">${userVal}</span>
                                 <span class="sub-divider">|</span>
                                 <span class="sub-label-tiny">ANS</span>
-                                <span style="color:#416361; font-weight:bold;">${trueVal}</span>
+                                <span style="color:#416361; font-weight:bold;">${cleanTrue}</span>
+                            </div>`;
+                    };
+
+                    // --- LAYOUT LOGIC ---
+
+                    // Case A: Special "1 Header + 4 Grid" (Problem 30)
+                    if (subKeys.length === 5) {
+                        const headKey = subKeys[0]; // 30-1
+                        const gridKeys = subKeys.slice(1); // 30-2 to 30-5
+
+                        let gridHtml = gridKeys.map(k => createLine(k, prob.correctAnswer[k])).join('');
+
+                        middleContent = `
+                            <div class="fill-header-layout">
+                                <div class="fill-header-row">
+                                    ${createLine(headKey, prob.correctAnswer[headKey])}
+                                </div>
+                                <div class="fill-grid-2x2">
+                                    ${gridHtml}
+                                </div>
                             </div>`;
                     }
-
-                    // --- NEW LOGIC: Layout Switcher ---
-                    // If more than 3 items, use the Grid (Columns). Otherwise, standard Flex (Vertical).
-                    if (subKeys.length > 3) {
+                    // Case B: Large Grid (> 3 items) (Problem 31)
+                    else if (subKeys.length > 3) {
+                        let linesHtml = subKeys.map(k => createLine(k, prob.correctAnswer[k])).join('');
                         middleContent = `<div class="fill-grid-3">${linesHtml}</div>`;
-                    } else {
+                    }
+                    // Case C: Standard Vertical List
+                    else {
+                        let linesHtml = subKeys.map(k => createLine(k, prob.correctAnswer[k])).join('');
                         middleContent = `<div class="fill-summary-container" style="justify-content:center;">${linesHtml}</div>`;
                     }
 
                 } else {
-                    // B. SINGLE FILL (Standard)
-                    const userVal = prob.userResult.choice || "(Empty)";
-                    const trueVal = prob.correctAnswer || "";
-                    const userColor = (userScore === maxPoints) ? '#416361' : '#e74c3c';
+                    // SINGLE FILL (Standard)
+                    const rawUser = prob.userResult.choice || "(Empty)";
+                    const userVal = rawUser.toString().trim();
+                    const trueVal = (prob.correctAnswer || "").toString().trim();
+
+                    // Use green if score matches max
+                    const userColor = (userScore == maxPoints) ? '#416361' : '#e74c3c';
 
                     middleContent = `
                         <div class="fill-summary-container">
