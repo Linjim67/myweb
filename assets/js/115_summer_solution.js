@@ -578,12 +578,25 @@ function renderExamMode() {
         container.appendChild(blockDiv);
     });
 
-    // Add Submit Button at the bottom
+    // Create Submit Button
+    const btnDiv = document.createElement('div');
+    btnDiv.style.textAlign = 'center';
+    btnDiv.style.padding = '40px';
+
     const submitBtn = document.createElement('button');
-    submitBtn.innerText = "Submit Exam";
-    submitBtn.className = "submit-exam-btn";
-    submitBtn.onclick = submitExam;
-    container.appendChild(submitBtn);
+    submitBtn.innerText = "交卷 (Submit Exam)";
+    submitBtn.className = "submit-btn"; // Add CSS for this class to make it look nice
+    submitBtn.style.padding = "15px 30px";
+    submitBtn.style.fontSize = "1.2rem";
+    submitBtn.style.cursor = "pointer";
+    submitBtn.style.backgroundColor = "#E3C9C6"; // Match your theme
+    submitBtn.style.border = "none";
+    submitBtn.style.borderRadius = "8px";
+
+    submitBtn.onclick = submitExam; // <--- This links the button to the function above
+
+    btnDiv.appendChild(submitBtn);
+    container.appendChild(btnDiv);
 }
 
 /* =========================================
