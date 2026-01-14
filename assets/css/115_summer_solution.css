@@ -565,7 +565,6 @@ input:checked+.slider:before {
 .section-intro {
     padding: 15px 20px;
     background: #ffffff;
-    /* border-left: 5px solid #E3C9C6;  <-- DELETE THIS LINE */
     border-bottom: 1px solid #eee;
     margin-top: 30px;
     margin-bottom: 0;
