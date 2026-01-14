@@ -208,15 +208,26 @@
 
     /* Common Badge Shape */
     .option-letter-badge {
+        /* 1. Flexbox Alignment */
         display: inline-flex;
         align-items: center;
         justify-content: center;
+
+        /* 2. Fixed Size */
         width: 35px;
         height: 35px;
         border-radius: 50%;
+
+        /* 3. Font Control (The Magic Fix) */
+        font-family: Arial, sans-serif;
+        font-size: 16px;
         font-weight: bold;
-        font-size: 1rem;
+        line-height: 1;
+        padding-top: 2px;
+
+        /* 4. Box Model */
         box-sizing: border-box;
+        margin: 0;
     }
 
     /* --- CASE (1,1): TRUE POSITIVE (You picked Correctly) --- 
