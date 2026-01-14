@@ -143,9 +143,8 @@ function getAnswerBadges(prob) {
 
 
 /* =========================================
-   RENDERER
+   RENDERER (Correct Color Fixed)
    ========================================= */
-
 function renderSolutions() {
     const container = document.getElementById('solution-container');
     if (!container || !window.examData) return;
@@ -155,93 +154,125 @@ function renderSolutions() {
     window.examData.forEach(block => {
         const blockDiv = document.createElement('div');
         blockDiv.className = 'exam-block';
-        blockDiv.innerHTML = `<div class="block-header">${block.title || block.blockTitle}</div>`;
 
+        // --- 1. BLOCK HEADER & INTRO ---
+        let blockHtml = `<div class="block-header">${block.title || block.blockTitle}</div>`;
+
+        if (block.intro || block.introImage) {
+            blockHtml += `<div class="block-intro">`;
+            if (block.intro) blockHtml += `<div class="intro-text">${block.intro}</div>`;
+            if (block.introImage) {
+                blockHtml += `<div class="problem-figure"><img src="${block.introImage}" onclick="window.open(this.src)"></div>`;
+            }
+            blockHtml += `</div>`;
+        }
+        blockDiv.innerHTML = blockHtml;
+
+        // --- 2. PROBLEM LOOP ---
         block.problems.forEach(prob => {
-            const maxPoints = prob.allocation || prob.points || 5;
+
+            // SECTION INTRO (Inserted BETWEEN questions)
+            if (prob.sectionIntro || prob.sectionImage) {
+                const introDiv = document.createElement('div');
+                introDiv.className = 'section-intro';
+                if (prob.sectionIntro) introDiv.innerHTML += `<div class="intro-text">${prob.sectionIntro}</div>`;
+                if (prob.sectionImage) introDiv.innerHTML += `<div class="problem-figure"><img src="${prob.sectionImage}" onclick="window.open(this.src)"></div>`;
+                blockDiv.appendChild(introDiv);
+            }
+
+            // SMART SCORING
+            let defaultPoints = 5;
+            if (prob.type === 'single' || prob.type === 'fill') defaultPoints = 3;
+            else if (prob.type === 'multi') defaultPoints = 5;
+
+            const maxPoints = prob.allocation || prob.points || defaultPoints;
             const userScore = prob.userResult.score || 0;
 
-            // Score Logic
             let scoreClass = 'score-partial';
             if (userScore === maxPoints) scoreClass = 'score-perfect';
             else if (userScore === 0) scoreClass = 'score-zero';
 
-            // --- CONTENT LOGIC ---
+            // === MIDDLE CONTENT ===
             let middleContent = '';
 
             if (prob.type === 'fill') {
-                const userVal = prob.userResult.choice || "(Empty)";
-                const trueVal = prob.correctAnswer || "";
-                const userColor = (userScore === maxPoints) ? '#416361' : '#e74c3c';
+                // A. MULTI-PART FILL (e.g. 27-1, 27-2)
+                if (typeof prob.correctAnswer === 'object' && prob.correctAnswer !== null) {
+                    let linesHtml = '';
+                    const userChoices = prob.userResult.choice || {};
 
-                middleContent = `
-                    <div class="fill-summary-container">
-                        <div class="fill-line">
-                            <span class="fill-label">YOU:</span>
-                            <span style="color:${userColor}; font-weight:bold; font-family:monospace; font-size:1rem;">${userVal}</span>
-                        </div>
-                        <div class="fill-line">
-                            <span class="fill-label">ANS:</span>
-                            <span style="color:#416361; font-weight:bold; font-family:monospace; font-size:1rem;">${trueVal}</span>
-                        </div>
-                    </div>
-                `;
+                    for (const [subKey, trueVal] of Object.entries(prob.correctAnswer)) {
+                        const userVal = userChoices[subKey] || "-";
+                        const isCorrect = (userVal === trueVal);
+
+                        // UPDATED COLOR HERE
+                        const userColor = isCorrect ? '#416361' : '#e74c3c';
+
+                        linesHtml += `
+                            <div class="fill-sub-line">
+                                <span class="sub-tag">${subKey}</span>
+                                <span class="sub-label-tiny">YOU</span>
+                                <span style="color:${userColor}; font-weight:bold; margin-right:5px;">${userVal}</span>
+                                <span class="sub-divider">|</span>
+                                <span class="sub-label-tiny">ANS</span>
+                                <span style="color:#416361; font-weight:bold;">${trueVal}</span>
+                            </div>`;
+                    }
+                    middleContent = `<div class="fill-summary-container" style="justify-content:center;">${linesHtml}</div>`;
+
+                } else {
+                    // B. SINGLE FILL
+                    const userVal = prob.userResult.choice || "(Empty)";
+                    const trueVal = prob.correctAnswer || "";
+
+                    // UPDATED COLOR HERE (The specific line you asked for)
+                    const userColor = (userScore === maxPoints) ? '#416361' : '#e74c3c';
+
+                    middleContent = `
+                        <div class="fill-summary-container">
+                            <div class="fill-line">
+                                <span class="fill-label">YOU:</span>
+                                <span style="color:${userColor}; font-weight:bold; font-family:monospace; font-size:1rem;">${userVal}</span>
+                            </div>
+                            <div class="fill-line">
+                                <span class="fill-label">ANS:</span>
+                                <span style="color:#416361; font-weight:bold; font-family:monospace; font-size:1rem;">${trueVal}</span>
+                            </div>
+                        </div>`;
+                }
             } else {
-                // MULTI/SINGLE: Badges
                 middleContent = getAnswerBadges(prob);
             }
 
-            // --- EXPLANATION LOGIC ---
-            // We check both prob.explanation (standard) and prob.exp (short)
+            // EXPLANATION & CARD HTML
             const expText = prob.explanation || prob.exp || "";
-            const explanationHtml = expText
-                ? `<div class="general-explanation"><strong>Explanation:</strong><br>${expText}</div>`
-                : '';
+            const explanationHtml = expText ? `<div class="general-explanation"><strong>📝 Explanation:</strong><br>${expText}</div>` : '';
 
-            // --- CARD HTML ---
             const problemCard = document.createElement('div');
             problemCard.className = 'problem-row';
-
             problemCard.innerHTML = `
                 <div class="problem-summary" onclick="handleRowClick(this, event)">
-                    <span class="clickable-id" 
-                          style="font-weight:bold; color:#416361; font-size:1.1em; padding:5px;"
-                          onclick="expandFullQuestion(this, event)">
-                          #${prob.id}
-                    </span>
-                    
+                    <span class="clickable-id" style="font-weight:bold; color:#416361; font-size:1.1em; padding:5px;" onclick="expandFullQuestion(this, event)">#${prob.id}</span>
                     <div style="display:flex; flex-direction:column; justify-content:center;">
-                        <div>
-                            <span class="tag">${prob.stats ? prob.stats.coverage : 'General'}</span>
-                            <span class="tag" style="background:#77A88D;">${prob.stats ? prob.stats.difficulty : 'Normal'}</span>
-                        </div>
+                        <div><span class="tag">${prob.stats ? prob.stats.coverage : 'General'}</span><span class="tag" style="background:#77A88D;">${prob.stats ? prob.stats.difficulty : 'Normal'}</span></div>
                         <span class="stat-text">Type: ${prob.type.toUpperCase()} | Acc: ${prob.stats ? prob.stats.accuracy : 'N/A'}</span>
                     </div>
-
                     ${middleContent}
-
-                    <div class="score-box ${scoreClass}">
-                        <span class="score-val">${userScore}</span>
-                        <span class="score-alloc">/${maxPoints}</span>
-                    </div>
+                    <div class="score-box ${scoreClass}"><span class="score-val">${userScore}</span><span class="score-alloc">/${maxPoints}</span></div>
                 </div>
-
                 <div class="problem-details" id="details-${prob.id}">
                     ${prob.image ? `<div class="problem-figure"><img src="${prob.image}" onclick="window.open(this.src)"></div>` : ''}
-                    
                     <div class="question-text">${prob.question}</div>
-                    
                     <div id="options-${prob.id}">${renderOptionsList(prob)}</div>
-
                     ${explanationHtml}
                 </div>
             `;
             blockDiv.appendChild(problemCard);
         });
-
         container.appendChild(blockDiv);
     });
 }
+
 
 
 function renderOptionsList(prob) {

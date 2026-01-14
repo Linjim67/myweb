@@ -1,13 +1,12 @@
 [
   {
-    "title": "Block 1: 單題",
+    "title": "單題：各種類型的題目",
     "problems": [
       {
         "id": 1,
         "type": "multi",
-        "allocation": 5,
         "image": "/assets/images/115/s01.png",
-        "question": "右圖為新興毒品喪屍煙彈(甲苄咪酯)的化學成分。關於此分子的敘述，哪些正確？",
+        "question": "附圖為新興毒品喪屍煙彈(甲苄咪酯)的化學成分。關於此分子的敘述，哪些正確？",
         "correctAnswer": ["A", "C", "D"],
         "stats": { "difficulty": "Easy", "accuracy": "68%", "coverage": "D4: Organic" },
         "options": [
@@ -21,7 +20,6 @@
       {
         "id": 2,
         "type": "multi",
-        "allocation": 5,
         "question": "實驗室常備以下器材：<br> 1. 試管&emsp;&emsp;&emsp; 2. 滴管 &emsp;&emsp;&emsp; 3. 燒杯&emsp;&emsp;&emsp; 4. 量筒 <br> 5. 錐形瓶&emsp;&emsp; 6. 滴定管&emsp;&emsp; 7. 定量瓶&emsp;&emsp; 8. 分度吸量管 <br> 已知容量有兩種標示：TD (To Deliver，用於轉移液體)、TC(To Contain，用於盛裝液體)，則下列關於容量器材的敘述，哪些正確？",
         "correctAnswer": ["A", "C"],
         "stats": { "difficulty": "Medium", "accuracy": "46%", "coverage": "D3: Lab intro" },
@@ -36,7 +34,6 @@
       {
         "id": 3,
         "type": "multi",
-        "allocation": 5,
         "question": "阿亨欲稀釋市售的濃度18.0 M、比重1.80濃硫酸，以配製0.50 M、比重為1.05的稀硫酸共540 mL。經簡單計算後，阿亨量取特定體積的水，緩慢地加入特定體積的濃硫酸中。則關於此稀釋過程與濃度的相關敘述，哪些正確？",
         "correctAnswer": ["D", "E"],
         "stats": { "difficulty": "Medium", "accuracy": "18%", "coverage": "D2: Soln" },
@@ -51,8 +48,7 @@
       {
         "id": 4,
         "type": "multi",
-        "allocation": 5,
-        "question": "早在19世紀初期，Dulong提出了金屬比熱C與金屬的原子量M相乘是定值，可以被近似成 6.0 [cal&#xB7;g<sup>-1</sup>&#xB7;K<sup>-1</sup>]。因為當時已知的原子量數據很少，測量比熱以推測原子量是個很好的方式。阿亨將40.0 g元素金屬M加熱到 100 &dig;C ，投入50.0 g、溫度 23.0 &dig;C 的水中，待達溫度平衡後，水溫為 25.0 &dig;C 。關於此的相關敘述，哪些正確？",
+        "question": "早在19世紀初期，Dulong提出了金屬比熱C與金屬的原子量M相乘是定值，可以被近似成 6.0 [cal&#xB7;g<sup>-1</sup>&#xB7;K<sup>-1</sup>]。因為當時已知的原子量數據很少，測量比熱以推測原子量是個很好的方式。阿亨將40.0 g元素金屬M加熱到 100 &deg;C ，投入50.0 g、溫度 23.0 &deg;C 的水中，待達溫度平衡後，水溫為 25.0 &deg;C 。關於此的相關敘述，哪些正確？",
         "correctAnswer": ["C", "E"],
         "stats": { "difficulty": "Easy", "accuracy": "24%", "coverage": "D4: Perodic table" },
         "options": [
@@ -66,7 +62,6 @@
       {
         "id": 5,
         "type": "multi",
-        "allocation": 5,
         "question": "在實驗室目睹到氟氣外洩時，可就不是你的福氣了，建議你趕快跑。氟氣具有標誌性的顏色，且______，會和鹼性水溶液劇烈反應。已知氟氣與鹼性水溶液反應後，有兩種可能的反應，產物可能是OF<sub>2</sub>或O<sub>2</sub>，依鹼液濃度而定。下列相關敘述，哪些正確？",
         "correctAnswer": ["A", "B", "E"],
         "stats": { "difficulty": "Hard", "accuracy": "43%", "coverage": "D4: Redox" },
@@ -81,10 +76,9 @@
       {
         "id": 6,
         "type": "multi",
-        "allocation": 5,
         "question": "已知 A、B、C、D、E 都是含有氯元素的化合物，我們不知道這些化合物的分子式，但知道關於這五種化合物之間的氧化還原反應：<br>(1) A &rarr; B + NaCl<br>(2) B + H<sub>2</sub>O &rarr; C + H<sub>2</sub> (電解反應)<br>(3) D + NaOH &rarr; A + B + H<sub>2</sub>O<br>(4) E + NaOH &rarr; B + C + H<sub>2</sub>O<br>試判斷這五種化合物中，氯原子的氧化數大小比較：",
         "correctAnswer": ["C", "D"],
-        "stats": { "difficulty": "Hard", "accuracy": "19%", "coverage": "D" },
+        "stats": { "difficulty": "Hard", "accuracy": "19%", "coverage": "D4: Redox" },
         "options": [
           { "label": "A", "text": "A>B", "percent": "52%", "explanation": "Cl屬於第17週期(7A)，氧化數範圍應介於-1~7。<br>反應式(1)：A &rarr; B + (-1)，故氧化數B>A，因為A再怎麼小不會到-1，這樣A=B-1時，B>A。<br> 反應式(2)：C多了一個氧，所以氧化數應變大，C>B。電解只是給予能量，使得原先不能反應的反應反應。<br>反應式(3)(4)：為歸中反應，表示 [中間氧化數] &rarr; [大氧化數] + [小氧化數]。D介於AB間、E介於BC間。<br>根據以上關係，有B>D>A與C>E>B，合併得C>E>B>D>A。" },
           { "label": "B", "text": "B>C", "percent": "52%", "explanation": "參考A選項" },
@@ -96,7 +90,6 @@
       {
         "id": 7,
         "type": "multi",
-        "allocation": 5,
         "question": "某工廠排放至大氣的氣體僅由N<sub>2</sub>、O<sub>2</sub>與CO<sub>2</sub>組成。研究員欲了解排放的氣體組成，於是在 T 下收集 V [L]廢氣進行分析。已知此溫度下，氣體的莫耳體積為 25.0 L/mol。研究員通入收集的廢氣，點燃過量的鎂帶。待反應完全後，得到了黑色、黃色與白色的固體物質，其質量分別為 12 g、300 g與 160 g。選出正確的選項。",
         "correctAnswer": ["B", "C", "E"],
         "stats": { "difficulty": "Hard", "accuracy": "27%", "coverage": "D6: Ideal gas"},
@@ -111,7 +104,6 @@
       {
         "id": 8,
         "type": "multi",
-        "allocation": 5,
         "question": "AB: 呈上題，選出正確的選項。<br>CDE: 若研究員加入反應當中的鎂帶質量恰為(A)所計算的質量，意即鎂帶恰好用盡。研究員將固體加入水中，濾除不溶解的固體過後，配製成 5.0 L 的水溶液。",
         "correctAnswer": ["B", "D"],
         "stats": { "difficulty": "Hard", "accuracy": "39%", "coverage": "D1: Stoichiometry" },
@@ -126,12 +118,12 @@
     ]
   },
   {
-    "title": "Block 2: Redox",
+    "title": "題組一：疊氮酸",
+    "intro": "疊氮酸(HN<sub>3</sub>)是一種非常不穩定的化合物，具有刺激性氣味，在常壓下的熔點為193 K、沸點則為310 K。疊氮酸分子受到撞擊就會爆炸，但是溶解於水溶液後穩定許多。疊氮酸是弱酸，其解離反應式為： HN<sub>3</sub>⇌H<sup>+</sup>+N<sub>3<sub><sup>-</sup> (N<sub>3<sub><sup>-</sup>：氮三離子)。已知疊氮酸(HN<sub>3</sub>)的鍵結形式為 H-N-N≡N 。<br>阿亨將疊氮酸溶解在水中，部分疊氮酸解離成氮三離子。阿亨測量溶液內分子的氮-氮鍵長(-表示鍵結，可能是單鍵或多重鍵)，得到三個數據，分別為113、116與125 [長度單位]。",
     "problems": [
       {
         "id": 9,
         "type": "multi",
-        "allocation": 5,
         "question": "關於疊氮酸(HN<sub>3</sub>)分子與氮三離子(N<sub>3</sub><sup>-</sup>)的敘述，哪些正確？<br>已知：熔點 193 K、沸點 310 K；結構 H-N-<b>N</b>&equiv;N。",
         "correctAnswer": ["A", "B", "C"],
         "stats": { "difficulty": "Easy", "accuracy": "34%", "coverage": "D4: Chemical Bonding" },
@@ -146,7 +138,6 @@
       {
         "id": 10,
         "type": "single",
-        "allocation": 3,
         "question": "已知將亞硝酸鈉(NaNO<sub>2</sub>)與聯氨(N<sub>2</sub>H<sub>4</sub>)配製成水溶液後，混合反應，可以製備出疊氮化鈉(NaN<sub>3</sub>)，此反應的產率達 80%。<br>反應式：NaNO<sub>2</sub> + N<sub>2</sub>H<sub>4</sub> &rarr; NaN<sub>3</sub> + 2H<sub>2</sub>O<br>阿亨取 8.28 g 的亞硝酸鈉、與 3.20 g 的聯氨進行反應，則預期可以合成出多少質量的疊氮化鈉？",
         "correctAnswer": "A",
         "stats": { "difficulty": "Easy", "accuracy": "70%", "coverage": "D1: Stoichiometry" },
@@ -160,7 +151,6 @@
       {
         "id": 11,
         "type": "single",
-        "allocation": 3,
         "question": "呈上，此反應的原子效率為多少？(提示：產率大小不影響原子效率)",
         "correctAnswer": "B",
         "stats": { "difficulty": "Easy", "accuracy": "48%", "coverage": "D1: Stoichiometry" },
@@ -174,8 +164,7 @@
       {
         "id": 12,
         "type": "single",
-        "allocation": 3,
-        "question": "試推測氮三離子(N<sub>3</sub><sup>-</sup>)的氮-氮鍵長？<br>已知 HN<sub>3</sub> 的鍵長數據為 113、116、125。",
+        "question": "試推測氮三離子(N<sub>3</sub><sup>-</sup>)的氮-氮鍵長？",
         "correctAnswer": "B",
         "stats": { "difficulty": "Hard", "accuracy": "43%", "coverage": "D4: Chemical Bonding" },
         "options": [
@@ -188,7 +177,6 @@
       {
         "id": 13,
         "type": "single",
-        "allocation": 3,
         "question": "氮-氮鍵長單位 [長度單位] 最有可能是以下何種？",
         "correctAnswer": "A",
         "stats": { "difficulty": "Easy", "accuracy": "39%", "coverage": "D1: Units" },
@@ -202,7 +190,6 @@
       {
         "id": 14,
         "type": "single",
-        "allocation": 3,
         "question": "疊氮化鈉(NaN<sub>3</sub>)是汽車內安全氣囊的成分之一，當遭受到強力撞擊，此分子會立即分解，產生金屬元素與一種穩定氣體(N<sub>2</sub>)。<br>若某汽車製造商要求安全氣囊被撞擊後，在NTP (V<sub>m</sub>=24.5 L/mol) 下可產生 14.7 L 的氣體，則每個安全氣囊內，至少要加入多少質量的疊氮化鈉？",
         "correctAnswer": "B",
         "stats": { "difficulty": "Medium", "accuracy": "52%", "coverage": "D6: Ideal gas" },
@@ -212,6 +199,211 @@
           { "label": "C", "text": "39.0 g", "percent": "30%", "explanation": "錯誤。此為誤算 1:1 的結果。" },
           { "label": "D", "text": "52.0 g", "percent": "9%", "explanation": "錯誤。" }
         ]
+      }
+    ]
+  }, 
+  {
+    "title": "題組二：草酸的綠色合成",
+    "intro": "草酸可以由碳水有機廢物(如玉米芯等)合成，是一種轉廢為寶的例子，對於環境保護有十分重大的意義。其合成的步驟如下：<br>(1) 將廢物加熱至70 &deg;，以 HNO<sub>3</sub> 氧化(此物質還原成NO)、V<sub>2</sub>O<sub>5</sub> 催化劑，可轉換成一氧化碳(CO)以及水(H<sub>2</sub>O)。<br>(2) 將一氧化碳與氫氧化鈉固體反應，加熱至127 &deg;並加壓至 8.2 atm，產生甲酸鈉。<br>(3) 甲酸鈉與氧氣反應，生成草酸鈉與水，此步驟需要 PdCl<sub>2</sub> 與 CuCl<sub>2</sub> 共同催化。<br>(4) 草酸鈉溶液加入生石灰，產生沉澱物。<br>(5) 將沉澱物分離，加入硫酸，即得到草酸(H<sub>2</sub>C<sub>2</sub>O<sub>4</sub>)。<br><br>假設各步驟的反應轉換率(產率)都是100%。碳水廢物的主成分是碳水聚合物，其化學式可以寫作 (CH<sub>2</sub>O)<sub>n</sub>。假設某工廠取回的碳水廢物中，有重量百分率 90% 是此分子。",
+    "problems": [
+      {
+        "id": 15,
+        "type": "single",
+        "question": "將 12 kg 的碳水廢物進行第一步反應，則至少需要多少體積的 15 M 硝酸？",
+        "correctAnswer": "C",
+        "stats": { "difficulty": "Medium", "accuracy": "43%", "coverage": "D1: Stoichiometry" },
+        "options": [
+          { "label": "A", "text": "4.0 L", "percent": "17%", "explanation": "錯誤。" },
+          { "label": "B", "text": "8.0 L", "percent": "35%", "explanation": "錯誤。" },
+          { "label": "C", "text": "16 L", "percent": "43%", "explanation": "正確。<br>1. (CH<sub>2</sub>O)<sub>n</sub> 質量 = 12000g × 0.9 = 10800g。<br>2. 莫耳數 = 10800 / 30 = 360 mol。<br>3. 反應式：3CH<sub>2</sub>O + 2HNO<sub>3</sub> → 3CO + ...<br>4. 需 HNO<sub>3</sub> = 360 × (2/3) = 240 mol。<br>5. 體積 = 240 / 15 = 16 L。" },
+          { "label": "D", "text": "24 L", "percent": "4%", "explanation": "錯誤。" }
+        ]
+      },
+      {
+        "id": 16,
+        "type": "single",
+        "question": "將前述生成的 CO 一次通入工廠的反應槽中進行反應。通入後恰好滿足反應時的條件(P = 8.2 atm)。試依此計算反應槽的體積。",
+        "correctAnswer": "C",
+        "stats": { "difficulty": "Easy", "accuracy": "57%", "coverage": "D6: Ideal gas" },
+        "options": [
+          { "label": "A", "text": "3.6 m<sup>3</sup>", "percent": "4%", "explanation": "錯誤。" },
+          { "label": "B", "text": "7.2 m<sup>3</sup>", "percent": "35%", "explanation": "錯誤。"},
+          { "label": "C", "text": "14.4 m<sup>3</sup>", "percent": "57%", "explanation": "正確。<br>CO 莫耳數 = 360 mol。<br>假設 T=127+273=400 K。<br>PV=nRT：V = 360 × 0.082 × 400 / 8.2 = 1440 L = 1.44 m<sup>3</sup>。"},
+          { "label": "D", "text": "57.6 m<sup>3</sup>", "percent": "4%", "explanation": "錯誤。"}
+        ]
+      },
+      {
+        "id": 17,
+        "type": "single",
+        "image": "/assets/images/115/s17.png",
+        "question": "步驟(2)反應過程的 CO 壓力與時間如附圖，為一氧化碳壓力的一級反應。試計算其反應速率常數 k (hr<sup>-1</sup>)。",
+        "correctAnswer": "B",
+        "stats": { "difficulty": "Easy", "accuracy": "26%", "coverage": "D6: Kinetics" },
+        "options": [
+          { "label": "A", "text": "0.123", "percent": "13%", "explanation": "錯誤。" },
+          { "label": "B", "text": "0.277", "percent": "26%", "explanation": "正確。<br>一級反應 k = 0.693 / t<sub>1/2</sub>。<br>由數據推算半生期約 2.5 min。<br>k = 0.693 / 2.5 = 0.277 min<sup>-1</sup>。" },
+          { "label": "C", "text": "0.347", "percent": "35%", "explanation": "錯誤。請看清楚半衰期，是2.5 hr而非2.0 hr。" },
+          { "label": "D", "text": "0.693", "percent": "26%", "explanation": "錯誤。" }
+        ]
+      },
+      {
+        "id": 18,
+        "type": "single",
+        "question": "將 (2) 與 (3) 合併，忽略掉催化劑。即：CO + NaOH + O<sub>2</sub> → Na<sub>2</sub>C<sub>2</sub>O<sub>4</sub> + H<sub>2</sub>O。試平衡此反應式，並求出此反應各係數(最簡整數)之係數和。",
+        "correctAnswer": "C",
+        "stats": { "difficulty": "Easy", "accuracy": "74%", "coverage": "D4: Redox" },
+        "options": [
+          { "label": "A", "text": "11", "percent": "4%", "explanation": "錯誤。" },
+          { "label": "B", "text": "12", "percent": "9%", "explanation": "錯誤。" },
+          { "label": "C", "text": "13", "percent": "74%", "explanation": "正確。<br>平衡後：4CO + 4NaOH + 1O<sub>2</sub> → 2Na<sub>2</sub>C<sub>2</sub>O<sub>4</sub> + 2H<sub>2</sub>O。<br>係數和 = 4+4+1+2+2 = 13。" },
+          { "label": "D", "text": "14", "percent": "13%", "explanation": "錯誤。" }
+        ]
+      },
+      {
+        "id": 19,
+        "type": "single",
+        "question": "呈上題，此反應式的原子效率為多少？",
+        "correctAnswer": "A",
+        "stats": { "difficulty": "Easy", "accuracy": "39%", "coverage": "D1: Stoichiometry" },
+        "options": [
+          { "label": "A", "text": "88%", "percent": "39%", "explanation": "正確。<br>原子效率 = (目標產物重 / 反應物總重)。<br>產物 2Na<sub>2</sub>C<sub>2</sub>O<sub>4</sub> = 2×134 = 268。<br>反應物總重 = 4(28)+4(40)+32 = 304。<br>效率 = 268/304 ≈ 88%。" },
+          { "label": "B", "text": "66%", "percent": "52%", "explanation": "錯誤。" },
+          { "label": "C", "text": "58%", "percent": "9%", "explanation": "錯誤。" },
+          { "label": "D", "text": "50%", "percent": "0%", "explanation": "錯誤。" }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "題組三：生物體內的氧化還原",
+    "intro": "菸鹼醯胺腺嘌呤二核苷酸(NAD)，是一種作為氫離子或電子載體的分子，在人體內總濃度約 0.2 mM。此物質有兩種型態：氧化態與還原態，其結構如下（可能未按照順序）：<br><br>結構A (左) 的化學式為 C<sub>21</sub>H<sub>27</sub>N<sub>7</sub>O<sub>14</sub>P<sub>2</sub>，儘管帶一個負電荷，科學家們還是習慣將此離子簡稱作 NAD<sup>+</sup>。若不考慮此分子的淨電荷，分子量為 663.4。",
+    "introImage": "/assets/images/115/spr4.png",
+    "problems": [
+      {
+        "id": 20,
+        "type": "multi",
+        "question": "關於結構 A 的組成敘述，哪些正確？",
+        "correctAnswer": ["A", "D", "E"],
+        "stats": { "difficulty": "Medium", "accuracy": "36%", "coverage": "D4: Organic" },
+        "options": [
+          { "label": "A", "text": "甲含有醯胺官能基。", "percent": "78%", "explanation": "正確。甲結構為 Nicotinamide (菸鹼醯胺)，含有醯胺基 (-CONH<sub>2</sub>)。" },
+          { "label": "B", "text": "DNA 含有與乙相同的五圓環分子。", "percent": "57%", "explanation": "錯誤。DNA 含去氧核糖 (Deoxyribose)，圖中乙為核糖 (Ribose，2'-OH 存在)。" },
+          { "label": "C", "text": "丙結構的英文可能是 Guanine。", "percent": "26%", "explanation": "錯誤。丙為 Adenine (腺嘌呤)。Guanine 具有 C=O 雙鍵。" },
+          { "label": "D", "text": "乙與丁結構相似，為一種醣類。", "percent": "87%", "explanation": "正確。乙與丁皆為核糖 (Ribose)。" },
+          { "label": "E", "text": "戊官能基是一種無機酯類(由無機酸+醇類、或由酸+無機醇縮合而成)。", "percent": "0.43", "explanation": "正確。戊為磷酸二酯鍵 (Phosphodiester bond)，由磷酸(無機酸)與糖(醇)縮合而成。" }
+        ]
+      },
+      {
+        "id": 21,
+        "type": "multi",
+        "question": "下列關於結構 A 與 B 之間的轉換與其相關敘述，哪些正確？",
+        "correctAnswer": ["B", "E"],
+        "stats": { "difficulty": "Hard", "accuracy": "27%", "coverage": "Redox" },
+        "options": [
+          { "label": "A", "text": "結構 B 的鈉鹽的分子量約為 709.4。", "percent": "39%", "explanation": "錯誤。NAD<sup>+</sup> (MW 663) 還原成 NADH (MW 665)。鈉鹽 NADH-Na<sub>2</sub> 約為 665 + 22*2 - 2 (H) ≈ 709，但結構 A 帶負電(-1)，結構 B (NADH) 帶負電(-2)，分子量計算需精確考慮抗衡離子。此選項通常因還原增加 H (MW+1~2) 而非大幅增加，且題幹未給 B 的精確式。" },
+          { "label": "B", "text": "結構 A 為氧化態、結構 B 為還原態。", "percent": "61%", "explanation": "正確。結構 A (NAD<sup>+</sup>) 具有芳香性吡啶環(帶正電 N)，結構 B (NADH) 環上多一個 H，雙鍵減少，為還原態。" },
+          { "label": "C", "text": "結構 B 的化學式可以被簡稱作 NAD<sup>-</sup>。", "percent": "48%", "explanation": "錯誤。還原態簡稱為 NADH。" },
+          { "label": "D", "text": "結構 A 與 B 合計在人體內的濃度約為 13 ppm。", "percent": "39%", "explanation": "錯誤。0.2 mM (0.2 mmol/L) * 663 g/mol ≈ 132.6 mg/L ≈ 133 ppm。" },
+          { "label": "E", "text": "每莫耳的 A 物質可以吸收 2 莫耳電子與 1 莫耳氫離子，產生 B 分子。", "percent": "43%", "explanation": "正確。半反應：NAD<sup>+</sup> + 2e<sup>-</sup> + H<sup>+</sup> &rarr; NADH。" }
+        ]
+      },
+      {
+        "id": 22,
+        "type": "single",
+        "sectionIntro": "阿亨偷跑去喝酒。該啤酒的體積百分濃度為 3.6%、460 mL 瓶裝。阿亨將其全部喝下肚。乙醇在身體中的代謝仰賴乙醇去氫酶、以及 NAD 作為輔酶。此反應將乙醇代謝為乙醛，一共耗費了 4.8 小時才將乙醇完全代謝掉。",
+        "question": "已知乙醇的密度為 0.8 g/mL。<br>以下關於此反應的描述，有哪些是正確的？<br>甲、結構 A 作為此反應的反應物<br>乙、乙醇去氫酶是此反應的催化劑<br>丙、結構 B 作為此反應的反應物<br>丁、乙醇是本反應的溶劑與反應物",
+        "correctAnswer": "A",
+        "stats": { "difficulty": "Easy", "accuracy": "61%", "coverage": "D6: Kinetics" },
+        "options": [
+          { "label": "A", "text": "甲乙", "percent": "61%", "explanation": "正確。<br>反應式：Ethanol + NAD<sup>+</sup> (結構A) &rarr; Acetaldehyde + NADH + H<sup>+</sup>。<br>甲：NAD<sup>+</sup> 是反應物(輔酶)。<br>乙：酶是催化劑。<br>丙：結構 B (NADH) 是產物。<br>丁：乙醇是溶質(反應物)，水是溶劑。" },
+          { "label": "B", "text": "甲丁", "percent": "17%", "explanation": "錯誤。" },
+          { "label": "C", "text": "乙丙", "percent": "22%", "explanation": "錯誤。" },
+          { "label": "D", "text": "丙", "percent": "0%", "explanation": "錯誤。" }
+        ]
+      },
+      {
+        "id": 23,
+        "type": "single",
+        "question": "試計算乙醇氧化的反應速率 (mg/min)。",
+        "correctAnswer": "B",
+        "stats": { "difficulty": "Medium", "accuracy": "70%", "coverage": "D6: Kinetics" },
+        "options": [
+          { "label": "A", "text": "23", "percent": "13%", "explanation": "錯誤。" },
+          { "label": "B", "text": "46", "percent": "70%", "explanation": "正確。<br>1. 乙醇體積 = 460 mL × 3.6% = 16.56 mL。重要：3.6%為體積百分比，並非質量百分比。<br>2. 乙醇質量 = 16.56 mL × 0.8 g/mL = 13.248 g ≈ 13248 mg。<br>3. 時間 = 4.8 hr = 4.8 × 60 = 288 min。<br>4. 速率 = 13248 / 288 = 46 mg/min。" },
+          { "label": "C", "text": "230", "percent": "9%", "explanation": "錯誤。" },
+          { "label": "D", "text": "460", "percent": "9%", "explanation": "錯誤。" }
+        ]
+      },
+      {
+        "id": 24,
+        "type": "single",
+        "question": "乙醇被氧化過程中，所需要的電子莫耳數為多少？(單位：mmol)",
+        "correctAnswer": "D",
+        "stats": { "difficulty": "Medium", "accuracy": "30%", "coverage": "D4: Redox" },
+        "options": [
+          { "label": "A", "text": "72", "percent": "4%", "explanation": "錯誤。" },
+          { "label": "B", "text": "144", "percent": "30%", "explanation": "錯誤。" },
+          { "label": "C", "text": "288", "percent": "35%", "explanation": "錯誤。" },
+          { "label": "D", "text": "576", "percent": "30%", "explanation": "正確。<br>1. 乙醇 MW = 46。<br>2. 乙醇莫耳數 = 13.248 g / 46 = 0.288 mol = 288 mmol。<br>3. 乙醇 &rarr; 乙醛 放出 2e<sup>-</sup> (C由-2變-1，失1e，兩個C? 不對，是C<sub>2</sub>H<sub>5</sub>OH &rarr; CH<sub>3</sub>CHO + 2H<sup>+</sup> + 2e<sup>-</sup>)。<br>4. 電子數 = 288 × 2 = 576 mmol。" }
+        ]
+      },
+      {
+        "id": 25,
+        "type": "single",
+        "question": "呈上題，多少體積的 0.036 M 的酸性 KMnO<sub>4</sub> 可以提供此電子當量數？",
+        "correctAnswer": "C",
+        "stats": { "difficulty": "Medium", "accuracy": "57%", "coverage": "D4: Redox" },
+        "options": [
+          { "label": "A", "text": "1.60 mL", "percent": "4%", "explanation": "錯誤。" },
+          { "label": "B", "text": "32.0 mL", "percent": "13%", "explanation": "錯誤。" },
+          { "label": "C", "text": "3.20 L", "percent": "57%", "explanation": "正確。<br>1. 電子總需求 = 576 mmol = 0.576 mol。<br>2. MnO<sub>4</sub><sup>-</sup> &rarr; Mn<sup>2+</sup> (酸性) 需 5e<sup>-</sup>。<br>3. KMnO<sub>4</sub> 莫耳數 = 0.576 / 5 = 0.1152 mol。<br>4. 體積 = 0.1152 / 0.036 = 3.2 L。" },
+          { "label": "D", "text": "8.00 L", "percent": "26%", "explanation": "錯誤。" }
+        ]
+      },
+      {
+        "id": 26,
+        "type": "single",
+        "question": "已知 NAD 的標準還原電位 E &deg; -0.32 V，而乙醛的標準還原電位 E &deg; = -0.01 V。試計算乙醇代謝的標準電位。",
+        "correctAnswer": "B",
+        "stats": { "difficulty": "Hard", "accuracy": "22%", "coverage": "D6: Electrochem" },
+        "options": [
+          { "label": "A", "text": "-0.33 V", "percent": "30%", "explanation": "錯誤。" },
+          { "label": "B", "text": "-0.31 V", "percent": "22%", "explanation": "正確。<br>反應：Ethanol + NAD<sup>+</sup> &rarr; Acetaldehyde + NADH + H<sup>+</sup><br>氧化半反應 (乙醇 &rarr; 乙醛): Eox = -(-0.01) = +0.01 V<br>還原半反應 (NAD<sup>+</sup> &rarr; NADH): Ered = -0.32 V<br>Ecell = 0.01 + (-0.32) = -0.31 V。" },
+          { "label": "C", "text": "+0.31 V", "percent": "26%", "explanation": "錯誤。" },
+          { "label": "D", "text": "+0.33 V", "percent": "22%", "explanation": "錯誤。" }
+        ]
+      },
+      {
+        "id": 27,
+        "sectionIntro": "右圖為 0.10 mM 的結構 A 與 B 在 pH 7 緩衝溶液的可見-紫外光光譜圖，結構 A 為實線、B 則為虛線。標註的數值為該峰對應的吸收度。",
+        "sectionImage": "/assets/images/115/spr41.png",
+        "type": "fill",
+        "allocation": 6,
+        "question": "已知需要連續數個共軛雙鍵(單雙鍵交錯)，才能讓分子吸收可見-紫外波段範圍的光。<br>則位於 260 nm 吸收峰對應到 ________ 、而位於 340 nm 吸收峰對應到 ________。<br>請填入分子片段(moiety)的代號甲至己。",
+        "correctAnswer": "260nm: 丙 / 340nm: 己",
+        "userResult": { "choice": "", "score": 0 },
+        "stats": { "difficulty": "Hard", "accuracy": "11%", "coverage": "D4: Spectroscopy" },
+        "explanation": "260 nm 吸收來自腺嘌呤(丙)；340 nm 吸收來自還原態Nicotinamide(己)。"
+      },
+      {
+        "id": 28,
+        "type": "fill",
+        "allocation": 4,
+        "question": "若實驗選擇光徑 b = 1 cm。物質 B 在 340 nm 時有個吸收峰，濃度 0.10 mM 時，其光吸收度 A 約為 0.60。則物質 B 在此波長的莫耳吸光度 ε 為 ________ M<sup>-1</sup> cm<sup>-1</sup>。",
+        "correctAnswer": "6000",
+        "userResult": { "choice": "", "score": 0 },
+        "stats": { "difficulty": "Hard", "accuracy": "9%", "coverage": "D4: Spectroscopy" },
+        "explanation": "ε = A / (bc) = 0.60 / (1 * 10<sup>-4</sup>) = 6000 M<sup>-1</sup> cm<sup>-1</sup>。"
+      },
+      {
+        "id": 29,
+        "type": "fill",
+        "allocation": 4,
+        "question": "某樣品水溶液中的溶質僅含有結構 A 與 B，將其稀釋 5 倍後，在 b=1 cm 環境下，測量在 260 nm、340 nm 的吸收度，分別為 0.90 與 0.18。<br>試依此計算，樣品原液中的結構 A 濃度為 ____ mM 與 B 的濃度為 ____ mM。",
+        "correctAnswer": "A: 0.15, B: 0.15",
+        "userResult": { "choice": "", "score": 0 },
+        "stats": { "difficulty": "Sophisticated", "accuracy": "0%", "coverage": "D4: Spectroscopy" },
+        "explanation": "由 340nm 數據得 C<sub>B</sub>(稀釋) = 0.18/6000 = 0.03 mM → 原液 B = 0.15 mM。<br>由 260nm 數據扣除 B 貢獻後，得 A 貢獻，計算後原液 A = 0.15 mM。"
       }
     ]
   }
