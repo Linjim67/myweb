@@ -600,16 +600,13 @@ function renderExamMode() {
    ========================================= */
 async function submitExam() {
 
-    // 1. AUTO-DETECT USER
     const userId = localStorage.getItem("username");
-
     if (!userId) {
         alert("Session expired. Please log in again.");
         window.location.href = "/login.html";
         return;
     }
 
-    // Confirmation (Optional, but good UX)
     if (!confirm(`Ready to submit exam for ID: ${userId}?`)) return;
 
     // ... (Part 1: Collection of answers is the same as before) ...
@@ -684,11 +681,7 @@ async function submitExam() {
                 }
             });
 
-            // 2. Alert the user briefly
             alert(`Grading Complete!\nYour Total Score: ${result.total}`);
-
-            // 3. Re-render the page in "Solution Mode"
-            // This will replace all <inputs> with the "YOU vs ANS" red/green view
             renderSolutions();
 
             // 4. Scroll to top so they see the first question
