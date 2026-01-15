@@ -90,14 +90,24 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    // Save user data (including files) to LocalStorage
-                    localStorage.setItem('currentUser', JSON.stringify(data));
+                    console.log("✅ Login Success:", data);
 
-                    // Go to Dashboard
-                    window.location.href = '/';
+                    const userPayload = {
+                        username: data.username,
+                        name: data.name,
+                        loginTime: new Date().toISOString()
+                    };
+
+                    localStorage.setItem('currentUser', JSON.stringify(userPayload));
+                    localStorage.setItem('username', data.username);
+
+                    window.location.href = "/solution.html";
+
                 } else {
-                    alert("登入失敗: " + data.message);
+                    alert("Login failed: " + data.message);
                 }
+
+
             } catch (err) {
                 console.error(err);
                 alert("連線錯誤，請稍後再試");

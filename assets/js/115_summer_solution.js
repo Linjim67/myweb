@@ -12,14 +12,30 @@ document.addEventListener('DOMContentLoaded', () => {
    ========================================= */
 async function loadPage() {
     try {
-        console.log("📡 Fetching data from server...");
-        const studentID = localStorage.getItem("username");
+        // === NEW AUTH CHECK (Compatible with currentUser) ===
+        let studentID = null;
 
+        // Try getting the object first (New Way)
+        const storedJson = localStorage.getItem("currentUser");
+        if (storedJson) {
+            const userObj = JSON.parse(storedJson);
+            studentID = userObj.username;
+        }
+
+        // Fallback to simple string (Old Way) if object fails
         if (!studentID) {
-            alert("Session expired. Please log in.");
-            window.location.href = "login.html";
+            studentID = localStorage.getItem("username");
+        }
+
+        // === SECURITY CHECK ===
+        if (!studentID) {
+            console.error("❌ No user found in storage. Redirecting...");
+            alert("Please log in first.");
+            window.location.href = "login.html"; // Kicks you out if empty
             return;
         }
+
+        console.log(`👤 Verified User: ${studentID}`);
 
         // 2. Send request (DYNAMIC version)
         const response = await fetch('/api/solution-data', {
@@ -35,7 +51,7 @@ async function loadPage() {
         console.log("📦 Server Data Received:", data);
 
         if (data.success) {
-            // 1. Get the Raw Data
+            // Get the Raw Data
             let rawExam = data.exam;
             const userFile = data.result || {};
 
