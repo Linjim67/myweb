@@ -1,0 +1,4 @@
+*.deb
+*.zip
+.env
+node_modules/.env
