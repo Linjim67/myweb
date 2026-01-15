@@ -6,7 +6,8 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const session = require('express-session');
 const path = require('path');
-const fs = require('fs').promises;
+const fs = require('fs');
+const fsPromises = fs.promises;  // Use this for async operations
 require('dotenv').config();
 
 const app = express();
@@ -23,21 +24,33 @@ app.use(session({
     secret: process.env.SESSION_SECRET || 'your-secret-key',
     resave: false,
     saveUninitialized: false,
-    cookie: { secure: false }
+    cookie: { 
+        secure: process.env.NODE_ENV === 'production',  // true in prod, false in dev
+        httpOnly: true,  // Prevent XSS attacks
+        sameSite: 'strict'  // CSRF protection
+    }
 }));
 
 // ====================================================
 // 3. DATABASE CONNECTION
 // ====================================================
-console.log('MongoDB URI:', process.env.MONGODB_URI ? 'FOUND' : 'NOT FOUND');
-console.log('First 20 chars:', process.env.MONGODB_URI?.substring(0, 20));
+const MONGODB_URI = process.env.MONGODB_URI;
 
-// Database connection - explicitly connect to 'test' database
-mongoose.connect(process.env.MONGODB_URI, {
+if (!MONGODB_URI) {
+    console.error('FATAL ERROR: MONGODB_URI is not defined.');
+    console.error('Please set MONGODB_URI in Render Environment Variables');
+    process.exit(1);
+}
+
+// Database connection
+mongoose.connect(MONGODB_URI, {
     dbName: 'test'
 })
     .then(() => console.log('Connected to MongoDB - test database'))
-    .catch(err => console.error('MongoDB connection error:', err));
+    .catch(err => {
+        console.error('MongoDB connection error:', err);
+        process.exit(1);
+    });
 
 // ----------------------------------------------------
 // [NEW] SUBMISSION SCHEMA (For storing exam results)
@@ -50,6 +63,9 @@ const submissionSchema = new mongoose.Schema({
     total_score: { type: Number, default: 0 },
     timestamp: { type: Date, default: Date.now }
 });
+
+// Add unique constraint
+submissionSchema.index({ user_id: 1, exam_id: 1 }, { unique: true });
 
 const Submission = mongoose.model('Submission', submissionSchema);
 
@@ -147,7 +163,13 @@ function calculateScores(examData, userAnswers) {
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'login.html')));
 app.get('/dashboard', (req, res) => res.sendFile(path.join(__dirname, 'dashboard.html')));
-app.get('/solution', (req, res) => res.sendFile(path.join(__dirname, 'solution.html')));
+app.get('/solution', (req, res) => {
+    // Frontend handles auth via localStorage, but add this for extra safety:
+    if (!req.session.userId) {
+        return res.redirect('/login');
+    }
+    res.sendFile(path.join(__dirname, 'solution.html'));
+});
 
 
 // ====================================================
@@ -162,8 +184,8 @@ app.post('/api/submit', async (req, res) => {
     try {
         const { user_id, exam_id, answers } = req.body;
 
-        if (!user_id || !exam_id || !answers) {
-            return res.status(400).json({ message: 'Missing required fields' });
+        if (!user_id || !exam_id || !answers || Object.keys(answers).length === 0) {
+            return res.status(400).json({ message: 'Invalid answers provided' });
         }
 
         // Check if already submitted
@@ -178,8 +200,13 @@ app.post('/api/submit', async (req, res) => {
 
         // Add error handling
         try {
-            const examDataRaw = await fs.readFile(examPath, 'utf8');
-            var examData = JSON.parse(examDataRaw);
+            const examDataRaw = await fsPromises.readFile(examPath, 'utf8');
+            const examData = JSON.parse(examDataRaw); 
+
+            // After parsing JSON, validate:
+            if (!Array.isArray(examData)) {
+                return res.status(500).json({ message: 'Invalid exam data format' });
+            }
         } catch (error) {
             console.error('Failed to load exam data:', error);
             return res.status(500).json({ message: 'Exam data not found' });
@@ -241,45 +268,6 @@ app.post('/api/check-status', async (req, res) => {
     } catch (error) {
         console.error('Check status error:', error);
         res.status(500).json({ message: 'Server error' });
-    }
-});
-
-
-/* =========================================
-   LOGIN ROUTE
-   ========================================= */
-
-app.post('/login', async (req, res) => {
-    const { username, password } = req.body;
-
-    try {
-        const user = await User.findOne({ username: username });
-
-        if (!user) {
-            return res.json({ success: false, message: "User not found" });
-        }
-
-        if (user.password === password) {
-            return res.json({ success: true, username: user.username });
-        } else {
-            return res.json({ success: false, message: "Wrong password" });
-        }
-
-    } catch (error) {
-        res.status(500).json({ success: false, message: "Server error" });
-    }
-});
-
-// Existing Route: Download Transcript
-app.post('/get-transcript', (req, res) => {
-    const { username, admission_year } = req.body;
-    const fileName = `${username}_summer_transcript.pdf`;
-    const filePath = path.join(__dirname, 'privatee', admission_year, '1.1', fileName); // Note: 1.1 used here in your original code
-
-    if (fs.existsSync(filePath)) {
-        res.download(filePath, fileName);
-    } else {
-        res.status(404).json({ success: false, message: "Transcript not found" });
     }
 });
 
@@ -353,6 +341,22 @@ app.get('/api/user', requireAuth, async (req, res) => {
         res.json(user);
     } catch (error) {
         res.status(500).json({ message: 'Server error' });
+    }
+});
+
+/**
+ * Download transcript PDF
+ */
+app.post('/get-transcript', async (req, res) => {  // Add async
+    const { username, admission_year } = req.body;
+    const fileName = `${username}_summer_transcript.pdf`;
+    const filePath = path.join(__dirname, 'privatee', admission_year, '1.1', fileName);
+
+    try {
+        await fsPromises.access(filePath);  // Check if file exists
+        res.download(filePath, fileName);
+    } catch (error) {
+        res.status(404).json({ success: false, message: "Transcript not found" });
     }
 });
 
