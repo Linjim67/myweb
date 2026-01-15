@@ -16,7 +16,7 @@
             
             <form id="login-form">
                 <div class="input-group">
-                    <label>Email / 帳號</label>
+                    <label>帳號</label>
                     <input type="text" name="username" placeholder="輸入您的帳號" required>
                 </div>
                 <div class="input-group">
@@ -104,10 +104,6 @@
             }
         });
 
-        if (response.success) {
-            localStorage.setItem("username", response.username); // <--- CRITICAL STEP
-            window.location.href = "/solution";
-        }
 
     </script>
 </body>
