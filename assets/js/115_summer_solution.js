@@ -13,14 +13,21 @@ document.addEventListener('DOMContentLoaded', () => {
 async function loadPage() {
     try {
         console.log("📡 Fetching data from server...");
+        const studentID = localStorage.getItem("username");
 
-        // 1. Send request (Hardcoded username for testing!)
+        if (!studentID) {
+            alert("Session expired. Please log in.");
+            window.location.href = "login.html";
+            return;
+        }
+
+        // 2. Send request (DYNAMIC version)
         const response = await fetch('/api/solution-data', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                username: "1150",
-                admission_year: "115"
+                username: studentID,
+                admission_year: studentID.substring(0, 3)
             })
         });
 
@@ -58,11 +65,8 @@ async function loadPage() {
                 });
             });
 
-            // 3. Save & Render
             window.examData = rawExam;
-            const studentID = userFile.username || "115";
             loadUserTheme(studentID);
-
             renderSolutions();
 
         } else {
@@ -78,7 +82,6 @@ async function loadPage() {
 
 
 function loadUserTheme(username) {
-    // Extract year (e.g., "1150" -> "115")
     const admissionYear = username.substring(0, 3);
     const cssPath = `/assets/css/${admissionYear}_summer_solution.css`;
 
@@ -717,7 +720,8 @@ async function fetchData() {
         console.log(`👤 Verified User: ${userId}`);
 
         // Load the Exam Questions
-        const examRes = await fetch('assets/data/exam_summer.json');
+        const admissionYear = username.substring(0, 3);
+        const examRes = await fetch('assets/data/${admissionYear}_exam_summer.json');
         if (!examRes.ok) throw new Error("Could not load exam data.");
         window.examData = await examRes.json();
 
@@ -725,7 +729,7 @@ async function fetchData() {
         const checkRes = await fetch('/api/check-status', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ user_id: userId }) // <--- Sending the saved ID
+            body: JSON.stringify({ user_id: userId })
         });
 
         const status = await checkRes.json();
