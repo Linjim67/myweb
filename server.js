@@ -49,12 +49,10 @@ const Submission = mongoose.models.Submission || mongoose.model('Submission', Su
 
 
 // ====================================================
-// 4. HELPER FUNCTIONS (The Auto-Grader)
+// 4. HELPER FUNCTIONS
 // ====================================================
 
-/**
- * Calculates scores based on User Answers vs Exam Data
- */
+
 function calculateAutoGrades(examData, userAnswers) {
     const scores = {};
     let totalScore = 0;
@@ -221,18 +219,49 @@ app.post('/api/solution-data', (req, res) => {
     }
 });
 
-// Existing Route: Login
+
+/* =========================================
+   LOGIN ROUTE
+   ========================================= */
+
+// 1. Define User Schema
+const UserSchema = new mongoose.Schema({
+    username: String,
+    password: String
+}, { collection: 'users' });
+
+const User = mongoose.models.User || mongoose.model('User', UserSchema);
+
 app.post('/login', async (req, res) => {
+    console.log("\n🔑 --- LOGIN ATTEMPT ---");
     const { username, password } = req.body;
+    console.log(`1. Received Request for: '${username}'`);
+
     try {
         const user = await User.findOne({ username: username });
-        if (user && user.password === password) {
-            res.json({ success: true, username: user.username, name: user.name, admission_year: user.admission_year });
-        } else {
-            res.status(401).json({ success: false, message: "Invalid Credentials" });
+
+        if (!user) {
+            console.log("❌ Result: User NOT found in database.");
+            console.log("   (Hint: Check if the field in DB is actually 'username')");
+            return res.json({ success: false, message: "User not found" });
         }
+
+        console.log(`2. User Found: ${user.username}`);
+
+        // 3. CHECK PASSWORD
+        // IMPORTANT: Is your DB password Plain Text or Hashed?
+        // This code checks BOTH to be safe.
+
+        if (user.password === password) {
+            console.log("✅ Result: Password Match (Plain Text)");
+            return res.json({ success: true, username: user.username });
+        }
+
+        return res.json({ success: false, message: "Wrong password" });
+
     } catch (error) {
-        res.status(500).json({ success: false, message: "Server Error" });
+        console.error("💥 Server Error:", error);
+        res.status(500).json({ success: false, message: "Server error" });
     }
 });
 
