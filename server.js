@@ -29,8 +29,14 @@ app.use(session({
 // ====================================================
 // 3. DATABASE CONNECTION
 // ====================================================
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/userdb')
-    .then(() => console.log('Connected to MongoDB'))
+console.log('MongoDB URI:', process.env.MONGODB_URI ? 'FOUND' : 'NOT FOUND');
+console.log('First 20 chars:', process.env.MONGODB_URI?.substring(0, 20));
+
+// Database connection - explicitly connect to 'test' database
+mongoose.connect(process.env.MONGODB_URI, {
+    dbName: 'test'
+})
+    .then(() => console.log('Connected to MongoDB - test database'))
     .catch(err => console.error('MongoDB connection error:', err));
 
 // ----------------------------------------------------
