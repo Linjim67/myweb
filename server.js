@@ -236,14 +236,6 @@ app.post('/api/check-status', async (req, res) => {
    LOGIN ROUTE
    ========================================= */
 
-// 1. Define User Schema
-const UserSchema = new mongoose.Schema({
-    username: { type: String, required: true }, 
-    password: { type: String, required: true }
-}, { collection: 'users' }); 
-
-const User = mongoose.models.User || mongoose.model('User', UserSchema);
-
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
