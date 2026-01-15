@@ -3,128 +3,134 @@
 // ====================================================
 const express = require('express');
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+const session = require('express-session');
 const path = require('path');
-const fs = require('fs');
+const fs = require('fs').promises;
 require('dotenv').config();
 
 const app = express();
-const port = process.env.PORT || 3000;
+const User = require('./models/User');
 
-// ✅ STATIC FILES CONFIGURATION
-app.use(express.static(path.join(__dirname, 'web')));
-app.use(express.static(__dirname));
 
 // ====================================================
 // 2. MIDDLEWARE
 // ====================================================
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(__dirname));
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'your-secret-key',
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false }
+}));
 
 // ====================================================
 // 3. DATABASE CONNECTION
 // ====================================================
-const mongoURI = process.env.MONGO_URI;
-if (!mongoURI) {
-    console.error("❌ Error: MONGO_URI is missing.");
-} else {
-    mongoose.connect(mongoURI)
-        .then(() => console.log("✅ Connected to MongoDB successfully!"))
-        .catch(err => console.error("❌ MongoDB connection error:", err));
-}
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/userdb')
+    .then(() => console.log('Connected to MongoDB'))
+    .catch(err => console.error('MongoDB connection error:', err));
 
 // ----------------------------------------------------
 // [NEW] SUBMISSION SCHEMA (For storing exam results)
 // ----------------------------------------------------
-const SubmissionSchema = new mongoose.Schema({
-    user_id: String,
-    exam_id: String,
-    timestamp: { type: Date, default: Date.now },
-    answers: Object,  // Stores raw input { "1": "A", "30": { "30-1": "..." } }
-    scores: Object,   // Stores graded points { "1": 3, "total": 85 }
-    total_score: Number
+const submissionSchema = new mongoose.Schema({
+    user_id: { type: String, required: true },
+    exam_id: { type: String, required: true },
+    answers: { type: Object, required: true },
+    scores: { type: Object },
+    total_score: { type: Number, default: 0 },
+    timestamp: { type: Date, default: Date.now }
 });
-// Check if model exists to avoid recompilation errors
-const Submission = mongoose.models.Submission || mongoose.model('Submission', SubmissionSchema);
 
+const Submission = mongoose.model('Submission', submissionSchema);
+
+
+// Authentication middleware
+const requireAuth = (req, res, next) => {
+    if (!req.session.userId) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
+    next();
+};
 
 // ====================================================
 // 4. HELPER FUNCTIONS
 // ====================================================
-
-
-function calculateAutoGrades(examData, userAnswers) {
+function calculateScores(examData, userAnswers) {
     const scores = {};
     let totalScore = 0;
 
-    // Flatten blocks to get simple list of problems
-    const allProblems = [];
-    if (Array.isArray(examData)) {
-        examData.forEach(block => {
-            if (block.problems) allProblems.push(...block.problems);
-        });
-    }
+    examData.forEach(block => {
+        block.problems.forEach(problem => {
+            const problemId = problem.id.toString();
+            const userAnswer = userAnswers[problemId];
+            const correctAnswer = problem.answer;
+            const allocation = problem.allocation || 0;
+            let earned = 0;
 
-    allProblems.forEach(prob => {
-        const pID = prob.id.toString();
-        const userAns = userAnswers[pID];
-        const correctAns = prob.correctAnswer;
-
-        // Default allocation logic
-        let allocation = prob.allocation || prob.points || (prob.type === 'multi' ? 5 : 3);
-        let earned = 0;
-
-        if (userAns) {
-            // A. FILL-IN (Handle Sub-Questions)
-            if (prob.type === 'fill') {
-                if (typeof correctAns === 'object') {
-                    // Multi-part (e.g. 30-1, 30-2)
-                    const subKeys = Object.keys(correctAns);
-                    const pointsPerBlank = allocation / subKeys.length;
-                    let correctCount = 0;
-
-                    subKeys.forEach(k => {
-                        const uVal = (userAns[k] || "").toString().trim();
-                        const cVal = (correctAns[k] || "").toString().trim();
-                        // Loose equality for numbers ("6" == 6)
-                        if (uVal == cVal) correctCount++;
-                    });
-                    earned = parseFloat((correctCount * pointsPerBlank).toFixed(2));
-                } else {
-                    // Single Fill
-                    if (userAns.toString().trim() == correctAns.toString().trim()) earned = allocation;
+            if (problem.type === 'single') {
+                // Single choice: exact match
+                if (userAnswer === correctAnswer) {
+                    earned = allocation;
                 }
-            }
-            // B. SINGLE CHOICE
-            else if (prob.type === 'single') {
-                if (userAns === correctAns) earned = allocation;
-            }
-            // C. MULTI CHOICE (Right - Wrong Formula)
-            else if (prob.type === 'multi') {
-                const allOpts = prob.options.map(o => o.label);
-                const uArr = Array.isArray(userAns) ? userAns : [userAns];
-                const cArr = Array.isArray(correctAns) ? correctAns : [correctAns];
+            } else if (problem.type === 'multi') {
+                // Multi choice: (correct - wrong) / total * points
+                const correctOpts = correctAnswer.split(',').map(a => a.trim());
+                const userOpts = userAnswer ? userAnswer.split(',').map(a => a.trim()) : [];
+                const allOpts = problem.options.map((_, idx) => String.fromCharCode(65 + idx));
 
                 let correctDecisions = 0;
                 let incorrectDecisions = 0;
 
                 allOpts.forEach(opt => {
-                    const picked = uArr.includes(opt);
-                    const isRight = cArr.includes(opt);
-                    if (picked === isRight) correctDecisions++;
-                    else incorrectDecisions++;
+                    const isPicked = userOpts.includes(opt);
+                    const isCorrect = correctOpts.includes(opt);
+                    
+                    if (isPicked === isCorrect) {
+                        correctDecisions++;
+                    } else {
+                        incorrectDecisions++;
+                    }
                 });
 
-                let rawScore = allocation * ((correctDecisions - incorrectDecisions) / allOpts.length);
-                earned = rawScore > 0 ? parseFloat(rawScore.toFixed(2)) : 0;
-            }
-        }
+                const rawScore = allocation * ((correctDecisions - incorrectDecisions) / allOpts.length);
+                earned = Math.max(0, rawScore);
 
-        scores[pID] = earned;
-        totalScore += earned;
+            } else if (problem.type === 'fill') {
+                if (typeof correctAnswer === 'object') {
+                    // Multi-part fill
+                    const subKeys = Object.keys(correctAnswer);
+                    const pointsPerBlank = allocation / subKeys.length;
+                    let correctCount = 0;
+
+                    subKeys.forEach(subKey => {
+                        const userSub = userAnswer && userAnswer[subKey] ? userAnswer[subKey].trim() : '';
+                        const correctSub = correctAnswer[subKey].trim();
+                        
+                        if (userSub === correctSub) {
+                            correctCount++;
+                        }
+                    });
+
+                    earned = correctCount * pointsPerBlank;
+                } else {
+                    // Single fill
+                    if (userAnswer && userAnswer.trim() === correctAnswer.trim()) {
+                        earned = allocation;
+                    }
+                }
+            }
+
+            scores[problemId] = parseFloat(earned.toFixed(2));
+            totalScore += earned;
+        });
     });
 
-    scores.total = parseFloat(totalScore.toFixed(1));
-    return scores;
+    scores.total = parseFloat(totalScore.toFixed(2));
+    return { scores, totalScore: scores.total };
 }
 
 
@@ -148,73 +154,80 @@ app.get('/solution', (req, res) => res.sendFile(path.join(__dirname, 'solution.h
  */
 app.post('/api/submit', async (req, res) => {
     try {
-        const { user_id, answers } = req.body;
-        console.log(`📝 Received submission from User: ${user_id}`);
+        const { user_id, exam_id, answers } = req.body;
 
-        // 1. Load the Answer Key
-        // We look in the same 'privatee' folder logic you used elsewhere
-        // Defaulting to 115/1.2 for now. You can pass these as params if needed.
-        const yearToUse = "115";
-        const classGroup = "1.2";
-        const examPath = path.join(__dirname, 'privatee', yearToUse, classGroup, 'exam_summer.json');
-
-        if (!fs.existsSync(examPath)) {
-            console.error("Exam file missing at:", examPath);
-            return res.status(404).json({ success: false, message: "Exam definition not found on server." });
+        if (!user_id || !exam_id || !answers) {
+            return res.status(400).json({ message: 'Missing required fields' });
         }
 
-        const examData = JSON.parse(fs.readFileSync(examPath, 'utf8'));
-
-        // 2. Run Auto-Grader
-        const scores = calculateAutoGrades(examData, answers);
-
-        // 3. Save to MongoDB
-        if (mongoose.connection.readyState === 1) {
-            const newSubmission = new Submission({
-                user_id,
-                exam_id: "exam_summer_115",
-                answers,
-                scores,
-                total_score: scores.total
-            });
-
-            await newSubmission.save();
-            console.log(`✅ Scores saved for ${user_id}: ${scores.total} pts`);
-        } else {
-            console.warn("⚠️ DB not connected; results calculated but not saved.");
+        // Check if already submitted
+        const existing = await Submission.findOne({ user_id, exam_id });
+        if (existing) {
+            return res.status(400).json({ message: 'Exam already submitted' });
         }
 
-        // 4. Return Results
-        res.json({ success: true, scores: scores, total: scores.total });
+        // Load exam data for grading
+        const admissionYear = user_id.substring(0, 3);
+        const examPath = path.join(__dirname, 'assets', 'data', `${admissionYear}_exam_summer.json`);
+        const examDataRaw = await fs.readFile(examPath, 'utf8');
+        const examData = JSON.parse(examDataRaw);
+
+        // Calculate scores
+        const { scores, totalScore } = calculateScores(examData, answers);
+
+        // Save submission
+        const submission = new Submission({
+            user_id,
+            exam_id,
+            answers,
+            scores,
+            total_score: totalScore
+        });
+
+        await submission.save();
+
+        res.json({
+            message: 'Exam submitted successfully',
+            totalScore: totalScore,
+            scores: scores
+        });
 
     } catch (error) {
-        console.error("Submission Error:", error);
-        res.status(500).json({ success: false, message: "Server Error processing submission." });
+        console.error('Submit error:', error);
+        res.status(500).json({ message: 'Server error' });
     }
 });
 
-// Existing Route: Load Solution Data
-app.post('/api/solution-data', (req, res) => {
-    const { username, admission_year } = req.body;
-    const yearToUse = `${String(admission_year || "115")}`;
-    const classGroup = "1.2";
-    const baseDir = path.join(__dirname, 'privatee', yearToUse, classGroup);
-    const universalPath = path.join(baseDir, 'exam_summer.json');
-    const personalPath = path.join(baseDir, `${username}_result.json`);
-
+/**
+ * Check if user has submitted exam
+ * Returns submission data if found
+ */
+app.post('/api/check-status', async (req, res) => {
     try {
-        if (!fs.existsSync(universalPath)) {
-            return res.status(404).json({ success: false, message: "Exam file not found." });
+        const { user_id } = req.body;
+
+        if (!user_id) {
+            return res.status(400).json({ message: 'User ID required' });
         }
-        const examData = JSON.parse(fs.readFileSync(universalPath, 'utf8'));
-        let userResult = null;
-        if (fs.existsSync(personalPath)) {
-            userResult = JSON.parse(fs.readFileSync(personalPath, 'utf8'));
+
+        const submission = await Submission.findOne({
+            user_id: user_id,
+            exam_id: "exam_summer_115"
+        });
+
+        if (submission) {
+            return res.json({
+                found: true,
+                answers: submission.answers,
+                scores: submission.scores,
+                total: submission.total_score
+            });
         }
-        res.json({ success: true, exam: examData, result: userResult });
+
+        res.json({ found: false });
     } catch (error) {
-        console.error("File Read Error:", error);
-        res.status(500).json({ success: false, message: "Server error." });
+        console.error('Check status error:', error);
+        res.status(500).json({ message: 'Server error' });
     }
 });
 
@@ -265,38 +278,76 @@ app.post('/get-transcript', (req, res) => {
     }
 });
 
-
-/* =========================================
-   CHECK STATUS ROUTE
-   frontend asks: "Did I submit this already?"
-   ========================================= */
-app.post('/api/check-status', async (req, res) => {
+// Registration endpoint
+app.post('/api/register', async (req, res) => {
     try {
-        const { user_id } = req.body;
+        const { username, email, password } = req.body;
 
-        // 1. Search MongoDB for this user's submission
-        if (mongoose.connection.readyState === 1) {
-            const submission = await Submission.findOne({
-                user_id: user_id,
-                exam_id: "exam_summer_115"
-            });
-
-            if (submission) {
-                // FOUND: Send back the data so we can show the transcript
-                return res.json({
-                    found: true,
-                    answers: submission.answers,
-                    scores: submission.scores
-                });
-            }
+        if (!username || !email || !password) {
+            return res.status(400).json({ message: 'All fields are required' });
         }
 
-        // NOT FOUND: Tell frontend to show exam mode
-        res.json({ found: false });
+        const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+        if (existingUser) {
+            return res.status(400).json({ message: 'User already exists' });
+        }
 
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const user = new User({ username, email, password: hashedPassword });
+        await user.save();
+
+        res.status(201).json({ message: 'User registered successfully' });
     } catch (error) {
-        console.error("Check Status Error:", error);
-        res.status(500).json({ error: "Server Error" });
+        console.error('Registration error:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// Login endpoint
+app.post('/api/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ message: 'Invalid credentials' });
+        }
+
+        const isValidPassword = await bcrypt.compare(password, user.password);
+        if (!isValidPassword) {
+            return res.status(400).json({ message: 'Invalid credentials' });
+        }
+
+        req.session.userId = user._id;
+        req.session.username = user.username;
+
+        res.json({ 
+            message: 'Login successful',
+            user: { username: user.username, email: user.email }
+        });
+    } catch (error) {
+        console.error('Login error:', error);
+        res.status(500).json({ message: 'Server error' });
+    }
+});
+
+// Logout endpoint
+app.post('/api/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            return res.status(500).json({ message: 'Logout failed' });
+        }
+        res.json({ message: 'Logout successful' });
+    });
+});
+
+// Get user session
+app.get('/api/user', requireAuth, async (req, res) => {
+    try {
+        const user = await User.findById(req.session.userId).select('-password');
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error' });
     }
 });
 
@@ -304,6 +355,9 @@ app.post('/api/check-status', async (req, res) => {
 // ====================================================
 // 7. START SERVER
 // ====================================================
-app.listen(port, () => {
-    console.log(`🚀 Website is running at http://localhost:${port}`);
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
+
+module.exports = { Submission };

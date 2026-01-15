@@ -149,26 +149,6 @@
             }
         });
 
-        // --- Update Navbar with Username ---
-        document.addEventListener("DOMContentLoaded", () => {
-            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-            const navBtn = document.getElementById('nav-login-btn');
-
-            if (currentUser && navBtn) {
-                navBtn.innerText = `👤 ${currentUser.name}`;
-
-                // Optional: Make the button a "Logout" button
-                navBtn.href = "#"; // Stop it from going to the login page
-                navBtn.onclick = function (e) {
-                    e.preventDefault();
-                    // Ask to confirm logout
-                    if (confirm(`Hi ${currentUser.username}, 確定要登出嗎? (Log out?)`)) {
-                        localStorage.removeItem('currentUser'); // Delete saved login
-                        window.location.reload(); // Refresh page to reset
-                    }
-                };
-            }
-        });
 
     </script>
 </body>
