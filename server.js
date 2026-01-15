@@ -169,8 +169,15 @@ app.post('/api/submit', async (req, res) => {
         // Load exam data for grading
         const admissionYear = user_id.substring(0, 3);
         const examPath = path.join(__dirname, 'assets', 'data', `${admissionYear}_exam_summer.json`);
-        const examDataRaw = await fs.readFile(examPath, 'utf8');
-        const examData = JSON.parse(examDataRaw);
+
+        // Add error handling
+        try {
+            const examDataRaw = await fs.readFile(examPath, 'utf8');
+            var examData = JSON.parse(examDataRaw);
+        } catch (error) {
+            console.error('Failed to load exam data:', error);
+            return res.status(500).json({ message: 'Exam data not found' });
+        }
 
         // Calculate scores
         const { scores, totalScore } = calculateScores(examData, answers);
