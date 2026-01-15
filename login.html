@@ -79,6 +79,8 @@
             const usernameInput = loginForm.querySelector('input[type="text"]').value;
             const passwordInput = loginForm.querySelector('input[type="password"]').value;
 
+            console.log('Attempting login with:', { username: usernameInput }); // Debug
+
             try {
                 if (isLogin) {
                     // LOGIN REQUEST
@@ -89,6 +91,7 @@
                     });
 
                     const data = await response.json();
+                    console.log('Server response:', data); // Debug - SHOWS ERROR MESSAGE
 
                     if (data.message === 'Login successful') {
                         console.log("✅ Login Success:", data);
