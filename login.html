@@ -36,7 +36,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/tsparticles-slim@2.0.6/tsparticles.slim.bundle.min.js"></script>
     <script>
-        // 1. Particle Background (Same as index)
+        // 1. Particle Background
         (async () => {
             await tsParticles.load("tsparticles", {
                 particles: {
@@ -50,7 +50,7 @@
             });
         })();
 
-        // 2. Simple Toggle between Login / Sign Up text
+        // 2. Toggle between Login / Sign Up
         const toggleBtn = document.getElementById('toggle-btn');
         const formTitle = document.getElementById('form-title');
         const submitBtn = document.querySelector('.login-btn');
@@ -70,50 +70,89 @@
             }
         });
         
-        // login
+        // 3. Form Submission Handler
         const loginForm = document.getElementById('login-form');
 
         loginForm.addEventListener('submit', async (e) => {
-            e.preventDefault(); // Stop page from refreshing
+            e.preventDefault();
 
-            // Get values from inputs
             const usernameInput = loginForm.querySelector('input[type="text"]').value;
             const passwordInput = loginForm.querySelector('input[type="password"]').value;
 
             try {
-                const response = await fetch('/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username: usernameInput, password: passwordInput })
-                });
+                if (isLogin) {
+                    // LOGIN REQUEST
+                    const response = await fetch('/api/login', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username: usernameInput, password: passwordInput })
+                    });
 
-                const data = await response.json();
+                    const data = await response.json();
 
-                if (data.success) {
-                    console.log("✅ Login Success:", data);
+                    if (data.message === 'Login successful') {
+                        console.log("✅ Login Success:", data);
 
-                    const userPayload = {
-                        username: data.username,
-                        name: data.name,
-                        loginTime: new Date().toISOString()
-                    };
+                        const userPayload = {
+                            username: data.user.username,
+                            loginTime: new Date().toISOString()
+                        };
 
-                    localStorage.setItem('currentUser', JSON.stringify(userPayload));
-                    localStorage.setItem('username', data.username);
+                        localStorage.setItem('currentUser', JSON.stringify(userPayload));
+                        localStorage.setItem('username', data.user.username);
 
-                    window.location.href = "/solution.html";
+                        window.location.href = "/solution.html";
+
+                    } else {
+                        alert("Login failed: " + (data.message || "Unknown error"));
+                    }
 
                 } else {
-                    alert("Login failed: " + data.message);
-                }
+                    // REGISTRATION REQUEST
+                    const name = prompt("Please enter your name:");
+                    const admissionYearStr = prompt("Please enter your admission year (e.g., 2022):");
+                    
+                    if (!name || !admissionYearStr) {
+                        alert("Registration cancelled.");
+                        return;
+                    }
 
+                    const admissionYear = parseInt(admissionYearStr);
+                    if (isNaN(admissionYear)) {
+                        alert("Invalid admission year.");
+                        return;
+                    }
+
+                    const response = await fetch('/api/register', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            username: usernameInput, 
+                            password: passwordInput,
+                            name: name,
+                            admission_year: admissionYear
+                        })
+                    });
+
+                    const data = await response.json();
+
+                    if (data.message === 'User registered successfully') {
+                        alert("✅ Registration successful! Please login.");
+                        isLogin = true;
+                        formTitle.innerText = "學員登入";
+                        submitBtn.innerText = "登入";
+                        toggleBtn.innerText = "立即註冊";
+                        loginForm.reset();
+                    } else {
+                        alert("Registration failed: " + (data.message || "Unknown error"));
+                    }
+                }
 
             } catch (err) {
                 console.error(err);
                 alert("連線錯誤，請稍後再試");
             }
         });
-
 
     </script>
 </body>

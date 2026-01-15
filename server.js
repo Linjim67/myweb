@@ -7,7 +7,8 @@ const bcrypt = require('bcryptjs');
 const session = require('express-session');
 const path = require('path');
 const fs = require('fs');
-const fsPromises = fs.promises;  // Use this for async operations
+const fsPromises = fs.promises;
+const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
 const app = express();
@@ -20,16 +21,33 @@ const User = require('./models/User');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname));
+
+// CORS Headers
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', process.env.CORS_ORIGIN || '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+});
+
+// Session Configuration
 app.use(session({
     secret: process.env.SESSION_SECRET || 'your-secret-key',
     resave: false,
     saveUninitialized: false,
     cookie: { 
-        secure: process.env.NODE_ENV === 'production',  // true in prod, false in dev
-        httpOnly: true,  // Prevent XSS attacks
-        sameSite: 'strict'  // CSRF protection
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true,
+        sameSite: 'strict'
     }
 }));
+
+// Rate limiting for login attempts
+const loginLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 5, // 5 attempts
+    message: 'Too many login attempts, please try again later'
+});
 
 // ====================================================
 // 3. DATABASE CONNECTION
@@ -38,10 +56,11 @@ const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
     console.error('FATAL ERROR: MONGODB_URI is not defined.');
+    console.error('Please set MONGODB_URI in Render Environment Variables');
     process.exit(1);
 }
 
-// DEBUG: Print the full connection string (MASK the password)
+// DEBUG: Print the connection string (MASK the password)
 const maskedURI = MONGODB_URI.replace(/:[^@]*@/, ':****@');
 console.log('Using MongoDB URI:', maskedURI);
 
@@ -54,9 +73,11 @@ mongoose.connect(MONGODB_URI, {
         process.exit(1);
     });
 
-// ----------------------------------------------------
-// [NEW] SUBMISSION SCHEMA (For storing exam results)
-// ----------------------------------------------------
+// ====================================================
+// 4. SCHEMAS & MODELS
+// ====================================================
+
+// Submission Schema
 const submissionSchema = new mongoose.Schema({
     user_id: { type: String, required: true },
     exam_id: { type: String, required: true },
@@ -66,13 +87,14 @@ const submissionSchema = new mongoose.Schema({
     timestamp: { type: Date, default: Date.now }
 });
 
-// Add unique constraint
+// Add unique constraint to prevent duplicate submissions
 submissionSchema.index({ user_id: 1, exam_id: 1 }, { unique: true });
 
 const Submission = mongoose.model('Submission', submissionSchema);
 
-
-// Authentication middleware
+// ====================================================
+// 5. AUTHENTICATION MIDDLEWARE
+// ====================================================
 const requireAuth = (req, res, next) => {
     if (!req.session.userId) {
         return res.status(401).json({ message: 'Unauthorized' });
@@ -81,7 +103,7 @@ const requireAuth = (req, res, next) => {
 };
 
 // ====================================================
-// 4. HELPER FUNCTIONS
+// 6. HELPER FUNCTIONS
 // ====================================================
 function calculateScores(examData, userAnswers) {
     const scores = {};
@@ -157,35 +179,33 @@ function calculateScores(examData, userAnswers) {
     return { scores, totalScore: scores.total };
 }
 
-
 // ====================================================
-// 5. HTML PAGE ROUTES
+// 7. HTML PAGE ROUTES
 // ====================================================
 
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'login.html')));
 app.get('/dashboard', (req, res) => res.sendFile(path.join(__dirname, 'dashboard.html')));
 app.get('/solution', (req, res) => {
-    // Frontend handles auth via localStorage, but add this for extra safety:
     if (!req.session.userId) {
         return res.redirect('/login');
     }
     res.sendFile(path.join(__dirname, 'solution.html'));
 });
 
-
 // ====================================================
-// 6. API ROUTES
+// 8. API ROUTES
 // ====================================================
 
 /**
- * [NEW] SUBMIT EXAM ROUTE
- * Receives answers, Grades them, Saves to Mongo
+ * SUBMIT EXAM ROUTE
+ * Receives answers, Grades them, Saves to MongoDB
  */
 app.post('/api/submit', async (req, res) => {
     try {
         const { user_id, exam_id, answers } = req.body;
 
+        // Input validation
         if (!user_id || !exam_id || !answers || Object.keys(answers).length === 0) {
             return res.status(400).json({ message: 'Invalid answers provided' });
         }
@@ -200,14 +220,20 @@ app.post('/api/submit', async (req, res) => {
         const admissionYear = user_id.substring(0, 3);
         const examPath = path.join(__dirname, 'assets', 'data', `${admissionYear}_exam_summer.json`);
 
-        // Add error handling
+        let examData;
         try {
             const examDataRaw = await fsPromises.readFile(examPath, 'utf8');
-            const examData = JSON.parse(examDataRaw); 
-
-            // After parsing JSON, validate:
-            if (!Array.isArray(examData)) {
+            
+            try {
+                examData = JSON.parse(examDataRaw);
+            } catch (parseError) {
+                console.error('JSON parse error in exam data:', parseError);
                 return res.status(500).json({ message: 'Invalid exam data format' });
+            }
+
+            // Validate exam data structure
+            if (!Array.isArray(examData)) {
+                return res.status(500).json({ message: 'Exam data must be an array' });
             }
         } catch (error) {
             console.error('Failed to load exam data:', error);
@@ -241,7 +267,7 @@ app.post('/api/submit', async (req, res) => {
 });
 
 /**
- * Check if user has submitted exam
+ * CHECK SUBMISSION STATUS
  * Returns submission data if found
  */
 app.post('/api/check-status', async (req, res) => {
@@ -273,22 +299,29 @@ app.post('/api/check-status', async (req, res) => {
     }
 });
 
-// Registration endpoint
+/**
+ * USER REGISTRATION
+ */
 app.post('/api/register', async (req, res) => {
     try {
-        const { username, email, password } = req.body;
+        const { username, password, name, admission_year } = req.body;
 
-        if (!username || !email || !password) {
+        // Validation
+        if (!username || !password || !name || !admission_year) {
             return res.status(400).json({ message: 'All fields are required' });
         }
+        
+        if (password.length < 6) {
+            return res.status(400).json({ message: 'Password must be at least 6 characters' });
+        }
 
-        const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+        const existingUser = await User.findOne({ username });
         if (existingUser) {
             return res.status(400).json({ message: 'User already exists' });
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
-        const user = new User({ username, email, password: hashedPassword });
+        const user = new User({ username, password: hashedPassword, name, admission_year });
         await user.save();
 
         res.status(201).json({ message: 'User registered successfully' });
@@ -298,12 +331,19 @@ app.post('/api/register', async (req, res) => {
     }
 });
 
-// Login endpoint
-app.post('/api/login', async (req, res) => {
+/**
+ * USER LOGIN
+ */
+app.post('/api/login', loginLimiter, async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { username, password } = req.body;
 
-        const user = await User.findOne({ email });
+        // Input validation
+        if (!username || !password) {
+            return res.status(400).json({ message: 'Username and password required' });
+        }
+
+        const user = await User.findOne({ username });
         if (!user) {
             return res.status(400).json({ message: 'Invalid credentials' });
         }
@@ -318,7 +358,7 @@ app.post('/api/login', async (req, res) => {
 
         res.json({ 
             message: 'Login successful',
-            user: { username: user.username, email: user.email }
+            user: { username: user.username }
         });
     } catch (error) {
         console.error('Login error:', error);
@@ -326,7 +366,9 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-// Logout endpoint
+/**
+ * USER LOGOUT
+ */
 app.post('/api/logout', (req, res) => {
     req.session.destroy(err => {
         if (err) {
@@ -336,35 +378,48 @@ app.post('/api/logout', (req, res) => {
     });
 });
 
-// Get user session
+/**
+ * GET USER INFO
+ */
 app.get('/api/user', requireAuth, async (req, res) => {
     try {
         const user = await User.findById(req.session.userId).select('-password');
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
         res.json(user);
     } catch (error) {
+        console.error('Get user error:', error);
         res.status(500).json({ message: 'Server error' });
     }
 });
 
 /**
- * Download transcript PDF
+ * DOWNLOAD TRANSCRIPT PDF
  */
-app.post('/get-transcript', async (req, res) => {  // Add async
+app.post('/get-transcript', async (req, res) => {
     const { username, admission_year } = req.body;
+    
+    // Input validation
+    if (!username || !admission_year) {
+        return res.status(400).json({ success: false, message: 'Missing required fields' });
+    }
+    
     const fileName = `${username}_summer_transcript.pdf`;
     const filePath = path.join(__dirname, 'privatee', admission_year, '1.1', fileName);
 
     try {
-        await fsPromises.access(filePath);  // Check if file exists
+        // Check if file exists and is readable
+        await fsPromises.access(filePath, fs.constants.R_OK);
         res.download(filePath, fileName);
     } catch (error) {
-        res.status(404).json({ success: false, message: "Transcript not found" });
+        console.error('Transcript download error:', error);
+        res.status(404).json({ success: false, message: 'Transcript not found' });
     }
 });
 
-
 // ====================================================
-// 7. START SERVER
+// 9. START SERVER
 // ====================================================
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
