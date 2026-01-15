@@ -249,6 +249,42 @@ app.post('/get-transcript', (req, res) => {
     }
 });
 
+
+/* =========================================
+   CHECK STATUS ROUTE
+   frontend asks: "Did I submit this already?"
+   ========================================= */
+app.post('/api/check-status', async (req, res) => {
+    try {
+        const { user_id } = req.body;
+
+        // 1. Search MongoDB for this user's submission
+        if (mongoose.connection.readyState === 1) {
+            const submission = await Submission.findOne({
+                user_id: user_id,
+                exam_id: "exam_summer_115"
+            });
+
+            if (submission) {
+                // FOUND: Send back the data so we can show the transcript
+                return res.json({
+                    found: true,
+                    answers: submission.answers,
+                    scores: submission.scores
+                });
+            }
+        }
+
+        // NOT FOUND: Tell frontend to show exam mode
+        res.json({ found: false });
+
+    } catch (error) {
+        console.error("Check Status Error:", error);
+        res.status(500).json({ error: "Server Error" });
+    }
+});
+
+
 // ====================================================
 // 7. START SERVER
 // ====================================================

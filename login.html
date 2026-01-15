@@ -104,6 +104,11 @@
             }
         });
 
+        if (response.success) {
+            localStorage.setItem("username", response.username); // <--- CRITICAL STEP
+            window.location.href = "/solution";
+        }
+
     </script>
 </body>
 

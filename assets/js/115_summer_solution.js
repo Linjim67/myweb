@@ -90,7 +90,7 @@ function loadUserTheme(username) {
 
 
 /* =========================================
-   1. BADGE GENERATOR (Aligns A-E)
+   BADGE GENERATOR (Aligns A-E)
    ========================================= */
 function getAnswerBadges(prob) {
     if (!prob.options) return '<div class="badge-container"></div>';
@@ -352,11 +352,7 @@ function renderOptionsList(prob) {
     }).join('');
 }
 
-/* =========================================
-   INTERACTION HANDLERS
-   ========================================= */
 
-// 1. Toggle the "Details" (Question Image & Options)
 function toggleDetails(summaryDiv) {
     const detailsDiv = summaryDiv.nextElementSibling;
     if (detailsDiv) {
@@ -368,7 +364,6 @@ function toggleDetails(summaryDiv) {
     }
 }
 
-// 2. Toggle the "Explanation" (Option Dropdown)
 function toggleExplanation(optionDiv) {
     // We toggle a class on the PARENT div (.option-item)
     // The CSS rule ".show-explanation .option-explanation" handles the display
@@ -376,9 +371,7 @@ function toggleExplanation(optionDiv) {
 }
 
 
-/* =========================================
-   GLOBAL CONTROLS
-   ========================================= */
+
 function toggleAnimation() {
     const isOn = document.getElementById('toggle-animate').checked;
     // Toggles the class that enables the CSS transition
@@ -603,10 +596,21 @@ function renderExamMode() {
    SUBMIT EXAM (Send to Backend)
    ========================================= */
 async function submitExam() {
+
+    // 1. AUTO-DETECT USER
+    const userId = localStorage.getItem("username");
+
+    if (!userId) {
+        alert("Session expired. Please log in again.");
+        window.location.href = "/login.html";
+        return;
+    }
+
+    // Confirmation (Optional, but good UX)
+    if (!confirm(`Ready to submit exam for ID: ${userId}?`)) return;
+
     // ... (Part 1: Collection of answers is the same as before) ...
     const answers = {};
-    let userId = prompt("Please enter your Student ID to submit:", "1150");
-    if (!userId) return;
 
     // Collect answers from inputs
     window.examData.forEach(block => {
@@ -694,5 +698,63 @@ async function submitExam() {
     } catch (error) {
         console.error("Error:", error);
         alert("Server Error. Check console.");
+    }
+}
+
+/* =========================================
+   SMART DATA FETCHER
+   Decides between "Exam Mode" and "Transcript Mode"
+   ========================================= */
+async function fetchData() {
+    try {
+        const userId = localStorage.getItem("username");
+        if (!userId) {
+            alert("Please log in first.");
+            window.location.href = "/login.html";
+            return;
+        }
+
+        console.log(`👤 Verified User: ${userId}`);
+
+        // Load the Exam Questions
+        const examRes = await fetch('assets/data/exam_summer.json');
+        if (!examRes.ok) throw new Error("Could not load exam data.");
+        window.examData = await examRes.json();
+
+        // Check Status (Silent Check)
+        const checkRes = await fetch('/api/check-status', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_id: userId }) // <--- Sending the saved ID
+        });
+
+        const status = await checkRes.json();
+
+        // THE DECISION (Transcript vs. Exam)
+        if (status.found) {
+            console.log("✅ Transcript found. Loading Solution View...");
+
+            // Merge grades into window.examData
+            window.examData.forEach(block => {
+                if (block.problems) {
+                    block.problems.forEach(prob => {
+                        const pID = prob.id.toString();
+                        prob.userResult = {
+                            choice: status.answers[pID] || null,
+                            score: status.scores[pID] || 0
+                        };
+                    });
+                }
+            });
+
+            renderSolutions();
+
+        } else {
+            console.log("📝 No transcript. Loading Exam Mode...");
+            renderExamMode();
+        }
+
+    } catch (error) {
+        console.error('Error:', error);
     }
 }
