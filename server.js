@@ -5,7 +5,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 const fs = require('fs');
-const User = require('./models/User');
 require('dotenv').config();
 
 const app = express();
@@ -226,41 +225,29 @@ app.post('/api/solution-data', (req, res) => {
 
 // 1. Define User Schema
 const UserSchema = new mongoose.Schema({
-    username: String,
-    password: String
-}, { collection: 'users' });
+    username: { type: String, required: true }, 
+    password: { type: String, required: true }
+}, { collection: 'users' }); 
 
 const User = mongoose.models.User || mongoose.model('User', UserSchema);
 
 app.post('/login', async (req, res) => {
-    console.log("\n🔑 --- LOGIN ATTEMPT ---");
     const { username, password } = req.body;
-    console.log(`1. Received Request for: '${username}'`);
 
     try {
         const user = await User.findOne({ username: username });
 
         if (!user) {
-            console.log("❌ Result: User NOT found in database.");
-            console.log("   (Hint: Check if the field in DB is actually 'username')");
             return res.json({ success: false, message: "User not found" });
         }
 
-        console.log(`2. User Found: ${user.username}`);
-
-        // 3. CHECK PASSWORD
-        // IMPORTANT: Is your DB password Plain Text or Hashed?
-        // This code checks BOTH to be safe.
-
         if (user.password === password) {
-            console.log("✅ Result: Password Match (Plain Text)");
             return res.json({ success: true, username: user.username });
+        } else {
+            return res.json({ success: false, message: "Wrong password" });
         }
 
-        return res.json({ success: false, message: "Wrong password" });
-
     } catch (error) {
-        console.error("💥 Server Error:", error);
         res.status(500).json({ success: false, message: "Server error" });
     }
 });
