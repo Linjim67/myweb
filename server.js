@@ -38,11 +38,13 @@ const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
     console.error('FATAL ERROR: MONGODB_URI is not defined.');
-    console.error('Please set MONGODB_URI in Render Environment Variables');
     process.exit(1);
 }
 
-// Database connection
+// DEBUG: Print the full connection string (MASK the password)
+const maskedURI = MONGODB_URI.replace(/:[^@]*@/, ':****@');
+console.log('Using MongoDB URI:', maskedURI);
+
 mongoose.connect(MONGODB_URI, {
     dbName: 'test'
 })
